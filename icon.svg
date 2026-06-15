@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="28" fill="#000a1e"/>
+  <polygon points="96,44 156,72 96,100 36,72" fill="#aec7f6"/>
+  <polygon points="36,72 36,104 96,132 96,100" fill="#708ab5"/>
+  <polygon points="156,72 156,104 96,132 96,100" fill="#d6e3ff"/>
+  <line x1="156" y1="72" x2="156" y2="118" stroke="#cca830" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="156" cy="126" r="9" fill="#cca830"/>
+  <text x="96" y="162" font-family="Georgia,serif" font-size="13" font-weight="700" text-anchor="middle" fill="#aec7f6" letter-spacing="2">SCHOLASTICA</text>
+</svg>

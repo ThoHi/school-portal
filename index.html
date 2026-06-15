@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard - Scholastica Portal</title>
+<meta name="theme-color" content="#000a1e"/>
+<meta name="description" content="Academic Excellence Portal — Unified School Management System"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon.svg"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "tertiary-fixed": "#ffe088", "secondary-container": "#d5e3fc", "primary": "#000a1e",
+        "surface-container": "#efedf1", "on-error": "#ffffff", "on-surface-variant": "#44474e",
+        "on-secondary-container": "#57657a", "surface-dim": "#dad9dd", "primary-fixed-dim": "#aec7f6",
+        "tertiary-container": "#cca830", "inverse-primary": "#aec7f6",
+        "surface-container-highest": "#e3e2e6", "on-tertiary-container": "#4f3e00",
+        "surface": "#faf9fd", "surface-variant": "#e3e2e6", "surface-tint": "#465f88",
+        "secondary": "#515f74", "error-container": "#ffdad6", "surface-container-low": "#f4f3f7",
+        "surface-bright": "#faf9fd", "primary-container": "#002147", "tertiary-fixed-dim": "#e9c349",
+        "tertiary": "#735c00", "primary-fixed": "#d6e3ff", "on-primary": "#ffffff",
+        "surface-container-lowest": "#ffffff", "on-error-container": "#93000a",
+        "on-primary-container": "#708ab5", "on-primary-fixed": "#001b3d",
+        "secondary-fixed": "#d5e3fc", "error": "#ba1a1a", "inverse-surface": "#2f3033",
+        "outline-variant": "#c4c6cf", "on-surface": "#1a1b1e", "on-secondary": "#ffffff",
+        "inverse-on-surface": "#f1f0f4", "background": "#faf9fd", "on-tertiary": "#ffffff",
+        "surface-container-high": "#e9e7eb", "secondary-fixed-dim": "#b9c7df", "on-background": "#1a1b1e",
+        "success": "#1a6b3c", "success-container": "#b7f0d0"
+      },
+      borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+      spacing: {
+        "margin-mobile": "16px", "base": "4px", "margin-desktop": "48px",
+        "xs": "8px", "gutter": "24px", "xl": "64px", "lg": "40px", "md": "24px", "sm": "16px"
+      },
+      fontFamily: {
+        "body-sm": ["Public Sans"], "data-mono": ["Public Sans"],
+        "headline-md": ['"Source Serif 4"'], "headline-lg-mobile": ['"Source Serif 4"'],
+        "headline-lg": ['"Source Serif 4"'], "display-lg": ['"Source Serif 4"'],
+        "label-md": ["Public Sans"], "body-lg": ["Public Sans"], "body-md": ["Public Sans"]
+      },
+      fontSize: {
+        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+        "data-mono": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+        "headline-lg-mobile": ["28px", { lineHeight: "36px", fontWeight: "600" }],
+        "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600" }],
+        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }]
+      }
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .glass-panel { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border: 1px solid rgba(226,232,240,0.5); }
+  .nav-active { background-color: #d5e3fc; color: #57657a; font-weight: 700; border-radius: 0.5rem; }
+  .nav-inactive { color: #44474e; border-radius: 0.5rem; }
+  .nav-inactive:hover { background-color: #e9e7eb; }
+  .schedule-now { border-left: 3px solid #000a1e; }
+</style>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen">
+
+<!-- Sidebar -->
+<aside class="h-screen w-64 fixed left-0 top-0 hidden lg:flex flex-col bg-surface-container-low border-r border-outline-variant/20 z-40">
+  <div class="p-sm flex flex-col h-full">
+    <div class="px-sm py-md mb-2">
+      <h1 class="font-headline-md text-headline-md text-primary leading-tight">Academic Excellence</h1>
+      <p class="font-label-md text-label-md text-on-surface-variant">Modern Scholasticism</p>
+    </div>
+    <nav class="flex-grow space-y-xs">
+      <a href="index.html" class="flex items-center gap-sm px-sm py-xs nav-active transition-all">
+        <span class="material-symbols-outlined icon-fill">dashboard</span>
+        <span class="font-label-md text-label-md">Dashboard</span>
+      </a>
+      <a href="exam-center.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">quiz</span>
+        <span class="font-label-md text-label-md">Exam Center</span>
+      </a>
+      <a href="e-library.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">menu_book</span>
+        <span class="font-label-md text-label-md">E-Library</span>
+      </a>
+      <a href="research.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">school</span>
+        <span class="font-label-md text-label-md">Research</span>
+      </a>
+      <a href="parent-portal.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">family_restroom</span>
+        <span class="font-label-md text-label-md">Parent Portal</span>
+      </a>
+    </nav>
+    <div class="pt-md border-t border-outline-variant/20 space-y-xs pb-sm">
+      <a href="#" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="font-label-md text-label-md">Settings</span>
+      </a>
+      <a href="#" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="font-label-md text-label-md">Logout</span>
+      </a>
+      <button class="w-full mt-2 bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">Support Desk</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile Bottom Nav -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest border-t border-outline-variant/20 flex">
+  <a href="index.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-primary">
+    <span class="material-symbols-outlined icon-fill text-[22px]">dashboard</span>
+    <span class="text-[10px] font-semibold">Home</span>
+  </a>
+  <a href="exam-center.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">quiz</span>
+    <span class="text-[10px] font-semibold">Exams</span>
+  </a>
+  <a href="e-library.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">menu_book</span>
+    <span class="text-[10px] font-semibold">Library</span>
+  </a>
+  <a href="research.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">school</span>
+    <span class="text-[10px] font-semibold">Research</span>
+  </a>
+  <a href="parent-portal.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">family_restroom</span>
+    <span class="text-[10px] font-semibold">Parents</span>
+  </a>
+</nav>
+
+<!-- Main -->
+<main class="lg:pl-64 pb-20 lg:pb-0 flex flex-col min-h-screen">
+
+  <!-- Top Header -->
+  <header class="bg-surface/80 backdrop-blur-md sticky top-0 z-30 border-b border-outline-variant/30 shadow-sm">
+    <div class="flex justify-between items-center h-16 px-gutter w-full max-w-[1280px] mx-auto">
+      <div class="flex items-center gap-md">
+        <span class="font-headline-md text-headline-md font-bold text-primary">Scholastica Portal</span>
+        <div class="hidden md:flex bg-surface-container px-sm py-xs rounded-full items-center gap-xs border border-outline-variant/20">
+          <span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+          <input type="text" placeholder="Search students, classes, reports..." class="bg-transparent border-none focus:ring-0 text-body-sm font-body-sm w-64 outline-none"/>
+        </div>
+      </div>
+      <div class="flex items-center gap-sm">
+        <button class="p-xs text-on-surface-variant hover:text-primary transition-colors relative">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute top-1 right-1 h-2 w-2 bg-error rounded-full"></span>
+        </button>
+        <button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
+          <span class="material-symbols-outlined">translate</span>
+        </button>
+        <div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden ml-xs border border-outline-variant/30">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwVyycLry4BRwiiIdSNwoC99vti7mdyi0_-jYETAw0wegipHA_DrkRr6dCMb8TUqaxOcteeIHC0QCFBPGmX7JpssTQBCPbBdSdOjbzNcxjsDBDxUOnlT7gp2Ta7YwuMkCFUobwTKfG-aSQ5ZUUdxyCWGzqFVOs26AvUii8_xNMonkq330diC7VK9SJKn-35fHKqHuinD2hPSJ4XdHPMXB5xdj4CmITH5qfOitjRw1Xm1ewSswasHkf_qQbYtoIul5NLB9xZqK-2vg" alt="Profile"/>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="flex-grow p-sm md:p-gutter max-w-[1280px] mx-auto w-full">
+
+    <!-- Welcome Section -->
+    <section class="mb-lg">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+        <div>
+          <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base" id="greeting-date">Sunday, 15 June 2026</p>
+          <h2 class="font-headline-lg text-headline-lg text-primary mb-xs">Good morning, Alexandra.</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant">You have 2 exams due today and 1 class in progress. Keep up the excellent work.</p>
+        </div>
+        <!-- Quick Stats Row -->
+        <div class="flex flex-wrap gap-sm shrink-0">
+          <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-md py-sm text-center shadow-sm min-w-[88px]">
+            <span class="block font-headline-md text-headline-md text-primary tabular-nums">3.87</span>
+            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[10px]">GPA</span>
+          </div>
+          <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-md py-sm text-center shadow-sm min-w-[88px]">
+            <span class="block font-headline-md text-headline-md text-primary tabular-nums">96%</span>
+            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[10px]">Attendance</span>
+          </div>
+          <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-md py-sm text-center shadow-sm min-w-[88px]">
+            <span class="block font-headline-md text-headline-md text-primary tabular-nums">68</span>
+            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[10px]">Credits</span>
+          </div>
+          <div class="bg-tertiary-container/20 border border-tertiary-container/40 rounded-xl px-md py-sm text-center shadow-sm min-w-[88px]">
+            <span class="block font-headline-md text-headline-md text-tertiary tabular-nums">#7</span>
+            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[10px]">Class Rank</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+
+      <!-- Left Column (8) -->
+      <div class="md:col-span-8 space-y-gutter">
+
+        <!-- Today's Schedule -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <div class="flex justify-between items-center mb-md">
+            <h3 class="font-headline-md text-headline-md text-primary">Today's Schedule</h3>
+            <span class="font-label-md text-label-md text-on-surface-variant" id="today-date">Mon, Jun 15</span>
+          </div>
+          <div class="space-y-xs">
+            <!-- Past -->
+            <div class="flex gap-md items-start p-sm rounded-lg opacity-50">
+              <div class="text-right w-16 shrink-0">
+                <span class="font-data-mono text-data-mono text-on-surface-variant">09:00</span>
+              </div>
+              <div class="flex-grow border-l-2 border-outline-variant/40 pl-md">
+                <span class="font-label-md text-label-md text-on-surface">Calculus III</span>
+                <span class="block font-body-sm text-body-sm text-on-surface-variant">Room 204 · Prof. Martinez</span>
+              </div>
+              <span class="bg-surface-container px-xs py-[2px] rounded text-[10px] font-bold text-on-surface-variant uppercase shrink-0">Done</span>
+            </div>
+            <!-- Now (active) -->
+            <div class="flex gap-md items-start p-sm rounded-lg bg-secondary-container/30 border border-secondary-container schedule-now">
+              <div class="text-right w-16 shrink-0">
+                <span class="font-data-mono text-data-mono text-primary font-bold">11:00</span>
+              </div>
+              <div class="flex-grow border-l-2 border-primary pl-md">
+                <div class="flex items-center gap-xs mb-base">
+                  <span class="font-label-md text-label-md text-primary">Advanced Quantum Mechanics</span>
+                  <span class="bg-error-container text-on-error-container text-[9px] font-bold px-xs py-[1px] rounded-full uppercase tracking-widest">Live</span>
+                </div>
+                <span class="block font-body-sm text-body-sm text-on-surface-variant">Hall B · Prof. Nakamura · Exam Active</span>
+              </div>
+              <a href="exam-center.html" class="flex items-center gap-xs px-sm py-xs bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 shrink-0 transition-opacity">
+                Join<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </a>
+            </div>
+            <!-- Future -->
+            <div class="flex gap-md items-start p-sm rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+              <div class="text-right w-16 shrink-0">
+                <span class="font-data-mono text-data-mono text-on-surface-variant">14:00</span>
+              </div>
+              <div class="flex-grow border-l-2 border-outline-variant/30 pl-md">
+                <span class="font-label-md text-label-md text-on-surface">Organic Chemistry Lab</span>
+                <span class="block font-body-sm text-body-sm text-on-surface-variant">Lab C-2 · Dr. Okafor</span>
+              </div>
+            </div>
+            <div class="flex gap-md items-start p-sm rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+              <div class="text-right w-16 shrink-0">
+                <span class="font-data-mono text-data-mono text-on-surface-variant">16:00</span>
+              </div>
+              <div class="flex-grow border-l-2 border-outline-variant/30 pl-md">
+                <span class="font-label-md text-label-md text-on-surface">French Language C1 Lab</span>
+                <span class="block font-body-sm text-body-sm text-on-surface-variant">Language Centre · Prof. Dubois</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Grades -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
+          <div class="flex justify-between items-center p-md border-b border-outline-variant/20">
+            <h3 class="font-headline-md text-headline-md text-primary">Recent Grades</h3>
+            <a href="exam-center.html" class="font-label-md text-label-md text-primary hover:underline">View All</a>
+          </div>
+          <table class="w-full">
+            <thead>
+              <tr class="bg-surface-container-low">
+                <th class="text-left px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Subject</th>
+                <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Score</th>
+                <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Grade</th>
+                <th class="text-right px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Trend</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/20">
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="px-md py-sm">
+                  <span class="font-label-md text-label-md text-on-surface">Macroeconomics Midterm</span>
+                  <span class="block font-body-sm text-body-sm text-on-surface-variant">Completed Oct 12</span>
+                </td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-tertiary">94/100</td>
+                <td class="px-sm py-sm text-center"><span class="bg-success-container text-success text-[11px] font-bold px-xs py-[2px] rounded uppercase">A</span></td>
+                <td class="px-md py-sm text-right"><span class="material-symbols-outlined text-success text-[18px] icon-fill">trending_up</span></td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="px-md py-sm">
+                  <span class="font-label-md text-label-md text-on-surface">French Language C1</span>
+                  <span class="block font-body-sm text-body-sm text-on-surface-variant">Completed Oct 05</span>
+                </td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-primary">82/100</td>
+                <td class="px-sm py-sm text-center"><span class="bg-secondary-container text-on-secondary-container text-[11px] font-bold px-xs py-[2px] rounded uppercase">B+</span></td>
+                <td class="px-md py-sm text-right"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">trending_flat</span></td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="px-md py-sm">
+                  <span class="font-label-md text-label-md text-on-surface">Structural Analysis I</span>
+                  <span class="block font-body-sm text-body-sm text-on-surface-variant">Completed Sep 28</span>
+                </td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-primary">88/100</td>
+                <td class="px-sm py-sm text-center"><span class="bg-secondary-container text-on-secondary-container text-[11px] font-bold px-xs py-[2px] rounded uppercase">B+</span></td>
+                <td class="px-md py-sm text-right"><span class="material-symbols-outlined text-success text-[18px] icon-fill">trending_up</span></td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="px-md py-sm">
+                  <span class="font-label-md text-label-md text-on-surface">Inorganic Chemistry</span>
+                  <span class="block font-body-sm text-body-sm text-on-surface-variant">In Review</span>
+                </td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface-variant">—</td>
+                <td class="px-sm py-sm text-center"><span class="bg-primary-container text-on-primary-container text-[11px] font-bold px-xs py-[2px] rounded uppercase">Pending</span></td>
+                <td class="px-md py-sm text-right"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">schedule</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Quick Access Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-sm">
+          <a href="exam-center.html" class="bg-primary text-on-primary p-md rounded-xl flex flex-col gap-sm hover:opacity-90 transition-opacity shadow-sm group">
+            <span class="material-symbols-outlined text-[28px] icon-fill">quiz</span>
+            <span class="font-label-md text-label-md">Exam Center</span>
+            <span class="font-body-sm text-body-sm opacity-70">2 active today</span>
+          </a>
+          <a href="e-library.html" class="bg-surface-container-lowest border border-outline-variant/30 p-md rounded-xl flex flex-col gap-sm hover:border-primary/30 transition-all shadow-sm">
+            <span class="material-symbols-outlined text-[28px] text-secondary icon-fill">menu_book</span>
+            <span class="font-label-md text-label-md text-on-surface">E-Library</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">1,240 resources</span>
+          </a>
+          <a href="research.html" class="bg-surface-container-lowest border border-outline-variant/30 p-md rounded-xl flex flex-col gap-sm hover:border-primary/30 transition-all shadow-sm">
+            <span class="material-symbols-outlined text-[28px] text-primary icon-fill">biotech</span>
+            <span class="font-label-md text-label-md text-on-surface">Research Hub</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">3 active projects</span>
+          </a>
+          <a href="parent-portal.html" class="bg-surface-container-lowest border border-outline-variant/30 p-md rounded-xl flex flex-col gap-sm hover:border-primary/30 transition-all shadow-sm">
+            <span class="material-symbols-outlined text-[28px] text-tertiary icon-fill">family_restroom</span>
+            <span class="font-label-md text-label-md text-on-surface">Parent Portal</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">1 new message</span>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Right Column (4) -->
+      <div class="md:col-span-4 space-y-gutter">
+
+        <!-- Upcoming Exams -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <div class="flex justify-between items-center mb-md">
+            <h4 class="font-headline-md text-headline-md text-primary">Upcoming</h4>
+            <a href="exam-center.html" class="font-label-md text-label-md text-primary hover:underline">View All</a>
+          </div>
+          <div class="space-y-sm">
+            <div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg border border-outline-variant/10 hover:border-primary/30 transition-all cursor-pointer">
+              <div class="h-12 w-12 bg-tertiary-container/20 rounded-lg flex items-center justify-center text-tertiary shrink-0">
+                <span class="material-symbols-outlined">architecture</span>
+              </div>
+              <div class="flex-grow min-w-0">
+                <span class="block font-label-md text-label-md text-primary truncate">Structural Analysis II</span>
+                <span class="block font-body-sm text-body-sm text-on-surface-variant">Tomorrow, 10:30 AM</span>
+              </div>
+              <span class="material-symbols-outlined text-on-surface-variant shrink-0">chevron_right</span>
+            </div>
+            <div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg border border-outline-variant/10 hover:border-primary/30 transition-all cursor-pointer">
+              <div class="h-12 w-12 bg-secondary-container/30 rounded-lg flex items-center justify-center text-secondary shrink-0">
+                <span class="material-symbols-outlined icon-fill">history_edu</span>
+              </div>
+              <div class="flex-grow min-w-0">
+                <span class="block font-label-md text-label-md text-primary truncate">Late Medieval Literature</span>
+                <span class="block font-body-sm text-body-sm text-on-surface-variant">Oct 24, 02:00 PM</span>
+              </div>
+              <span class="material-symbols-outlined text-on-surface-variant shrink-0">chevron_right</span>
+            </div>
+            <div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg border border-outline-variant/10 hover:border-primary/30 transition-all cursor-pointer">
+              <div class="h-12 w-12 bg-primary-container/10 rounded-lg flex items-center justify-center text-primary shrink-0">
+                <span class="material-symbols-outlined">biotech</span>
+              </div>
+              <div class="flex-grow min-w-0">
+                <span class="block font-label-md text-label-md text-primary truncate">Neurobiology Finals</span>
+                <span class="block font-body-sm text-body-sm text-on-surface-variant">Oct 28, 09:00 AM</span>
+              </div>
+              <span class="material-symbols-outlined text-on-surface-variant shrink-0">chevron_right</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Announcements -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <div class="flex justify-between items-center mb-md">
+            <h4 class="font-headline-md text-headline-md text-primary">Announcements</h4>
+            <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
+              <span class="material-symbols-outlined text-on-surface-variant">more_horiz</span>
+            </button>
+          </div>
+          <div class="space-y-sm">
+            <div class="p-sm border-l-4 border-l-error bg-error-container/20 rounded-r-lg">
+              <span class="block font-label-md text-label-md text-on-surface">Course Registration Deadline</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Spring semester registration closes Oct 30. Ensure your advisor has approved your plan.</span>
+              <span class="block font-body-sm text-body-sm text-error mt-xs font-semibold">Due Oct 30</span>
+            </div>
+            <div class="p-sm border-l-4 border-l-secondary bg-secondary-container/20 rounded-r-lg">
+              <span class="block font-label-md text-label-md text-on-surface">Library Extended Hours</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">The main library will remain open until midnight during the exam period this week.</span>
+              <span class="block font-body-sm text-body-sm text-secondary mt-xs font-semibold">This Week</span>
+            </div>
+            <div class="p-sm border-l-4 border-l-tertiary bg-tertiary-container/10 rounded-r-lg">
+              <span class="block font-label-md text-label-md text-on-surface">Honors Convocation</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Annual awards ceremony recognizing academic excellence. You have been nominated.</span>
+              <span class="block font-body-sm text-body-sm text-tertiary mt-xs font-semibold">Nov 5, 3:00 PM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Achievement Badge -->
+        <div class="bg-primary rounded-xl p-md text-on-primary shadow-sm">
+          <div class="flex items-center gap-sm mb-sm">
+            <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[32px]">workspace_premium</span>
+            <div>
+              <span class="block font-label-md text-label-md text-on-primary/70 uppercase tracking-widest text-[10px]">Achievement</span>
+              <span class="block font-headline-md text-headline-md">Dean's List</span>
+            </div>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-primary/80 mb-md">Congratulations! You have maintained a GPA above 3.75 for three consecutive semesters.</p>
+          <button class="flex items-center gap-xs font-label-md text-label-md text-tertiary-fixed hover:underline">
+            Claim Certificate <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full py-md mt-xl bg-surface-container-highest border-t border-outline-variant">
+    <div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop w-full max-w-[1280px] mx-auto">
+      <div class="mb-sm md:mb-0">
+        <span class="font-label-md text-label-md font-bold text-primary">Scholastica Portal</span>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">© 2024 Scholastica Academic Systems. All Rights Reserved.</p>
+      </div>
+      <div class="flex gap-md flex-wrap justify-center">
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Privacy Policy</a>
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Terms of Service</a>
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Institutional Ethics</a>
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Academic Calendar</a>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  }
+  // Update greeting date
+  const d = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('greeting-date').textContent = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  const shortMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const shortDays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  document.getElementById('today-date').textContent = `${shortDays[d.getDay()]}, ${shortMonths[d.getMonth()]} ${d.getDate()}`;
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "Academic Excellence Portal",
+  "short_name": "Scholastica",
+  "description": "Unified School Management Portal for students, teachers, and parents",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf9fd",
+  "theme_color": "#000a1e",
+  "orientation": "portrait-primary",
+  "categories": ["education"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Dashboard", "url": "index.html" },
+    { "name": "Exam Center", "url": "exam-center.html" },
+    { "name": "E-Library", "url": "e-library.html" },
+    { "name": "Research", "url": "research.html" },
+    { "name": "Parent Portal", "url": "parent-portal.html" }
+  ]
+}
