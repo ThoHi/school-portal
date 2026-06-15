@@ -60,6 +60,12 @@ To bake in a default for everyone, set `SCHOLASTICA.libraryUrlDefault` in `app.j
 Students then tap **Open Library** / a subject / a search to jump straight into calibre-web and read
 online or download the EPUB/PDF.
 
+> **⚠️ Use HTTPS in production.** If the portal is served over HTTPS (e.g. GitHub Pages) but calibre-web
+> is plain `http://`, browsers block the cross-origin links as **mixed content** and the buttons silently
+> fail. Serve calibre-web over HTTPS too — put it behind a reverse proxy (Caddy or nginx) with a TLS
+> certificate (e.g. Let's Encrypt), then use the `https://…` address as the Library Server URL. For
+> local testing over plain HTTP this isn't an issue.
+
 ## Running locally
 
 The site is plain static HTML, but service workers require it to be served over HTTP
