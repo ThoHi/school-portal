@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Grades - Scholastica Portal</title>
+<meta name="theme-color" content="#000a1e"/>
+<meta name="description" content="Grades & GPA — Scholastica Academic Excellence Portal"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon.svg"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "tertiary-fixed": "#ffe088", "secondary-container": "#d5e3fc", "primary": "#000a1e",
+        "surface-container": "#efedf1", "on-error": "#ffffff", "on-surface-variant": "#44474e",
+        "on-secondary-container": "#57657a", "surface-dim": "#dad9dd", "primary-fixed-dim": "#aec7f6",
+        "tertiary-container": "#cca830", "inverse-primary": "#aec7f6",
+        "surface-container-highest": "#e3e2e6", "on-tertiary-container": "#4f3e00",
+        "surface": "#faf9fd", "surface-variant": "#e3e2e6", "surface-tint": "#465f88",
+        "secondary": "#515f74", "error-container": "#ffdad6", "surface-container-low": "#f4f3f7",
+        "surface-bright": "#faf9fd", "primary-container": "#002147", "tertiary-fixed-dim": "#e9c349",
+        "tertiary": "#735c00", "primary-fixed": "#d6e3ff", "on-primary": "#ffffff",
+        "surface-container-lowest": "#ffffff", "on-error-container": "#93000a",
+        "on-primary-container": "#708ab5", "on-primary-fixed": "#001b3d",
+        "secondary-fixed": "#d5e3fc", "error": "#ba1a1a", "inverse-surface": "#2f3033",
+        "outline-variant": "#c4c6cf", "on-surface": "#1a1b1e", "on-secondary": "#ffffff",
+        "inverse-on-surface": "#f1f0f4", "background": "#faf9fd", "on-tertiary": "#ffffff",
+        "surface-container-high": "#e9e7eb", "secondary-fixed-dim": "#b9c7df", "on-background": "#1a1b1e",
+        "success": "#1a6b3c", "success-container": "#b7f0d0"
+      },
+      borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+      spacing: {
+        "margin-mobile": "16px", "base": "4px", "margin-desktop": "48px",
+        "xs": "8px", "gutter": "24px", "xl": "64px", "lg": "40px", "md": "24px", "sm": "16px"
+      },
+      fontFamily: {
+        "body-sm": ["Public Sans"], "data-mono": ["Public Sans"],
+        "headline-md": ['"Source Serif 4"'], "headline-lg-mobile": ['"Source Serif 4"'],
+        "headline-lg": ['"Source Serif 4"'], "display-lg": ['"Source Serif 4"'],
+        "label-md": ["Public Sans"], "body-lg": ["Public Sans"], "body-md": ["Public Sans"]
+      },
+      fontSize: {
+        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+        "data-mono": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+        "headline-lg-mobile": ["28px", { lineHeight: "36px", fontWeight: "600" }],
+        "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600" }],
+        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }]
+      }
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .nav-active { background-color: #d5e3fc; color: #57657a; font-weight: 700; border-radius: 0.5rem; }
+  .nav-inactive { color: #44474e; border-radius: 0.5rem; }
+  .nav-inactive:hover { background-color: #e9e7eb; }
+</style>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen">
+
+<!-- Sidebar -->
+<aside class="h-screen w-64 fixed left-0 top-0 hidden lg:flex flex-col bg-surface-container-low border-r border-outline-variant/20 z-40">
+  <div class="p-sm flex flex-col h-full">
+    <div class="px-sm py-md mb-2">
+      <h1 class="font-headline-md text-headline-md text-primary leading-tight">Academic Excellence</h1>
+      <p class="font-label-md text-label-md text-on-surface-variant">Modern Scholasticism</p>
+    </div>
+    <nav class="flex-grow space-y-xs overflow-y-auto">
+      <a href="index.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="font-label-md text-label-md">Dashboard</span>
+      </a>
+      <a href="attendance.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">event_available</span>
+        <span class="font-label-md text-label-md">Attendance</span>
+      </a>
+      <a href="grades.html" class="flex items-center gap-sm px-sm py-xs nav-active transition-all">
+        <span class="material-symbols-outlined icon-fill">grade</span>
+        <span class="font-label-md text-label-md">Grades</span>
+      </a>
+      <a href="exam-center.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">quiz</span>
+        <span class="font-label-md text-label-md">Exam Center</span>
+      </a>
+      <a href="e-library.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">menu_book</span>
+        <span class="font-label-md text-label-md">E-Library</span>
+      </a>
+      <a href="research.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">school</span>
+        <span class="font-label-md text-label-md">Research</span>
+      </a>
+      <a href="parent-portal.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">family_restroom</span>
+        <span class="font-label-md text-label-md">Parent Portal</span>
+      </a>
+    </nav>
+    <div class="pt-md border-t border-outline-variant/20 space-y-xs pb-sm">
+      <a href="#" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="font-label-md text-label-md">Settings</span>
+      </a>
+      <a href="#" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="font-label-md text-label-md">Logout</span>
+      </a>
+      <button class="w-full mt-2 bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">Support Desk</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile Bottom Nav -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest border-t border-outline-variant/20 flex">
+  <a href="index.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">dashboard</span>
+    <span class="text-[10px] font-semibold">Home</span>
+  </a>
+  <a href="attendance.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">event_available</span>
+    <span class="text-[10px] font-semibold">Attend</span>
+  </a>
+  <a href="grades.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-primary">
+    <span class="material-symbols-outlined icon-fill text-[22px]">grade</span>
+    <span class="text-[10px] font-semibold">Grades</span>
+  </a>
+  <a href="exam-center.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">quiz</span>
+    <span class="text-[10px] font-semibold">Exams</span>
+  </a>
+  <a href="e-library.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">menu_book</span>
+    <span class="text-[10px] font-semibold">Library</span>
+  </a>
+  <a href="research.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">school</span>
+    <span class="text-[10px] font-semibold">Research</span>
+  </a>
+  <a href="parent-portal.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">family_restroom</span>
+    <span class="text-[10px] font-semibold">Parents</span>
+  </a>
+</nav>
+
+<!-- Main -->
+<main class="lg:pl-64 pb-20 lg:pb-0 flex flex-col min-h-screen">
+
+  <!-- Top Header -->
+  <header class="bg-surface/80 backdrop-blur-md sticky top-0 z-30 border-b border-outline-variant/30 shadow-sm">
+    <div class="flex justify-between items-center h-16 px-gutter w-full max-w-[1280px] mx-auto">
+      <div class="flex items-center gap-md">
+        <span class="font-headline-md text-headline-md font-bold text-primary">Scholastica Portal</span>
+        <div class="hidden md:flex bg-surface-container px-sm py-xs rounded-full items-center gap-xs border border-outline-variant/20">
+          <span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+          <input type="text" placeholder="Search students, classes, reports..." class="bg-transparent border-none focus:ring-0 text-body-sm font-body-sm w-64 outline-none"/>
+        </div>
+      </div>
+      <div class="flex items-center gap-sm">
+        <button class="p-xs text-on-surface-variant hover:text-primary transition-colors relative">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute top-1 right-1 h-2 w-2 bg-error rounded-full"></span>
+        </button>
+        <button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
+          <span class="material-symbols-outlined">translate</span>
+        </button>
+        <div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden ml-xs border border-outline-variant/30 flex items-center justify-center text-on-primary font-label-md text-label-md">AC</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="flex-grow p-sm md:p-gutter max-w-[1280px] mx-auto w-full">
+
+    <!-- Page Heading -->
+    <section class="mb-lg">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+        <div>
+          <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base">Academic Record</p>
+          <h2 class="font-headline-lg text-headline-lg text-primary mb-xs">Grades &amp; GPA</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant">Your complete grade report, weighted GPA, and performance trends by semester.</p>
+        </div>
+        <div class="flex gap-sm shrink-0 items-center">
+          <select id="semester-select" class="bg-surface-container-lowest border border-outline-variant/30 rounded-lg font-label-md text-label-md text-on-surface px-md py-sm shadow-sm focus:ring-primary focus:border-primary">
+            <option value="0">Spring 2026</option>
+            <option value="1">Fall 2025</option>
+            <option value="2">Spring 2025</option>
+          </select>
+          <button class="flex items-center gap-xs bg-primary text-on-primary px-md py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm">
+            <span class="material-symbols-outlined text-[18px]">description</span> Transcript
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stat Cards -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-sm mb-gutter">
+      <div class="bg-primary text-on-primary rounded-xl p-md shadow-sm">
+        <div class="flex items-center justify-between mb-sm">
+          <span class="font-label-md text-label-md text-on-primary/70 uppercase tracking-wider text-[11px]">Semester GPA</span>
+          <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[20px]">trending_up</span>
+        </div>
+        <span class="block font-headline-lg text-headline-lg tabular-nums" id="stat-gpa">3.87</span>
+        <span class="font-body-sm text-body-sm text-on-primary/70">on a 4.00 scale</span>
+      </div>
+      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+        <div class="flex items-center justify-between mb-sm">
+          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Cumulative</span>
+          <span class="material-symbols-outlined text-secondary icon-fill text-[20px]">school</span>
+        </div>
+        <span class="block font-headline-lg text-headline-lg text-on-surface tabular-nums">3.79</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">across 6 semesters</span>
+      </div>
+      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+        <div class="flex items-center justify-between mb-sm">
+          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Credits</span>
+          <span class="material-symbols-outlined text-tertiary icon-fill text-[20px]">workspace_premium</span>
+        </div>
+        <span class="block font-headline-lg text-headline-lg text-on-surface tabular-nums" id="stat-credits">18</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">68 cumulative</span>
+      </div>
+      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+        <div class="flex items-center justify-between mb-sm">
+          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Class Rank</span>
+          <span class="material-symbols-outlined text-tertiary icon-fill text-[20px]">leaderboard</span>
+        </div>
+        <span class="block font-headline-lg text-headline-lg text-on-surface tabular-nums">#7</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">of 214 students</span>
+      </div>
+    </section>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+
+      <!-- Left: Grade table -->
+      <div class="md:col-span-8 space-y-gutter">
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
+          <div class="flex justify-between items-center p-md border-b border-outline-variant/20">
+            <h3 class="font-headline-md text-headline-md text-primary">Course Grades</h3>
+            <span class="font-label-md text-label-md text-on-surface-variant" id="course-count">6 courses</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[560px]">
+              <thead>
+                <tr class="bg-surface-container-low">
+                  <th class="text-left px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Course</th>
+                  <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Credits</th>
+                  <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Score</th>
+                  <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Grade</th>
+                  <th class="text-right px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Points</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-outline-variant/20" id="grade-rows"></tbody>
+              <tfoot>
+                <tr class="bg-surface-container-low border-t-2 border-outline-variant/30">
+                  <td class="px-md py-sm font-label-md text-label-md text-primary">Weighted GPA</td>
+                  <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface" id="foot-credits">18</td>
+                  <td class="px-sm py-sm"></td>
+                  <td class="px-sm py-sm"></td>
+                  <td class="px-md py-sm text-right font-data-mono text-data-mono font-bold text-primary" id="foot-gpa">3.87</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- GPA Trend -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <div class="flex justify-between items-center mb-md">
+            <h3 class="font-headline-md text-headline-md text-primary">GPA Trend</h3>
+            <span class="font-label-md text-label-md text-success flex items-center gap-xs"><span class="material-symbols-outlined text-[16px] icon-fill">trending_up</span> +0.18 vs last term</span>
+          </div>
+          <div class="flex items-end justify-between gap-sm h-44 pt-md" id="trend-chart"></div>
+        </div>
+      </div>
+
+      <!-- Right: Distribution + honors -->
+      <div class="md:col-span-4 space-y-gutter">
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <h4 class="font-headline-md text-headline-md text-primary mb-md">Grade Distribution</h4>
+          <div class="space-y-sm" id="distribution"></div>
+        </div>
+
+        <!-- Honors -->
+        <div class="bg-primary rounded-xl p-md text-on-primary shadow-sm">
+          <div class="flex items-center gap-sm mb-sm">
+            <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[32px]">military_tech</span>
+            <div>
+              <span class="block font-label-md text-label-md text-on-primary/70 uppercase tracking-widest text-[10px]">Standing</span>
+              <span class="block font-headline-md text-headline-md">Dean's List</span>
+            </div>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-primary/80">GPA above 3.75 for 3 consecutive semesters. Eligible for honors graduation track.</p>
+        </div>
+
+        <!-- GPA scale reference -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px] mb-sm">Grading Scale</h4>
+          <div class="grid grid-cols-2 gap-x-md gap-y-xs font-body-sm text-body-sm text-on-surface-variant">
+            <span>A / A− <span class="float-right font-data-mono">4.0 / 3.7</span></span>
+            <span>B+ / B <span class="float-right font-data-mono">3.3 / 3.0</span></span>
+            <span>B− / C+ <span class="float-right font-data-mono">2.7 / 2.3</span></span>
+            <span>C / C− <span class="float-right font-data-mono">2.0 / 1.7</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full py-md mt-xl bg-surface-container-highest border-t border-outline-variant">
+    <div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop w-full max-w-[1280px] mx-auto">
+      <div class="mb-sm md:mb-0">
+        <span class="font-label-md text-label-md font-bold text-primary">Scholastica Portal</span>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">© 2026 Scholastica Academic Systems. All Rights Reserved.</p>
+      </div>
+      <div class="flex gap-md flex-wrap justify-center">
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Privacy Policy</a>
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Terms of Service</a>
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Academic Calendar</a>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  }
+
+  // --- Grade data per semester ---
+  const gradePoints = { "A":4.0,"A-":3.7,"B+":3.3,"B":3.0,"B-":2.7,"C+":2.3,"C":2.0,"C-":1.7,"D":1.0,"F":0 };
+  const semesters = [
+    { label: "Spring 2026", gpa: "3.87", courses: [
+      { name: "Advanced Quantum Mechanics", code: "PHY-401", credits: 4, score: 91, grade: "A-" },
+      { name: "Calculus III", code: "MAT-301", credits: 3, score: 96, grade: "A" },
+      { name: "Macroeconomics", code: "ECO-210", credits: 3, score: 94, grade: "A" },
+      { name: "French Language C1", code: "FRN-310", credits: 3, score: 82, grade: "B+" },
+      { name: "Inorganic Chemistry", code: "CHM-220", credits: 3, score: 88, grade: "B+" },
+      { name: "Organic Chemistry Lab", code: "CHM-221L", credits: 2, score: 90, grade: "A-" },
+    ]},
+    { label: "Fall 2025", gpa: "3.69", courses: [
+      { name: "Quantum Mechanics I", code: "PHY-301", credits: 4, score: 87, grade: "B+" },
+      { name: "Calculus II", code: "MAT-201", credits: 3, score: 93, grade: "A" },
+      { name: "Microeconomics", code: "ECO-110", credits: 3, score: 89, grade: "B+" },
+      { name: "French Language B2", code: "FRN-210", credits: 3, score: 85, grade: "B+" },
+      { name: "General Chemistry", code: "CHM-120", credits: 4, score: 95, grade: "A" },
+    ]},
+    { label: "Spring 2025", gpa: "3.55", courses: [
+      { name: "Classical Mechanics", code: "PHY-201", credits: 4, score: 84, grade: "B" },
+      { name: "Calculus I", code: "MAT-101", credits: 3, score: 91, grade: "A-" },
+      { name: "Intro to Economics", code: "ECO-101", credits: 3, score: 88, grade: "B+" },
+      { name: "Academic Writing", code: "ENG-101", credits: 3, score: 92, grade: "A" },
+      { name: "World History", code: "HIS-110", credits: 3, score: 80, grade: "B-" },
+    ]},
+  ];
+  const trend = [
+    { term: "Sp24", gpa: 3.41 }, { term: "Fa24", gpa: 3.52 }, { term: "Sp25", gpa: 3.55 },
+    { term: "Fa25", gpa: 3.69 }, { term: "Sp26", gpa: 3.87 },
+  ];
+
+  function gradeBadge(g) {
+    if (g === "A" || g === "A-") return "bg-success-container text-success";
+    if (g.startsWith("B")) return "bg-secondary-container text-on-secondary-container";
+    if (g.startsWith("C")) return "bg-tertiary-fixed text-on-tertiary-container";
+    return "bg-error-container text-error";
+  }
+  function scoreColor(s) {
+    if (s >= 90) return "text-success";
+    if (s >= 80) return "text-primary";
+    return "text-tertiary";
+  }
+
+  function renderSemester(idx) {
+    const sem = semesters[idx];
+    document.getElementById('grade-rows').innerHTML = sem.courses.map(c => `
+      <tr class="hover:bg-surface-container-low/50 transition-colors">
+        <td class="px-md py-sm">
+          <span class="font-label-md text-label-md text-on-surface">${c.name}</span>
+          <span class="block font-body-sm text-body-sm text-on-surface-variant">${c.code}</span>
+        </td>
+        <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface-variant">${c.credits}</td>
+        <td class="px-sm py-sm text-center font-data-mono text-data-mono ${scoreColor(c.score)}">${c.score}</td>
+        <td class="px-sm py-sm text-center"><span class="${gradeBadge(c.grade)} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${c.grade}</span></td>
+        <td class="px-md py-sm text-right font-data-mono text-data-mono text-on-surface tabular-nums">${gradePoints[c.grade].toFixed(1)}</td>
+      </tr>`).join('');
+
+    const totalCredits = sem.courses.reduce((a, c) => a + c.credits, 0);
+    const weighted = sem.courses.reduce((a, c) => a + c.credits * gradePoints[c.grade], 0);
+    const gpa = (weighted / totalCredits).toFixed(2);
+    document.getElementById('foot-credits').textContent = totalCredits;
+    document.getElementById('foot-gpa').textContent = gpa;
+    document.getElementById('stat-gpa').textContent = gpa;
+    document.getElementById('stat-credits').textContent = totalCredits;
+    document.getElementById('course-count').textContent = `${sem.courses.length} courses`;
+
+    // Distribution
+    const buckets = { "A":0, "B":0, "C":0, "Other":0 };
+    sem.courses.forEach(c => {
+      if (c.grade.startsWith("A")) buckets.A++;
+      else if (c.grade.startsWith("B")) buckets.B++;
+      else if (c.grade.startsWith("C")) buckets.C++;
+      else buckets.Other++;
+    });
+    const distMeta = [
+      { key: "A", label: "A range", color: "bg-success" },
+      { key: "B", label: "B range", color: "bg-secondary" },
+      { key: "C", label: "C range", color: "bg-tertiary" },
+      { key: "Other", label: "Other", color: "bg-error" },
+    ];
+    const max = sem.courses.length;
+    document.getElementById('distribution').innerHTML = distMeta.map(d => {
+      const n = buckets[d.key];
+      const pct = max ? Math.round((n / max) * 100) : 0;
+      return `
+        <div>
+          <div class="flex justify-between items-baseline mb-xs">
+            <span class="font-body-sm text-body-sm text-on-surface">${d.label}</span>
+            <span class="font-data-mono text-data-mono text-on-surface-variant">${n} course${n===1?'':'s'}</span>
+          </div>
+          <div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+            <div class="h-full ${d.color} rounded-full" style="width:${pct}%"></div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // Trend chart (static across semesters)
+  const maxGpa = 4.0;
+  document.getElementById('trend-chart').innerHTML = trend.map((t, i) => {
+    const h = Math.round((t.gpa / maxGpa) * 100);
+    const isLast = i === trend.length - 1;
+    return `
+      <div class="flex-1 flex flex-col items-center gap-xs h-full justify-end">
+        <span class="font-data-mono text-[11px] ${isLast ? 'text-primary font-bold' : 'text-on-surface-variant'} tabular-nums">${t.gpa.toFixed(2)}</span>
+        <div class="w-full ${isLast ? 'bg-primary' : 'bg-primary-fixed-dim'} rounded-t-lg transition-all" style="height:${h}%"></div>
+        <span class="font-label-md text-[10px] text-on-surface-variant uppercase">${t.term}</span>
+      </div>`;
+  }).join('');
+
+  document.getElementById('semester-select').addEventListener('change', e => renderSemester(+e.target.value));
+  renderSemester(0);
+</script>
+</body>
+</html>

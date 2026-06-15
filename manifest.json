@@ -19,6 +19,8 @@
   ],
   "shortcuts": [
     { "name": "Dashboard", "url": "index.html" },
+    { "name": "Attendance", "url": "attendance.html" },
+    { "name": "Grades", "url": "grades.html" },
     { "name": "Exam Center", "url": "exam-center.html" },
     { "name": "E-Library", "url": "e-library.html" },
     { "name": "Research", "url": "research.html" },

@@ -1,6 +1,8 @@
-const CACHE = 'scholastica-v1';
+const CACHE = 'scholastica-v2';
 const PAGES = [
   'index.html',
+  'attendance.html',
+  'grades.html',
   'exam-center.html',
   'e-library.html',
   'research.html',

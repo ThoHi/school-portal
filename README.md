@@ -9,6 +9,8 @@ to a phone or desktop home screen.
 | Page | File | Description |
 |------|------|-------------|
 | Dashboard | `index.html` | Main landing dashboard and navigation hub |
+| Attendance | `attendance.html` | Attendance tracking — rates by course, calendar heatmap, activity log |
+| Grades | `grades.html` | Grades & GPA — per-course grades, weighted GPA, trend chart by semester |
 | Exam Center | `exam-center.html` | Exams, schedules, and results |
 | E-Library | `e-library.html` | Digital library of learning resources |
 | Research Hub | `research.html` | Research materials and tools |
