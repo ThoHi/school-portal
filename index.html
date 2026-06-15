@@ -191,27 +191,13 @@ tailwind.config = {
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
         <div>
           <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base" id="greeting-date">Sunday, 15 June 2026</p>
-          <h2 class="font-headline-lg text-headline-lg text-primary mb-xs">Good morning, Alexandra.</h2>
-          <p class="font-body-md text-body-md text-on-surface-variant">You have 2 exams due today and 1 class in progress. Keep up the excellent work.</p>
+          <h2 class="font-headline-lg text-headline-lg text-primary mb-xs" id="greeting-name">Good morning.</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant" id="greeting-msg"></p>
         </div>
-        <!-- Quick Stats Row -->
-        <div class="flex flex-wrap gap-sm shrink-0">
-          <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-md py-sm text-center shadow-sm min-w-[88px]">
-            <span class="block font-headline-md text-headline-md text-primary tabular-nums">3.87</span>
-            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[10px]">GPA</span>
-          </div>
-          <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-md py-sm text-center shadow-sm min-w-[88px]">
-            <span class="block font-headline-md text-headline-md text-primary tabular-nums">96%</span>
-            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[10px]">Attendance</span>
-          </div>
-          <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-md py-sm text-center shadow-sm min-w-[88px]">
-            <span class="block font-headline-md text-headline-md text-primary tabular-nums">68</span>
-            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[10px]">Credits</span>
-          </div>
-          <div class="bg-tertiary-container/20 border border-tertiary-container/40 rounded-xl px-md py-sm text-center shadow-sm min-w-[88px]">
-            <span class="block font-headline-md text-headline-md text-tertiary tabular-nums">#7</span>
-            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[10px]">Class Rank</span>
-          </div>
+        <div class="flex flex-col items-start md:items-end gap-sm shrink-0">
+          <span id="track-toggle"></span>
+          <!-- Quick Stats Row -->
+          <div class="flex flex-wrap gap-sm" id="quick-stats"></div>
         </div>
       </div>
     </section>
@@ -228,54 +214,7 @@ tailwind.config = {
             <h3 class="font-headline-md text-headline-md text-primary">Today's Schedule</h3>
             <span class="font-label-md text-label-md text-on-surface-variant" id="today-date">Mon, Jun 15</span>
           </div>
-          <div class="space-y-xs">
-            <!-- Past -->
-            <div class="flex gap-md items-start p-sm rounded-lg opacity-50">
-              <div class="text-right w-16 shrink-0">
-                <span class="font-data-mono text-data-mono text-on-surface-variant">09:00</span>
-              </div>
-              <div class="flex-grow border-l-2 border-outline-variant/40 pl-md">
-                <span class="font-label-md text-label-md text-on-surface">Calculus III</span>
-                <span class="block font-body-sm text-body-sm text-on-surface-variant">Room 204 · Prof. Martinez</span>
-              </div>
-              <span class="bg-surface-container px-xs py-[2px] rounded text-[10px] font-bold text-on-surface-variant uppercase shrink-0">Done</span>
-            </div>
-            <!-- Now (active) -->
-            <div class="flex gap-md items-start p-sm rounded-lg bg-secondary-container/30 border border-secondary-container schedule-now">
-              <div class="text-right w-16 shrink-0">
-                <span class="font-data-mono text-data-mono text-primary font-bold">11:00</span>
-              </div>
-              <div class="flex-grow border-l-2 border-primary pl-md">
-                <div class="flex items-center gap-xs mb-base">
-                  <span class="font-label-md text-label-md text-primary">Advanced Quantum Mechanics</span>
-                  <span class="bg-error-container text-on-error-container text-[9px] font-bold px-xs py-[1px] rounded-full uppercase tracking-widest">Live</span>
-                </div>
-                <span class="block font-body-sm text-body-sm text-on-surface-variant">Hall B · Prof. Nakamura · Exam Active</span>
-              </div>
-              <a href="exam-center.html" class="flex items-center gap-xs px-sm py-xs bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 shrink-0 transition-opacity">
-                Join<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-              </a>
-            </div>
-            <!-- Future -->
-            <div class="flex gap-md items-start p-sm rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
-              <div class="text-right w-16 shrink-0">
-                <span class="font-data-mono text-data-mono text-on-surface-variant">14:00</span>
-              </div>
-              <div class="flex-grow border-l-2 border-outline-variant/30 pl-md">
-                <span class="font-label-md text-label-md text-on-surface">Organic Chemistry Lab</span>
-                <span class="block font-body-sm text-body-sm text-on-surface-variant">Lab C-2 · Dr. Okafor</span>
-              </div>
-            </div>
-            <div class="flex gap-md items-start p-sm rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
-              <div class="text-right w-16 shrink-0">
-                <span class="font-data-mono text-data-mono text-on-surface-variant">16:00</span>
-              </div>
-              <div class="flex-grow border-l-2 border-outline-variant/30 pl-md">
-                <span class="font-label-md text-label-md text-on-surface">French Language C1 Lab</span>
-                <span class="block font-body-sm text-body-sm text-on-surface-variant">Language Centre · Prof. Dubois</span>
-              </div>
-            </div>
-          </div>
+          <div class="space-y-xs" id="schedule-list"></div>
         </div>
 
         <!-- Recent Grades -->
@@ -293,63 +232,26 @@ tailwind.config = {
                 <th class="text-right px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Trend</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-outline-variant/20">
-              <tr class="hover:bg-surface-container-low/50 transition-colors">
-                <td class="px-md py-sm">
-                  <span class="font-label-md text-label-md text-on-surface">Macroeconomics Midterm</span>
-                  <span class="block font-body-sm text-body-sm text-on-surface-variant">Completed Oct 12</span>
-                </td>
-                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-tertiary">94/100</td>
-                <td class="px-sm py-sm text-center"><span class="bg-success-container text-success text-[11px] font-bold px-xs py-[2px] rounded uppercase">A</span></td>
-                <td class="px-md py-sm text-right"><span class="material-symbols-outlined text-success text-[18px] icon-fill">trending_up</span></td>
-              </tr>
-              <tr class="hover:bg-surface-container-low/50 transition-colors">
-                <td class="px-md py-sm">
-                  <span class="font-label-md text-label-md text-on-surface">French Language C1</span>
-                  <span class="block font-body-sm text-body-sm text-on-surface-variant">Completed Oct 05</span>
-                </td>
-                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-primary">82/100</td>
-                <td class="px-sm py-sm text-center"><span class="bg-secondary-container text-on-secondary-container text-[11px] font-bold px-xs py-[2px] rounded uppercase">B+</span></td>
-                <td class="px-md py-sm text-right"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">trending_flat</span></td>
-              </tr>
-              <tr class="hover:bg-surface-container-low/50 transition-colors">
-                <td class="px-md py-sm">
-                  <span class="font-label-md text-label-md text-on-surface">Structural Analysis I</span>
-                  <span class="block font-body-sm text-body-sm text-on-surface-variant">Completed Sep 28</span>
-                </td>
-                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-primary">88/100</td>
-                <td class="px-sm py-sm text-center"><span class="bg-secondary-container text-on-secondary-container text-[11px] font-bold px-xs py-[2px] rounded uppercase">B+</span></td>
-                <td class="px-md py-sm text-right"><span class="material-symbols-outlined text-success text-[18px] icon-fill">trending_up</span></td>
-              </tr>
-              <tr class="hover:bg-surface-container-low/50 transition-colors">
-                <td class="px-md py-sm">
-                  <span class="font-label-md text-label-md text-on-surface">Inorganic Chemistry</span>
-                  <span class="block font-body-sm text-body-sm text-on-surface-variant">In Review</span>
-                </td>
-                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface-variant">—</td>
-                <td class="px-sm py-sm text-center"><span class="bg-primary-container text-on-primary-container text-[11px] font-bold px-xs py-[2px] rounded uppercase">Pending</span></td>
-                <td class="px-md py-sm text-right"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">schedule</span></td>
-              </tr>
-            </tbody>
+            <tbody class="divide-y divide-outline-variant/20" id="recent-grades"></tbody>
           </table>
         </div>
 
         <!-- Quick Access Cards -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-sm">
-          <a href="exam-center.html" class="bg-primary text-on-primary p-md rounded-xl flex flex-col gap-sm hover:opacity-90 transition-opacity shadow-sm group">
-            <span class="material-symbols-outlined text-[28px] icon-fill">quiz</span>
-            <span class="font-label-md text-label-md">Exam Center</span>
-            <span class="font-body-sm text-body-sm opacity-70">2 active today</span>
+          <a href="attendance.html" class="bg-primary text-on-primary p-md rounded-xl flex flex-col gap-sm hover:opacity-90 transition-opacity shadow-sm group">
+            <span class="material-symbols-outlined text-[28px] icon-fill">event_available</span>
+            <span class="font-label-md text-label-md">Attendance</span>
+            <span class="font-body-sm text-body-sm opacity-70">View record</span>
           </a>
-          <a href="e-library.html" class="bg-surface-container-lowest border border-outline-variant/30 p-md rounded-xl flex flex-col gap-sm hover:border-primary/30 transition-all shadow-sm">
-            <span class="material-symbols-outlined text-[28px] text-secondary icon-fill">menu_book</span>
-            <span class="font-label-md text-label-md text-on-surface">E-Library</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant">1,240 resources</span>
+          <a href="grades.html" class="bg-surface-container-lowest border border-outline-variant/30 p-md rounded-xl flex flex-col gap-sm hover:border-primary/30 transition-all shadow-sm">
+            <span class="material-symbols-outlined text-[28px] text-secondary icon-fill">grade</span>
+            <span class="font-label-md text-label-md text-on-surface">Grades</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Report card</span>
           </a>
-          <a href="research.html" class="bg-surface-container-lowest border border-outline-variant/30 p-md rounded-xl flex flex-col gap-sm hover:border-primary/30 transition-all shadow-sm">
-            <span class="material-symbols-outlined text-[28px] text-primary icon-fill">biotech</span>
-            <span class="font-label-md text-label-md text-on-surface">Research Hub</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant">3 active projects</span>
+          <a href="exam-center.html" class="bg-surface-container-lowest border border-outline-variant/30 p-md rounded-xl flex flex-col gap-sm hover:border-primary/30 transition-all shadow-sm">
+            <span class="material-symbols-outlined text-[28px] text-primary icon-fill">quiz</span>
+            <span class="font-label-md text-label-md text-on-surface">Exam Center</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Quizzes &amp; tests</span>
           </a>
           <a href="parent-portal.html" class="bg-surface-container-lowest border border-outline-variant/30 p-md rounded-xl flex flex-col gap-sm hover:border-primary/30 transition-all shadow-sm">
             <span class="material-symbols-outlined text-[28px] text-tertiary icon-fill">family_restroom</span>
@@ -369,38 +271,7 @@ tailwind.config = {
             <h4 class="font-headline-md text-headline-md text-primary">Upcoming</h4>
             <a href="exam-center.html" class="font-label-md text-label-md text-primary hover:underline">View All</a>
           </div>
-          <div class="space-y-sm">
-            <div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg border border-outline-variant/10 hover:border-primary/30 transition-all cursor-pointer">
-              <div class="h-12 w-12 bg-tertiary-container/20 rounded-lg flex items-center justify-center text-tertiary shrink-0">
-                <span class="material-symbols-outlined">architecture</span>
-              </div>
-              <div class="flex-grow min-w-0">
-                <span class="block font-label-md text-label-md text-primary truncate">Structural Analysis II</span>
-                <span class="block font-body-sm text-body-sm text-on-surface-variant">Tomorrow, 10:30 AM</span>
-              </div>
-              <span class="material-symbols-outlined text-on-surface-variant shrink-0">chevron_right</span>
-            </div>
-            <div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg border border-outline-variant/10 hover:border-primary/30 transition-all cursor-pointer">
-              <div class="h-12 w-12 bg-secondary-container/30 rounded-lg flex items-center justify-center text-secondary shrink-0">
-                <span class="material-symbols-outlined icon-fill">history_edu</span>
-              </div>
-              <div class="flex-grow min-w-0">
-                <span class="block font-label-md text-label-md text-primary truncate">Late Medieval Literature</span>
-                <span class="block font-body-sm text-body-sm text-on-surface-variant">Oct 24, 02:00 PM</span>
-              </div>
-              <span class="material-symbols-outlined text-on-surface-variant shrink-0">chevron_right</span>
-            </div>
-            <div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg border border-outline-variant/10 hover:border-primary/30 transition-all cursor-pointer">
-              <div class="h-12 w-12 bg-primary-container/10 rounded-lg flex items-center justify-center text-primary shrink-0">
-                <span class="material-symbols-outlined">biotech</span>
-              </div>
-              <div class="flex-grow min-w-0">
-                <span class="block font-label-md text-label-md text-primary truncate">Neurobiology Finals</span>
-                <span class="block font-body-sm text-body-sm text-on-surface-variant">Oct 28, 09:00 AM</span>
-              </div>
-              <span class="material-symbols-outlined text-on-surface-variant shrink-0">chevron_right</span>
-            </div>
-          </div>
+          <div class="space-y-sm" id="upcoming-list"></div>
         </div>
 
         <!-- Announcements -->
@@ -413,37 +284,25 @@ tailwind.config = {
           </div>
           <div class="space-y-sm">
             <div class="p-sm border-l-4 border-l-error bg-error-container/20 rounded-r-lg">
-              <span class="block font-label-md text-label-md text-on-surface">Course Registration Deadline</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Spring semester registration closes Oct 30. Ensure your advisor has approved your plan.</span>
-              <span class="block font-body-sm text-body-sm text-error mt-xs font-semibold">Due Oct 30</span>
+              <span class="block font-label-md text-label-md text-on-surface">Parent–Teacher Conference</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Term 2 conferences are next week. Please book a time slot with your child's teacher.</span>
+              <span class="block font-body-sm text-body-sm text-error mt-xs font-semibold">Jun 22–24</span>
             </div>
             <div class="p-sm border-l-4 border-l-secondary bg-secondary-container/20 rounded-r-lg">
-              <span class="block font-label-md text-label-md text-on-surface">Library Extended Hours</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">The main library will remain open until midnight during the exam period this week.</span>
+              <span class="block font-label-md text-label-md text-on-surface">Library Reading Week</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Extra reading sessions and e-book check-outs are open in the school library all week.</span>
               <span class="block font-body-sm text-body-sm text-secondary mt-xs font-semibold">This Week</span>
             </div>
             <div class="p-sm border-l-4 border-l-tertiary bg-tertiary-container/10 rounded-r-lg">
-              <span class="block font-label-md text-label-md text-on-surface">Honors Convocation</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Annual awards ceremony recognizing academic excellence. You have been nominated.</span>
-              <span class="block font-body-sm text-body-sm text-tertiary mt-xs font-semibold">Nov 5, 3:00 PM</span>
+              <span class="block font-label-md text-label-md text-on-surface">GED Test Registration</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Registration for the next official GED test window is now open. See the front office for details.</span>
+              <span class="block font-body-sm text-body-sm text-tertiary mt-xs font-semibold">Opens Jun 30</span>
             </div>
           </div>
         </div>
 
         <!-- Achievement Badge -->
-        <div class="bg-primary rounded-xl p-md text-on-primary shadow-sm">
-          <div class="flex items-center gap-sm mb-sm">
-            <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[32px]">workspace_premium</span>
-            <div>
-              <span class="block font-label-md text-label-md text-on-primary/70 uppercase tracking-widest text-[10px]">Achievement</span>
-              <span class="block font-headline-md text-headline-md">Dean's List</span>
-            </div>
-          </div>
-          <p class="font-body-sm text-body-sm text-on-primary/80 mb-md">Congratulations! You have maintained a GPA above 3.75 for three consecutive semesters.</p>
-          <button class="flex items-center gap-xs font-label-md text-label-md text-tertiary-fixed hover:underline">
-            Claim Certificate <span class="material-symbols-outlined text-[16px]">open_in_new</span>
-          </button>
-        </div>
+        <div id="achievement-card" class="bg-primary rounded-xl p-md text-on-primary shadow-sm"></div>
 
       </div>
     </div>
@@ -467,6 +326,7 @@ tailwind.config = {
 
 </main>
 
+<script src="app.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
@@ -479,6 +339,128 @@ tailwind.config = {
   const shortMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const shortDays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   document.getElementById('today-date').textContent = `${shortDays[d.getDay()]}, ${shortMonths[d.getMonth()]} ${d.getDate()}`;
+
+  // --- track-aware dashboard ---
+  function renderDashboard() {
+    const t = getTrack();
+    const isGed = t.grading === 'ged';
+    const scores = t.subjects.map(s => s.score);
+    const mean = avg(scores);
+    const att = Math.round(t.subjects.reduce((a, s) => a + s.attended, 0) / t.subjects.reduce((a, s) => a + s.total, 0) * 100);
+
+    // greeting
+    const hr = d.getHours();
+    const part = hr < 12 ? 'Good morning' : (hr < 18 ? 'Good afternoon' : 'Good evening');
+    document.getElementById('greeting-name').textContent = `${part}, ${t.student.name}.`;
+    document.getElementById('greeting-msg').textContent = isGed
+      ? `${t.student.fullName} · ${t.student.grade}. Keep building toward test-ready scores across all four subjects.`
+      : `${t.student.fullName} · ${t.student.grade}. You have ${t.schedule.length} classes today. Keep up the great work!`;
+
+    // quick stats
+    const stats = isGed
+      ? [
+          { v: Math.round(mean), l: 'Avg Score' },
+          { v: att + '%', l: 'Attendance' },
+          { v: scores.filter(s => s >= 145).length + '/4', l: 'Passing' },
+          { v: scores.filter(s => s >= 165).length + '/4', l: 'Ready', accent: true },
+        ]
+      : [
+          { v: Math.round(mean) + '%', l: 'Average' },
+          { v: att + '%', l: 'Attendance' },
+          { v: letterFromPct(mean), l: 'Grade' },
+          { v: mean >= 90 ? 'Yes' : '—', l: 'Honor Roll', accent: true },
+        ];
+    document.getElementById('quick-stats').innerHTML = stats.map(s => `
+      <div class="${s.accent ? 'bg-tertiary-container/20 border-tertiary-container/40' : 'bg-surface-container-lowest border-outline-variant/30'} border rounded-xl px-md py-sm text-center shadow-sm min-w-[88px]">
+        <span class="block font-headline-md text-headline-md ${s.accent ? 'text-tertiary' : 'text-primary'} tabular-nums">${s.v}</span>
+        <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[10px]">${s.l}</span>
+      </div>`).join('');
+
+    // today's schedule
+    document.getElementById('schedule-list').innerHTML = t.schedule.map(c => {
+      if (c.state === 'now') {
+        return `
+          <div class="flex gap-md items-start p-sm rounded-lg bg-secondary-container/30 border border-secondary-container schedule-now">
+            <div class="text-right w-16 shrink-0"><span class="font-data-mono text-data-mono text-primary font-bold">${c.time}</span></div>
+            <div class="flex-grow border-l-2 border-primary pl-md">
+              <div class="flex items-center gap-xs mb-base">
+                <span class="font-label-md text-label-md text-primary">${c.subject}</span>
+                <span class="bg-error-container text-on-error-container text-[9px] font-bold px-xs py-[1px] rounded-full uppercase tracking-widest">Now</span>
+              </div>
+              <span class="block font-body-sm text-body-sm text-on-surface-variant">${c.room}</span>
+            </div>
+          </div>`;
+      }
+      if (c.state === 'done') {
+        return `
+          <div class="flex gap-md items-start p-sm rounded-lg opacity-50">
+            <div class="text-right w-16 shrink-0"><span class="font-data-mono text-data-mono text-on-surface-variant">${c.time}</span></div>
+            <div class="flex-grow border-l-2 border-outline-variant/40 pl-md">
+              <span class="font-label-md text-label-md text-on-surface">${c.subject}</span>
+              <span class="block font-body-sm text-body-sm text-on-surface-variant">${c.room}</span>
+            </div>
+            <span class="bg-surface-container px-xs py-[2px] rounded text-[10px] font-bold text-on-surface-variant uppercase shrink-0">Done</span>
+          </div>`;
+      }
+      return `
+        <div class="flex gap-md items-start p-sm rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+          <div class="text-right w-16 shrink-0"><span class="font-data-mono text-data-mono text-on-surface-variant">${c.time}</span></div>
+          <div class="flex-grow border-l-2 border-outline-variant/30 pl-md">
+            <span class="font-label-md text-label-md text-on-surface">${c.subject}</span>
+            <span class="block font-body-sm text-body-sm text-on-surface-variant">${c.room}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    // recent grades (top 4 subjects)
+    document.getElementById('recent-grades').innerHTML = t.subjects.slice(0, 4).map(s => {
+      let scoreCell, badge;
+      if (isGed) {
+        const b = gedBand(s.score);
+        scoreCell = `<span class="font-data-mono text-data-mono ${b.text}">${s.score}</span>`;
+        badge = `<span class="${b.badge} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${b.label}</span>`;
+      } else {
+        const l = letterFromPct(s.score);
+        scoreCell = `<span class="font-data-mono text-data-mono ${s.score >= 90 ? 'text-success' : 'text-primary'}">${s.score}%</span>`;
+        badge = `<span class="${letterBadge(l)} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${l}</span>`;
+      }
+      return `
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="px-md py-sm"><span class="font-label-md text-label-md text-on-surface">${s.name}</span><span class="block font-body-sm text-body-sm text-on-surface-variant">${s.code}</span></td>
+          <td class="px-sm py-sm text-center">${scoreCell}</td>
+          <td class="px-sm py-sm text-center">${badge}</td>
+          <td class="px-md py-sm text-right">${trendIcon(s.trend)}</td>
+        </tr>`;
+    }).join('');
+
+    // upcoming
+    document.getElementById('upcoming-list').innerHTML = t.upcoming.map(u => `
+      <div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg border border-outline-variant/10 hover:border-primary/30 transition-all cursor-pointer">
+        <div class="h-12 w-12 bg-secondary-container/30 rounded-lg flex items-center justify-center text-secondary shrink-0">
+          <span class="material-symbols-outlined">${u.icon}</span>
+        </div>
+        <div class="flex-grow min-w-0">
+          <span class="block font-label-md text-label-md text-primary truncate">${u.subject}</span>
+          <span class="block font-body-sm text-body-sm text-on-surface-variant">${u.when}</span>
+        </div>
+        <span class="material-symbols-outlined text-on-surface-variant shrink-0">chevron_right</span>
+      </div>`).join('');
+
+    // achievement
+    document.getElementById('achievement-card').innerHTML = `
+      <div class="flex items-center gap-sm mb-sm">
+        <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[32px]">workspace_premium</span>
+        <div>
+          <span class="block font-label-md text-label-md text-on-primary/70 uppercase tracking-widest text-[10px]">${t.achievement.tag}</span>
+          <span class="block font-headline-md text-headline-md">${t.achievement.title}</span>
+        </div>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-primary/80">${t.achievement.note}</p>`;
+  }
+
+  mountTrackToggle(document.getElementById('track-toggle'));
+  document.addEventListener('trackchange', renderDashboard);
+  renderDashboard();
 </script>
 </body>
 </html>

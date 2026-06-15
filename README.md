@@ -4,6 +4,18 @@ A unified school management portal for **students, teachers, and parents**, buil
 [Progressive Web App (PWA)](https://web.dev/progressive-web-apps/). It works offline and can be added
 to a phone or desktop home screen.
 
+## Programs
+
+The school runs two programs, and the portal switches between them with a **track toggle** (top of the
+Dashboard, Grades, and Attendance pages). The choice is saved in the browser and shared across pages.
+
+- **Grade 5/6 (Primary)** — elementary subjects (Math, English Language Arts, Science, Social Studies,
+  Reading, Art, PE) graded with **letter grades + percentages** (e.g. 92% = A−).
+- **GED** — the four GED subjects (Mathematical Reasoning, RLA, Science, Social Studies) scored on the
+  official **100–200 scale** (145 = pass, 165 = college-ready, 175 = honors).
+
+Track data and grading helpers live in `app.js`.
+
 ## Pages
 
 | Page | File | Description |

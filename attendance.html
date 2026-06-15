@@ -175,7 +175,7 @@ tailwind.config = {
         <button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
           <span class="material-symbols-outlined">translate</span>
         </button>
-        <div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden ml-xs border border-outline-variant/30 flex items-center justify-center text-on-primary font-label-md text-label-md">AC</div>
+        <div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden ml-xs border border-outline-variant/30 flex items-center justify-center text-on-primary font-label-md text-label-md" data-avatar-initials>MC</div>
       </div>
     </div>
   </header>
@@ -187,56 +187,21 @@ tailwind.config = {
     <section class="mb-lg">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
         <div>
-          <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base">Spring Semester 2026</p>
+          <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base" id="page-caption">Spring Term 2026</p>
           <h2 class="font-headline-lg text-headline-lg text-primary mb-xs">Attendance Tracking</h2>
-          <p class="font-body-md text-body-md text-on-surface-variant">Monitor your class attendance, absences, and punctuality across all enrolled courses.</p>
+          <p class="font-body-md text-body-md text-on-surface-variant" id="page-desc">Monitor class attendance, absences, and punctuality across all subjects.</p>
         </div>
-        <div class="flex gap-sm shrink-0">
-          <button class="flex items-center gap-xs bg-surface-container-lowest border border-outline-variant/30 px-md py-sm rounded-lg font-label-md text-label-md text-on-surface hover:border-primary/30 transition-all shadow-sm">
-            <span class="material-symbols-outlined text-[18px]">download</span> Export
-          </button>
+        <div class="flex gap-sm shrink-0 items-center">
+          <span id="track-toggle"></span>
           <button class="flex items-center gap-xs bg-primary text-on-primary px-md py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm">
-            <span class="material-symbols-outlined text-[18px]">flag</span> Request Leave
+            <span class="material-symbols-outlined text-[18px]">flag</span> Report Absence
           </button>
         </div>
       </div>
     </section>
 
     <!-- Stat Cards -->
-    <section class="grid grid-cols-2 lg:grid-cols-4 gap-sm mb-gutter">
-      <div class="bg-primary text-on-primary rounded-xl p-md shadow-sm">
-        <div class="flex items-center justify-between mb-sm">
-          <span class="font-label-md text-label-md text-on-primary/70 uppercase tracking-wider text-[11px]">Overall Rate</span>
-          <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[20px]">verified</span>
-        </div>
-        <span class="block font-headline-lg text-headline-lg tabular-nums">94.2%</span>
-        <span class="font-body-sm text-body-sm text-on-primary/70">163 of 173 sessions</span>
-      </div>
-      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
-        <div class="flex items-center justify-between mb-sm">
-          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Present</span>
-          <span class="material-symbols-outlined text-success icon-fill text-[20px]">check_circle</span>
-        </div>
-        <span class="block font-headline-lg text-headline-lg text-on-surface tabular-nums">158</span>
-        <span class="font-body-sm text-body-sm text-on-surface-variant">days attended</span>
-      </div>
-      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
-        <div class="flex items-center justify-between mb-sm">
-          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Late</span>
-          <span class="material-symbols-outlined text-tertiary icon-fill text-[20px]">schedule</span>
-        </div>
-        <span class="block font-headline-lg text-headline-lg text-on-surface tabular-nums">5</span>
-        <span class="font-body-sm text-body-sm text-on-surface-variant">tardy arrivals</span>
-      </div>
-      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
-        <div class="flex items-center justify-between mb-sm">
-          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Absent</span>
-          <span class="material-symbols-outlined text-error icon-fill text-[20px]">cancel</span>
-        </div>
-        <span class="block font-headline-lg text-headline-lg text-on-surface tabular-nums">10</span>
-        <span class="font-body-sm text-body-sm text-on-surface-variant">2 unexcused</span>
-      </div>
-    </section>
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-sm mb-gutter" id="att-stats"></section>
 
     <!-- Main Grid -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
@@ -245,8 +210,8 @@ tailwind.config = {
       <div class="md:col-span-7 space-y-gutter">
         <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
           <div class="flex justify-between items-center mb-md">
-            <h3 class="font-headline-md text-headline-md text-primary">By Course</h3>
-            <span class="font-label-md text-label-md text-on-surface-variant">6 enrolled</span>
+            <h3 class="font-headline-md text-headline-md text-primary" id="bycourse-title">By Subject</h3>
+            <span class="font-label-md text-label-md text-on-surface-variant" id="course-count">—</span>
           </div>
           <div class="space-y-md" id="subject-list"></div>
         </div>
@@ -299,7 +264,7 @@ tailwind.config = {
             <span class="material-symbols-outlined text-tertiary icon-fill">notifications_active</span>
             <div>
               <span class="block font-label-md text-label-md text-on-surface">Attendance Policy</span>
-              <p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Courses require a minimum 85% attendance to remain eligible for finals. <span class="font-semibold text-tertiary">Organic Chemistry Lab</span> is approaching this threshold.</p>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-xs" id="att-alert"></p>
             </div>
           </div>
         </div>
@@ -324,20 +289,11 @@ tailwind.config = {
 
 </main>
 
+<script src="app.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   }
-
-  // --- Subject attendance data ---
-  const subjects = [
-    { name: "Advanced Quantum Mechanics", code: "PHY-401", attended: 28, total: 29 },
-    { name: "Calculus III", code: "MAT-301", attended: 30, total: 31 },
-    { name: "Macroeconomics", code: "ECO-210", attended: 27, total: 28 },
-    { name: "French Language C1", code: "FRN-310", attended: 25, total: 28 },
-    { name: "Inorganic Chemistry", code: "CHM-220", attended: 26, total: 28 },
-    { name: "Organic Chemistry Lab", code: "CHM-221L", attended: 22, total: 29 },
-  ];
 
   function barColor(pct) {
     if (pct >= 90) return "bg-success";
@@ -350,55 +306,92 @@ tailwind.config = {
     return "text-error";
   }
 
-  document.getElementById('subject-list').innerHTML = subjects.map(s => {
-    const pct = Math.round((s.attended / s.total) * 100);
-    return `
-      <div>
-        <div class="flex justify-between items-baseline mb-xs">
-          <div>
-            <span class="font-label-md text-label-md text-on-surface">${s.name}</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant ml-xs">${s.code}</span>
+  function renderAttendance() {
+    const t = getTrack();
+    const isGed = t.grading === 'ged';
+    const subs = t.subjects;
+    const totalSessions = subs.reduce((a, s) => a + s.total, 0);
+    const attended = subs.reduce((a, s) => a + s.attended, 0);
+    const absent = totalSessions - attended;
+    const rate = Math.round((attended / totalSessions) * 100);
+
+    document.getElementById('page-caption').textContent = t.term;
+    document.getElementById('page-desc').textContent = isGed
+      ? `Class attendance for ${t.student.fullName}, GED evening program.`
+      : `Attendance for ${t.student.fullName}, ${t.student.grade}.`;
+    document.getElementById('course-count').textContent = `${subs.length} subjects`;
+
+    // --- stat cards ---
+    const cards = [
+      { dark: true, label: 'Overall Rate', value: rate + '%', sub: `${attended} of ${totalSessions} sessions`, icon: 'verified' },
+      { label: 'Present', value: attended, sub: 'sessions attended', icon: 'check_circle', color: 'text-success' },
+      { label: 'Absent', value: absent, sub: 'sessions missed', icon: 'cancel', color: 'text-error' },
+      { label: 'Subjects', value: subs.length, sub: 'tracked this term', icon: 'menu_book', color: 'text-secondary' },
+    ];
+    document.getElementById('att-stats').innerHTML = cards.map(c => `
+      <div class="${c.dark ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest border border-outline-variant/30'} rounded-xl p-md shadow-sm">
+        <div class="flex items-center justify-between mb-sm">
+          <span class="font-label-md text-label-md ${c.dark ? 'text-on-primary/70' : 'text-on-surface-variant'} uppercase tracking-wider text-[11px]">${c.label}</span>
+          <span class="material-symbols-outlined icon-fill text-[20px] ${c.dark ? 'text-tertiary-fixed' : (c.color || 'text-secondary')}">${c.icon}</span>
+        </div>
+        <span class="block font-headline-lg text-headline-lg tabular-nums ${c.dark ? '' : 'text-on-surface'}">${c.value}</span>
+        <span class="font-body-sm text-body-sm ${c.dark ? 'text-on-primary/70' : 'text-on-surface-variant'}">${c.sub}</span>
+      </div>`).join('');
+
+    // --- by subject ---
+    document.getElementById('subject-list').innerHTML = subs.map(s => {
+      const pct = Math.round((s.attended / s.total) * 100);
+      return `
+        <div>
+          <div class="flex justify-between items-baseline mb-xs">
+            <div>
+              <span class="font-label-md text-label-md text-on-surface">${s.name}</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant ml-xs">${s.code}</span>
+            </div>
+            <span class="font-data-mono text-data-mono font-bold ${pctText(pct)} tabular-nums">${pct}%</span>
           </div>
-          <span class="font-data-mono text-data-mono font-bold ${pctText(pct)} tabular-nums">${pct}%</span>
-        </div>
-        <div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
-          <div class="h-full ${barColor(pct)} rounded-full" style="width:${pct}%"></div>
-        </div>
-        <span class="block font-body-sm text-body-sm text-on-surface-variant mt-xs">${s.attended} of ${s.total} sessions attended</span>
-      </div>`;
-  }).join('');
+          <div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+            <div class="h-full ${barColor(pct)} rounded-full" style="width:${pct}%"></div>
+          </div>
+          <span class="block font-body-sm text-body-sm text-on-surface-variant mt-xs">${s.attended} of ${s.total} sessions attended</span>
+        </div>`;
+    }).join('');
 
-  // --- Recent log ---
-  const log = [
-    { status: "present", subject: "Advanced Quantum Mechanics", date: "Today, 11:00 AM" },
-    { status: "present", subject: "Calculus III", date: "Today, 09:00 AM" },
-    { status: "late", subject: "French Language C1", date: "Yesterday, 04:12 PM" },
-    { status: "absent", subject: "Organic Chemistry Lab", date: "Jun 12, 02:00 PM" },
-    { status: "present", subject: "Macroeconomics", date: "Jun 12, 10:00 AM" },
-    { status: "excused", subject: "Inorganic Chemistry", date: "Jun 11, 01:00 PM" },
-  ];
-  const statusMeta = {
-    present: { icon: "check_circle", color: "text-success", bg: "bg-success-container/40", label: "Present" },
-    late:    { icon: "schedule",     color: "text-tertiary", bg: "bg-tertiary-fixed/40", label: "Late" },
-    absent:  { icon: "cancel",       color: "text-error", bg: "bg-error-container/50", label: "Absent" },
-    excused: { icon: "event_busy",   color: "text-secondary", bg: "bg-secondary-container/50", label: "Excused" },
-  };
-  document.getElementById('recent-log').innerHTML = log.map(l => {
-    const m = statusMeta[l.status];
-    return `
-      <div class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors">
-        <span class="h-9 w-9 rounded-full ${m.bg} flex items-center justify-center shrink-0">
-          <span class="material-symbols-outlined ${m.color} icon-fill text-[18px]">${m.icon}</span>
-        </span>
-        <div class="flex-grow min-w-0">
-          <span class="block font-label-md text-label-md text-on-surface truncate">${l.subject}</span>
-          <span class="block font-body-sm text-body-sm text-on-surface-variant">${l.date}</span>
-        </div>
-        <span class="font-label-md text-[11px] uppercase ${m.color} shrink-0">${m.label}</span>
-      </div>`;
-  }).join('');
+    // --- recent log (sampled from this track's subjects) ---
+    const statusMeta = {
+      present: { icon: "check_circle", color: "text-success", bg: "bg-success-container/40", label: "Present" },
+      late:    { icon: "schedule",     color: "text-tertiary", bg: "bg-tertiary-fixed/40", label: "Late" },
+      absent:  { icon: "cancel",       color: "text-error", bg: "bg-error-container/50", label: "Absent" },
+      excused: { icon: "event_busy",   color: "text-secondary", bg: "bg-secondary-container/50", label: "Excused" },
+    };
+    const when = ['Today, 9:00 AM', 'Today, 10:30 AM', 'Yesterday', '2 days ago', '3 days ago', 'Last week'];
+    const seq = ['present', 'present', 'late', 'present', 'absent', 'present'];
+    const log = subs.slice(0, 6).map((s, i) => ({ status: seq[i % seq.length], subject: s.name, date: when[i % when.length] }));
+    document.getElementById('recent-log').innerHTML = log.map(l => {
+      const m = statusMeta[l.status];
+      return `
+        <div class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors">
+          <span class="h-9 w-9 rounded-full ${m.bg} flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined ${m.color} icon-fill text-[18px]">${m.icon}</span>
+          </span>
+          <div class="flex-grow min-w-0">
+            <span class="block font-label-md text-label-md text-on-surface truncate">${l.subject}</span>
+            <span class="block font-body-sm text-body-sm text-on-surface-variant">${l.date}</span>
+          </div>
+          <span class="font-label-md text-[11px] uppercase ${m.color} shrink-0">${m.label}</span>
+        </div>`;
+    }).join('');
 
-  // --- Calendar heatmap ---
+    // --- policy alert: lowest-attendance subject ---
+    const lowest = subs.reduce((a, b) => (a.attended / a.total) <= (b.attended / b.total) ? a : b);
+    const lowestPct = Math.round((lowest.attended / lowest.total) * 100);
+    const threshold = isGed ? 80 : 85;
+    document.getElementById('att-alert').innerHTML = lowestPct < threshold
+      ? `A minimum ${threshold}% attendance is expected. <span class="font-semibold text-tertiary">${lowest.name}</span> is at ${lowestPct}% — below the threshold.`
+      : `A minimum ${threshold}% attendance is expected. All subjects are above the threshold — lowest is <span class="font-semibold text-tertiary">${lowest.name}</span> at ${lowestPct}%.`;
+  }
+
+  // --- Calendar heatmap (program-independent) ---
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   let viewDate = new Date();
   viewDate.setDate(1);
@@ -434,6 +427,10 @@ tailwind.config = {
   }
   document.getElementById('cal-prev').onclick = () => { viewDate.setMonth(viewDate.getMonth() - 1); renderCalendar(); };
   document.getElementById('cal-next').onclick = () => { viewDate.setMonth(viewDate.getMonth() + 1); renderCalendar(); };
+
+  mountTrackToggle(document.getElementById('track-toggle'));
+  document.addEventListener('trackchange', renderAttendance);
+  renderAttendance();
   renderCalendar();
 </script>
 </body>

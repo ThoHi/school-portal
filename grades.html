@@ -174,7 +174,7 @@ tailwind.config = {
         <button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
           <span class="material-symbols-outlined">translate</span>
         </button>
-        <div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden ml-xs border border-outline-variant/30 flex items-center justify-center text-on-primary font-label-md text-label-md">AC</div>
+        <div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden ml-xs border border-outline-variant/30 flex items-center justify-center text-on-primary font-label-md text-label-md" data-avatar-initials>MC</div>
       </div>
     </div>
   </header>
@@ -186,58 +186,21 @@ tailwind.config = {
     <section class="mb-lg">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
         <div>
-          <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base">Academic Record</p>
-          <h2 class="font-headline-lg text-headline-lg text-primary mb-xs">Grades &amp; GPA</h2>
-          <p class="font-body-md text-body-md text-on-surface-variant">Your complete grade report, weighted GPA, and performance trends by semester.</p>
+          <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base" id="page-caption">Report Card</p>
+          <h2 class="font-headline-lg text-headline-lg text-primary mb-xs">Grades &amp; Report Card</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant" id="page-desc">Grade report and progress for the current term.</p>
         </div>
         <div class="flex gap-sm shrink-0 items-center">
-          <select id="semester-select" class="bg-surface-container-lowest border border-outline-variant/30 rounded-lg font-label-md text-label-md text-on-surface px-md py-sm shadow-sm focus:ring-primary focus:border-primary">
-            <option value="0">Spring 2026</option>
-            <option value="1">Fall 2025</option>
-            <option value="2">Spring 2025</option>
-          </select>
+          <span id="track-toggle"></span>
           <button class="flex items-center gap-xs bg-primary text-on-primary px-md py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm">
-            <span class="material-symbols-outlined text-[18px]">description</span> Transcript
+            <span class="material-symbols-outlined text-[18px]">description</span> Report
           </button>
         </div>
       </div>
     </section>
 
     <!-- Stat Cards -->
-    <section class="grid grid-cols-2 lg:grid-cols-4 gap-sm mb-gutter">
-      <div class="bg-primary text-on-primary rounded-xl p-md shadow-sm">
-        <div class="flex items-center justify-between mb-sm">
-          <span class="font-label-md text-label-md text-on-primary/70 uppercase tracking-wider text-[11px]">Semester GPA</span>
-          <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[20px]">trending_up</span>
-        </div>
-        <span class="block font-headline-lg text-headline-lg tabular-nums" id="stat-gpa">3.87</span>
-        <span class="font-body-sm text-body-sm text-on-primary/70">on a 4.00 scale</span>
-      </div>
-      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
-        <div class="flex items-center justify-between mb-sm">
-          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Cumulative</span>
-          <span class="material-symbols-outlined text-secondary icon-fill text-[20px]">school</span>
-        </div>
-        <span class="block font-headline-lg text-headline-lg text-on-surface tabular-nums">3.79</span>
-        <span class="font-body-sm text-body-sm text-on-surface-variant">across 6 semesters</span>
-      </div>
-      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
-        <div class="flex items-center justify-between mb-sm">
-          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Credits</span>
-          <span class="material-symbols-outlined text-tertiary icon-fill text-[20px]">workspace_premium</span>
-        </div>
-        <span class="block font-headline-lg text-headline-lg text-on-surface tabular-nums" id="stat-credits">18</span>
-        <span class="font-body-sm text-body-sm text-on-surface-variant">68 cumulative</span>
-      </div>
-      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
-        <div class="flex items-center justify-between mb-sm">
-          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Class Rank</span>
-          <span class="material-symbols-outlined text-tertiary icon-fill text-[20px]">leaderboard</span>
-        </div>
-        <span class="block font-headline-lg text-headline-lg text-on-surface tabular-nums">#7</span>
-        <span class="font-body-sm text-body-sm text-on-surface-variant">of 214 students</span>
-      </div>
-    </section>
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-sm mb-gutter" id="stat-cards"></section>
 
     <!-- Main Grid -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
@@ -251,25 +214,9 @@ tailwind.config = {
           </div>
           <div class="overflow-x-auto">
             <table class="w-full min-w-[560px]">
-              <thead>
-                <tr class="bg-surface-container-low">
-                  <th class="text-left px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Course</th>
-                  <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Credits</th>
-                  <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Score</th>
-                  <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Grade</th>
-                  <th class="text-right px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Points</th>
-                </tr>
-              </thead>
+              <thead id="grade-head"></thead>
               <tbody class="divide-y divide-outline-variant/20" id="grade-rows"></tbody>
-              <tfoot>
-                <tr class="bg-surface-container-low border-t-2 border-outline-variant/30">
-                  <td class="px-md py-sm font-label-md text-label-md text-primary">Weighted GPA</td>
-                  <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface" id="foot-credits">18</td>
-                  <td class="px-sm py-sm"></td>
-                  <td class="px-sm py-sm"></td>
-                  <td class="px-md py-sm text-right font-data-mono text-data-mono font-bold text-primary" id="foot-gpa">3.87</td>
-                </tr>
-              </tfoot>
+              <tfoot id="grade-foot"></tfoot>
             </table>
           </div>
         </div>
@@ -277,8 +224,8 @@ tailwind.config = {
         <!-- GPA Trend -->
         <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
           <div class="flex justify-between items-center mb-md">
-            <h3 class="font-headline-md text-headline-md text-primary">GPA Trend</h3>
-            <span class="font-label-md text-label-md text-success flex items-center gap-xs"><span class="material-symbols-outlined text-[16px] icon-fill">trending_up</span> +0.18 vs last term</span>
+            <h3 class="font-headline-md text-headline-md text-primary" id="trend-title">Progress</h3>
+            <span class="font-label-md text-label-md text-success flex items-center gap-xs" id="trend-note"></span>
           </div>
           <div class="flex items-end justify-between gap-sm h-44 pt-md" id="trend-chart"></div>
         </div>
@@ -291,28 +238,11 @@ tailwind.config = {
           <div class="space-y-sm" id="distribution"></div>
         </div>
 
-        <!-- Honors -->
-        <div class="bg-primary rounded-xl p-md text-on-primary shadow-sm">
-          <div class="flex items-center gap-sm mb-sm">
-            <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[32px]">military_tech</span>
-            <div>
-              <span class="block font-label-md text-label-md text-on-primary/70 uppercase tracking-widest text-[10px]">Standing</span>
-              <span class="block font-headline-md text-headline-md">Dean's List</span>
-            </div>
-          </div>
-          <p class="font-body-sm text-body-sm text-on-primary/80">GPA above 3.75 for 3 consecutive semesters. Eligible for honors graduation track.</p>
-        </div>
+        <!-- Standing -->
+        <div id="standing-card" class="bg-primary rounded-xl p-md text-on-primary shadow-sm"></div>
 
-        <!-- GPA scale reference -->
-        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
-          <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px] mb-sm">Grading Scale</h4>
-          <div class="grid grid-cols-2 gap-x-md gap-y-xs font-body-sm text-body-sm text-on-surface-variant">
-            <span>A / A− <span class="float-right font-data-mono">4.0 / 3.7</span></span>
-            <span>B+ / B <span class="float-right font-data-mono">3.3 / 3.0</span></span>
-            <span>B− / C+ <span class="float-right font-data-mono">2.7 / 2.3</span></span>
-            <span>C / C− <span class="float-right font-data-mono">2.0 / 1.7</span></span>
-          </div>
-        </div>
+        <!-- Grading reference -->
+        <div id="scale-card" class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm"></div>
       </div>
     </div>
   </div>
@@ -334,123 +264,190 @@ tailwind.config = {
 
 </main>
 
+<script src="app.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   }
 
-  // --- Grade data per semester ---
-  const gradePoints = { "A":4.0,"A-":3.7,"B+":3.3,"B":3.0,"B-":2.7,"C+":2.3,"C":2.0,"C-":1.7,"D":1.0,"F":0 };
-  const semesters = [
-    { label: "Spring 2026", gpa: "3.87", courses: [
-      { name: "Advanced Quantum Mechanics", code: "PHY-401", credits: 4, score: 91, grade: "A-" },
-      { name: "Calculus III", code: "MAT-301", credits: 3, score: 96, grade: "A" },
-      { name: "Macroeconomics", code: "ECO-210", credits: 3, score: 94, grade: "A" },
-      { name: "French Language C1", code: "FRN-310", credits: 3, score: 82, grade: "B+" },
-      { name: "Inorganic Chemistry", code: "CHM-220", credits: 3, score: 88, grade: "B+" },
-      { name: "Organic Chemistry Lab", code: "CHM-221L", credits: 2, score: 90, grade: "A-" },
-    ]},
-    { label: "Fall 2025", gpa: "3.69", courses: [
-      { name: "Quantum Mechanics I", code: "PHY-301", credits: 4, score: 87, grade: "B+" },
-      { name: "Calculus II", code: "MAT-201", credits: 3, score: 93, grade: "A" },
-      { name: "Microeconomics", code: "ECO-110", credits: 3, score: 89, grade: "B+" },
-      { name: "French Language B2", code: "FRN-210", credits: 3, score: 85, grade: "B+" },
-      { name: "General Chemistry", code: "CHM-120", credits: 4, score: 95, grade: "A" },
-    ]},
-    { label: "Spring 2025", gpa: "3.55", courses: [
-      { name: "Classical Mechanics", code: "PHY-201", credits: 4, score: 84, grade: "B" },
-      { name: "Calculus I", code: "MAT-101", credits: 3, score: 91, grade: "A-" },
-      { name: "Intro to Economics", code: "ECO-101", credits: 3, score: 88, grade: "B+" },
-      { name: "Academic Writing", code: "ENG-101", credits: 3, score: 92, grade: "A" },
-      { name: "World History", code: "HIS-110", credits: 3, score: 80, grade: "B-" },
-    ]},
-  ];
-  const trend = [
-    { term: "Sp24", gpa: 3.41 }, { term: "Fa24", gpa: 3.52 }, { term: "Sp25", gpa: 3.55 },
-    { term: "Fa25", gpa: 3.69 }, { term: "Sp26", gpa: 3.87 },
-  ];
+  function renderGrades() {
+    const t = getTrack();
+    const isGed = t.grading === 'ged';
+    const scores = t.subjects.map(s => s.score);
+    const mean = avg(scores);
 
-  function gradeBadge(g) {
-    if (g === "A" || g === "A-") return "bg-success-container text-success";
-    if (g.startsWith("B")) return "bg-secondary-container text-on-secondary-container";
-    if (g.startsWith("C")) return "bg-tertiary-fixed text-on-tertiary-container";
-    return "bg-error-container text-error";
-  }
-  function scoreColor(s) {
-    if (s >= 90) return "text-success";
-    if (s >= 80) return "text-primary";
-    return "text-tertiary";
-  }
+    document.getElementById('page-caption').textContent = isGed ? 'GED Program' : 'Report Card · ' + t.term;
+    document.getElementById('page-desc').textContent = isGed
+      ? `Practice-test scores on the GED 100–200 scale (145 = pass) for ${t.student.fullName}.`
+      : `Report card and progress for ${t.student.fullName}, ${t.student.grade}.`;
 
-  function renderSemester(idx) {
-    const sem = semesters[idx];
-    document.getElementById('grade-rows').innerHTML = sem.courses.map(c => `
-      <tr class="hover:bg-surface-container-low/50 transition-colors">
-        <td class="px-md py-sm">
-          <span class="font-label-md text-label-md text-on-surface">${c.name}</span>
-          <span class="block font-body-sm text-body-sm text-on-surface-variant">${c.code}</span>
-        </td>
-        <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface-variant">${c.credits}</td>
-        <td class="px-sm py-sm text-center font-data-mono text-data-mono ${scoreColor(c.score)}">${c.score}</td>
-        <td class="px-sm py-sm text-center"><span class="${gradeBadge(c.grade)} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${c.grade}</span></td>
-        <td class="px-md py-sm text-right font-data-mono text-data-mono text-on-surface tabular-nums">${gradePoints[c.grade].toFixed(1)}</td>
-      </tr>`).join('');
+    // --- stat cards ---
+    let cards;
+    if (isGed) {
+      const passing = scores.filter(s => s >= 145).length;
+      const ready = scores.filter(s => s >= 165).length;
+      cards = [
+        { dark: true, label: 'Avg Practice Score', value: Math.round(mean), sub: 'on the 100–200 scale', icon: 'trending_up' },
+        { label: 'Subjects Passing', value: `${passing} / 4`, sub: 'score ≥ 145', icon: 'verified', color: 'text-success' },
+        { label: 'College Ready', value: `${ready} / 4`, sub: 'score ≥ 165', icon: 'school', color: 'text-secondary' },
+        { label: 'Next Official Test', value: 'Jul 6', sub: 'Science', icon: 'event', color: 'text-tertiary' },
+      ];
+    } else {
+      const letter = letterFromPct(mean);
+      const honor = mean >= 90;
+      cards = [
+        { dark: true, label: 'Term Average', value: `${Math.round(mean)}%`, sub: `across ${t.subjects.length} subjects`, icon: 'trending_up' },
+        { label: 'Overall Grade', value: letter, sub: 'letter grade', icon: 'grade', color: 'text-secondary' },
+        { label: 'Subjects', value: t.subjects.length, sub: 'this term', icon: 'menu_book', color: 'text-tertiary' },
+        { label: 'Honor Roll', value: honor ? 'Yes' : '—', sub: honor ? 'avg ≥ 90%' : 'avg below 90%', icon: 'workspace_premium', color: 'text-tertiary' },
+      ];
+    }
+    document.getElementById('stat-cards').innerHTML = cards.map(c => `
+      <div class="${c.dark ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest border border-outline-variant/30'} rounded-xl p-md shadow-sm">
+        <div class="flex items-center justify-between mb-sm">
+          <span class="font-label-md text-label-md ${c.dark ? 'text-on-primary/70' : 'text-on-surface-variant'} uppercase tracking-wider text-[11px]">${c.label}</span>
+          <span class="material-symbols-outlined icon-fill text-[20px] ${c.dark ? 'text-tertiary-fixed' : (c.color || 'text-secondary')}">${c.icon}</span>
+        </div>
+        <span class="block font-headline-lg text-headline-lg tabular-nums ${c.dark ? '' : 'text-on-surface'}">${c.value}</span>
+        <span class="font-body-sm text-body-sm ${c.dark ? 'text-on-primary/70' : 'text-on-surface-variant'}">${c.sub}</span>
+      </div>`).join('');
 
-    const totalCredits = sem.courses.reduce((a, c) => a + c.credits, 0);
-    const weighted = sem.courses.reduce((a, c) => a + c.credits * gradePoints[c.grade], 0);
-    const gpa = (weighted / totalCredits).toFixed(2);
-    document.getElementById('foot-credits').textContent = totalCredits;
-    document.getElementById('foot-gpa').textContent = gpa;
-    document.getElementById('stat-gpa').textContent = gpa;
-    document.getElementById('stat-credits').textContent = totalCredits;
-    document.getElementById('course-count').textContent = `${sem.courses.length} courses`;
+    // --- table head ---
+    const cols = isGed ? ['Subject', 'Practice Score', 'Status', 'Trend'] : ['Subject', 'Score', 'Grade', 'Trend'];
+    document.getElementById('grade-head').innerHTML = `
+      <tr class="bg-surface-container-low">
+        <th class="text-left px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[0]}</th>
+        <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[1]}</th>
+        <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[2]}</th>
+        <th class="text-right px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[3]}</th>
+      </tr>`;
 
-    // Distribution
-    const buckets = { "A":0, "B":0, "C":0, "Other":0 };
-    sem.courses.forEach(c => {
-      if (c.grade.startsWith("A")) buckets.A++;
-      else if (c.grade.startsWith("B")) buckets.B++;
-      else if (c.grade.startsWith("C")) buckets.C++;
-      else buckets.Other++;
-    });
-    const distMeta = [
-      { key: "A", label: "A range", color: "bg-success" },
-      { key: "B", label: "B range", color: "bg-secondary" },
-      { key: "C", label: "C range", color: "bg-tertiary" },
-      { key: "Other", label: "Other", color: "bg-error" },
-    ];
-    const max = sem.courses.length;
-    document.getElementById('distribution').innerHTML = distMeta.map(d => {
-      const n = buckets[d.key];
-      const pct = max ? Math.round((n / max) * 100) : 0;
+    // --- rows ---
+    document.getElementById('grade-rows').innerHTML = t.subjects.map(s => {
+      let scoreCell, badgeCell;
+      if (isGed) {
+        const b = gedBand(s.score);
+        scoreCell = `<span class="font-data-mono text-data-mono ${b.text}">${s.score}</span>`;
+        badgeCell = `<span class="${b.badge} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${b.label}</span>`;
+      } else {
+        const l = letterFromPct(s.score);
+        const col = s.score >= 90 ? 'text-success' : (s.score >= 80 ? 'text-primary' : 'text-tertiary');
+        scoreCell = `<span class="font-data-mono text-data-mono ${col}">${s.score}%</span>`;
+        badgeCell = `<span class="${letterBadge(l)} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${l}</span>`;
+      }
+      return `
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="px-md py-sm">
+            <span class="font-label-md text-label-md text-on-surface">${s.name}</span>
+            <span class="block font-body-sm text-body-sm text-on-surface-variant">${s.code}</span>
+          </td>
+          <td class="px-sm py-sm text-center">${scoreCell}</td>
+          <td class="px-sm py-sm text-center">${badgeCell}</td>
+          <td class="px-md py-sm text-right">${trendIcon(s.trend)}</td>
+        </tr>`;
+    }).join('');
+
+    // --- footer ---
+    document.getElementById('grade-foot').innerHTML = isGed ? `
+      <tr class="bg-surface-container-low border-t-2 border-outline-variant/30">
+        <td class="px-md py-sm font-label-md text-label-md text-primary">Average Score</td>
+        <td class="px-sm py-sm text-center font-data-mono text-data-mono font-bold text-primary">${Math.round(mean)}</td>
+        <td class="px-sm py-sm"></td><td class="px-md py-sm"></td>
+      </tr>` : `
+      <tr class="bg-surface-container-low border-t-2 border-outline-variant/30">
+        <td class="px-md py-sm font-label-md text-label-md text-primary">Term Average</td>
+        <td class="px-sm py-sm text-center font-data-mono text-data-mono font-bold text-primary">${Math.round(mean)}%</td>
+        <td class="px-sm py-sm text-center"><span class="${letterBadge(letterFromPct(mean))} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${letterFromPct(mean)}</span></td>
+        <td class="px-md py-sm"></td>
+      </tr>`;
+    document.getElementById('course-count').textContent = `${t.subjects.length} subjects`;
+
+    // --- trend chart ---
+    const maxV = isGed ? 200 : 100;
+    document.getElementById('trend-title').textContent = isGed ? 'Practice Score Trend' : 'Progress';
+    const first = t.trend[0].value, last = t.trend[t.trend.length - 1].value;
+    const up = last >= first;
+    const note = document.getElementById('trend-note');
+    note.innerHTML = `<span class="material-symbols-outlined text-[16px] icon-fill">${up ? 'trending_up' : 'trending_down'}</span> ${up ? '+' : ''}${last - first}${isGed ? ' pts' : '%'} since ${t.trend[0].term}`;
+    note.className = 'font-label-md text-label-md flex items-center gap-xs ' + (up ? 'text-success' : 'text-error');
+    document.getElementById('trend-chart').innerHTML = t.trend.map((d, i) => {
+      const h = Math.round((d.value / maxV) * 100);
+      const isLast = i === t.trend.length - 1;
+      return `
+        <div class="flex-1 flex flex-col items-center gap-xs h-full justify-end">
+          <span class="font-data-mono text-[11px] ${isLast ? 'text-primary font-bold' : 'text-on-surface-variant'} tabular-nums">${d.value}</span>
+          <div class="w-full ${isLast ? 'bg-primary' : 'bg-primary-fixed-dim'} rounded-t-lg transition-all" style="height:${h}%"></div>
+          <span class="font-label-md text-[10px] text-on-surface-variant uppercase">${d.term}</span>
+        </div>`;
+    }).join('');
+
+    // --- distribution ---
+    let dist;
+    if (isGed) {
+      const b = { 'Honors': 0, 'College Ready': 0, 'Passing': 0, 'Not Yet Passing': 0 };
+      t.subjects.forEach(s => b[gedBand(s.score).label]++);
+      dist = [
+        { label: 'College Ready (165+)', n: b['College Ready'] + b['Honors'], color: 'bg-secondary' },
+        { label: 'Passing (145–164)', n: b['Passing'], color: 'bg-success' },
+        { label: 'Not Yet Passing', n: b['Not Yet Passing'], color: 'bg-error' },
+      ];
+    } else {
+      const b = { A: 0, B: 0, C: 0, DF: 0 };
+      t.subjects.forEach(s => { const l = letterFromPct(s.score); if (l[0] === 'A') b.A++; else if (l[0] === 'B') b.B++; else if (l[0] === 'C') b.C++; else b.DF++; });
+      dist = [
+        { label: 'A range', n: b.A, color: 'bg-success' },
+        { label: 'B range', n: b.B, color: 'bg-secondary' },
+        { label: 'C range', n: b.C, color: 'bg-tertiary' },
+        { label: 'D / F', n: b.DF, color: 'bg-error' },
+      ];
+    }
+    const total = t.subjects.length;
+    document.getElementById('distribution').innerHTML = dist.map(d => {
+      const pct = total ? Math.round((d.n / total) * 100) : 0;
       return `
         <div>
           <div class="flex justify-between items-baseline mb-xs">
             <span class="font-body-sm text-body-sm text-on-surface">${d.label}</span>
-            <span class="font-data-mono text-data-mono text-on-surface-variant">${n} course${n===1?'':'s'}</span>
+            <span class="font-data-mono text-data-mono text-on-surface-variant">${d.n} subject${d.n === 1 ? '' : 's'}</span>
           </div>
           <div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
             <div class="h-full ${d.color} rounded-full" style="width:${pct}%"></div>
           </div>
         </div>`;
     }).join('');
+
+    // --- standing card ---
+    document.getElementById('standing-card').innerHTML = `
+      <div class="flex items-center gap-sm mb-sm">
+        <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[32px]">military_tech</span>
+        <div>
+          <span class="block font-label-md text-label-md text-on-primary/70 uppercase tracking-widest text-[10px]">${t.achievement.tag}</span>
+          <span class="block font-headline-md text-headline-md">${t.achievement.title}</span>
+        </div>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-primary/80">${t.achievement.note}</p>`;
+
+    // --- grading reference ---
+    document.getElementById('scale-card').innerHTML = isGed ? `
+      <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px] mb-sm">GED Score Bands</h4>
+      <div class="space-y-xs font-body-sm text-body-sm text-on-surface-variant">
+        <div class="flex justify-between"><span>Not yet passing</span><span class="font-data-mono">100–144</span></div>
+        <div class="flex justify-between"><span>GED Pass</span><span class="font-data-mono">145–164</span></div>
+        <div class="flex justify-between"><span>College Ready</span><span class="font-data-mono">165–174</span></div>
+        <div class="flex justify-between"><span>College Ready + Credit</span><span class="font-data-mono">175–200</span></div>
+      </div>` : `
+      <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px] mb-sm">Grading Scale</h4>
+      <div class="grid grid-cols-2 gap-x-md gap-y-xs font-body-sm text-body-sm text-on-surface-variant">
+        <span>A <span class="float-right font-data-mono">93–100%</span></span>
+        <span>A− <span class="float-right font-data-mono">90–92%</span></span>
+        <span>B <span class="float-right font-data-mono">83–86%</span></span>
+        <span>C <span class="float-right font-data-mono">73–76%</span></span>
+      </div>`;
   }
 
-  // Trend chart (static across semesters)
-  const maxGpa = 4.0;
-  document.getElementById('trend-chart').innerHTML = trend.map((t, i) => {
-    const h = Math.round((t.gpa / maxGpa) * 100);
-    const isLast = i === trend.length - 1;
-    return `
-      <div class="flex-1 flex flex-col items-center gap-xs h-full justify-end">
-        <span class="font-data-mono text-[11px] ${isLast ? 'text-primary font-bold' : 'text-on-surface-variant'} tabular-nums">${t.gpa.toFixed(2)}</span>
-        <div class="w-full ${isLast ? 'bg-primary' : 'bg-primary-fixed-dim'} rounded-t-lg transition-all" style="height:${h}%"></div>
-        <span class="font-label-md text-[10px] text-on-surface-variant uppercase">${t.term}</span>
-      </div>`;
-  }).join('');
-
-  document.getElementById('semester-select').addEventListener('change', e => renderSemester(+e.target.value));
-  renderSemester(0);
+  mountTrackToggle(document.getElementById('track-toggle'));
+  document.addEventListener('trackchange', renderGrades);
+  renderGrades();
 </script>
 </body>
 </html>
