@@ -184,354 +184,83 @@ tailwind.config = {
 
     <!-- Page Header -->
     <section class="mb-lg">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-sm">
-        <div>
-          <h2 class="font-headline-lg text-headline-lg text-primary mb-base">E-Library</h2>
-          <p class="font-body-md text-body-md text-on-surface-variant">Access 1,240+ academic resources, journals, and curated reading lists.</p>
-        </div>
-        <div class="flex gap-sm">
-          <div class="bg-surface-container px-md py-sm rounded-lg text-center border border-outline-variant/30">
-            <span class="block font-headline-md text-headline-md text-primary">1,240</span>
-            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Resources</span>
-          </div>
-          <div class="bg-surface-container px-md py-sm rounded-lg text-center border border-outline-variant/30">
-            <span class="block font-headline-md text-headline-md text-primary">7</span>
-            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Bookmarked</span>
-          </div>
-        </div>
-      </div>
-      <!-- Search Bar (Mobile) -->
-      <div class="md:hidden mt-md flex bg-surface-container-lowest px-sm py-xs rounded-xl items-center gap-xs border border-outline-variant/30 shadow-sm">
-        <span class="material-symbols-outlined text-on-surface-variant">search</span>
-        <input type="text" placeholder="Search the library..." class="bg-transparent border-none focus:ring-0 text-body-md font-body-md flex-grow outline-none"/>
-        <button class="p-xs">
-          <span class="material-symbols-outlined text-on-surface-variant">tune</span>
-        </button>
-      </div>
-      <!-- Filter Chips -->
-      <div class="flex gap-xs mt-md overflow-x-auto pb-xs scrollbar-hide flex-nowrap">
-        <button class="filter-active px-md py-xs rounded-full font-label-md text-label-md shrink-0 transition-all">All</button>
-        <button class="filter-inactive px-md py-xs rounded-full font-label-md text-label-md shrink-0 transition-all">Textbooks</button>
-        <button class="filter-inactive px-md py-xs rounded-full font-label-md text-label-md shrink-0 transition-all">Journals</button>
-        <button class="filter-inactive px-md py-xs rounded-full font-label-md text-label-md shrink-0 transition-all">Articles</button>
-        <button class="filter-inactive px-md py-xs rounded-full font-label-md text-label-md shrink-0 transition-all">Videos</button>
-        <button class="filter-inactive px-md py-xs rounded-full font-label-md text-label-md shrink-0 transition-all">Theses</button>
-        <button class="filter-inactive px-md py-xs rounded-full font-label-md text-label-md shrink-0 transition-all">Case Studies</button>
-      </div>
+      <h2 class="font-headline-lg text-headline-lg text-primary mb-base">E-Library</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant">The school's e-book collection, managed with <span class="font-semibold text-primary">Calibre</span>. Read in your browser or download to any device.</p>
     </section>
+
+    <!-- Connection banner -->
+    <div id="lib-status" class="mb-gutter"></div>
 
     <!-- Main Grid -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
 
-      <!-- Left: Featured + Browse -->
+      <!-- Left: launcher -->
       <div class="md:col-span-8 space-y-gutter">
 
-        <!-- Featured Resources -->
-        <div>
-          <h3 class="font-headline-md text-headline-md text-primary mb-md">Featured This Week</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
-
-            <!-- Book Card 1 -->
-            <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
-              <div class="h-40 bg-primary flex items-center justify-center relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-br from-primary-container to-primary opacity-80"></div>
-                <span class="material-symbols-outlined text-[64px] text-primary-fixed-dim relative z-10">functions</span>
-              </div>
-              <div class="p-sm">
-                <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Mathematics</span>
-                <h4 class="font-headline-md text-[16px] leading-tight text-primary mt-base mb-xs group-hover:underline">Principles of Mathematical Analysis</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant mb-sm">Walter Rudin · 3rd Edition</p>
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-[2px]">
-                    <span class="material-symbols-outlined text-tertiary icon-fill text-[14px]">star</span>
-                    <span class="font-body-sm text-body-sm text-on-surface-variant">4.8 · 2.1k reads</span>
-                  </div>
-                  <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-on-surface-variant text-[18px]">bookmark_add</span>
-                  </button>
-                </div>
-              </div>
+        <!-- Hero -->
+        <div class="bg-primary text-on-primary rounded-xl p-lg shadow-sm relative overflow-hidden">
+          <div class="absolute right-[-20px] top-[-20px] opacity-10">
+            <span class="material-symbols-outlined text-[180px]">local_library</span>
+          </div>
+          <div class="relative z-10">
+            <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[40px]">menu_book</span>
+            <h3 class="font-headline-lg text-headline-lg mt-sm mb-xs">School Library</h3>
+            <p class="font-body-md text-body-md text-on-primary/80 mb-md max-w-md">Browse the full catalogue, search by title or author, and read e-books online — no install needed.</p>
+            <div class="flex flex-wrap gap-sm">
+              <a id="open-library" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-xs bg-tertiary-fixed text-on-tertiary-container px-lg py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-[20px]">open_in_new</span> Open Library
+              </a>
+              <a id="recent-link" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-xs bg-on-primary/10 text-on-primary px-lg py-sm rounded-lg font-label-md text-label-md hover:bg-on-primary/20 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">schedule</span> Recently Added
+              </a>
             </div>
-
-            <!-- Book Card 2 -->
-            <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
-              <div class="h-40 bg-secondary flex items-center justify-center relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-br from-secondary-container to-secondary opacity-70"></div>
-                <span class="material-symbols-outlined text-[64px] text-primary-fixed relative z-10">science</span>
-              </div>
-              <div class="p-sm">
-                <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Physics</span>
-                <h4 class="font-headline-md text-[16px] leading-tight text-primary mt-base mb-xs group-hover:underline">Introduction to Quantum Mechanics</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant mb-sm">David J. Griffiths · 3rd Ed.</p>
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-[2px]">
-                    <span class="material-symbols-outlined text-tertiary icon-fill text-[14px]">star</span>
-                    <span class="font-body-sm text-body-sm text-on-surface-variant">4.9 · 5.4k reads</span>
-                  </div>
-                  <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-primary icon-fill text-[18px]">bookmark</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Book Card 3 -->
-            <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
-              <div class="h-40 flex items-center justify-center relative overflow-hidden" style="background: linear-gradient(135deg, #735c00, #cca830)">
-                <span class="material-symbols-outlined text-[64px] text-tertiary-fixed relative z-10">history_edu</span>
-              </div>
-              <div class="p-sm">
-                <span class="text-[10px] font-bold text-tertiary uppercase tracking-widest">Literature</span>
-                <h4 class="font-headline-md text-[16px] leading-tight text-primary mt-base mb-xs group-hover:underline">The Canterbury Tales</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant mb-sm">Geoffrey Chaucer · Annotated Ed.</p>
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-[2px]">
-                    <span class="material-symbols-outlined text-tertiary icon-fill text-[14px]">star</span>
-                    <span class="font-body-sm text-body-sm text-on-surface-variant">4.6 · 890 reads</span>
-                  </div>
-                  <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-on-surface-variant text-[18px]">bookmark_add</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
 
-        <!-- Browse by Category -->
+        <!-- Browse by subject -->
         <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
           <h3 class="font-headline-md text-headline-md text-primary mb-md">Browse by Subject</h3>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-sm">
-            <button class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg hover:bg-secondary-container/30 transition-colors group text-left">
-              <div class="h-10 w-10 bg-primary-container/10 rounded-lg flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined text-primary text-[20px]">functions</span>
-              </div>
-              <div>
-                <span class="block font-label-md text-label-md text-on-surface">Mathematics</span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant">214 items</span>
-              </div>
-            </button>
-            <button class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg hover:bg-secondary-container/30 transition-colors group text-left">
-              <div class="h-10 w-10 bg-secondary-container/30 rounded-lg flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined text-secondary text-[20px]">science</span>
-              </div>
-              <div>
-                <span class="block font-label-md text-label-md text-on-surface">Sciences</span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant">389 items</span>
-              </div>
-            </button>
-            <button class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg hover:bg-secondary-container/30 transition-colors group text-left">
-              <div class="h-10 w-10 bg-tertiary-container/10 rounded-lg flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined text-tertiary text-[20px]">history_edu</span>
-              </div>
-              <div>
-                <span class="block font-label-md text-label-md text-on-surface">Humanities</span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant">178 items</span>
-              </div>
-            </button>
-            <button class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg hover:bg-secondary-container/30 transition-colors group text-left">
-              <div class="h-10 w-10 bg-primary-container/10 rounded-lg flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined text-primary text-[20px]">account_balance</span>
-              </div>
-              <div>
-                <span class="block font-label-md text-label-md text-on-surface">Economics</span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant">156 items</span>
-              </div>
-            </button>
-            <button class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg hover:bg-secondary-container/30 transition-colors group text-left">
-              <div class="h-10 w-10 bg-secondary-container/30 rounded-lg flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined text-secondary text-[20px]">language</span>
-              </div>
-              <div>
-                <span class="block font-label-md text-label-md text-on-surface">Languages</span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant">97 items</span>
-              </div>
-            </button>
-            <button class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg hover:bg-secondary-container/30 transition-colors group text-left">
-              <div class="h-10 w-10 bg-primary-container/10 rounded-lg flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined text-primary text-[20px]">architecture</span>
-              </div>
-              <div>
-                <span class="block font-label-md text-label-md text-on-surface">Engineering</span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant">206 items</span>
-              </div>
-            </button>
-          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-sm" id="subject-grid"></div>
         </div>
 
-        <!-- Recent Journal Articles -->
-        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
-          <div class="flex justify-between items-center p-md border-b border-outline-variant/20">
-            <h3 class="font-headline-md text-headline-md text-primary">Recent Journal Articles</h3>
-            <a href="#" class="font-label-md text-label-md text-primary hover:underline">Browse All</a>
-          </div>
-          <div class="divide-y divide-outline-variant/20">
-            <div class="flex items-start gap-md p-md hover:bg-surface-container-low/50 transition-colors cursor-pointer">
-              <div class="h-12 w-12 bg-primary-container/10 rounded-lg flex items-center justify-center shrink-0 mt-xs">
-                <span class="material-symbols-outlined text-primary text-[22px]">article</span>
-              </div>
-              <div class="flex-grow min-w-0">
-                <h4 class="font-label-md text-label-md text-primary mb-base leading-snug">Quantum Entanglement and Non-locality: A Review of Recent Experimental Evidence</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant mb-xs">Physical Review Letters · Vol. 132, 2024</p>
-                <div class="flex gap-xs flex-wrap">
-                  <span class="bg-secondary-container text-on-secondary-container text-[11px] font-semibold px-xs py-[2px] rounded-full">Physics</span>
-                  <span class="bg-surface-container text-on-surface-variant text-[11px] font-semibold px-xs py-[2px] rounded-full">Peer Reviewed</span>
-                </div>
-              </div>
-              <div class="flex flex-col items-end gap-xs shrink-0">
-                <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
-                  <span class="material-symbols-outlined text-on-surface-variant text-[18px]">bookmark_add</span>
-                </button>
-                <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
-                  <span class="material-symbols-outlined text-on-surface-variant text-[18px]">download</span>
-                </button>
-              </div>
+        <!-- Search -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <h3 class="font-headline-md text-headline-md text-primary mb-md">Find a Book</h3>
+          <form id="lib-search" class="flex gap-sm">
+            <div class="flex-grow flex bg-surface-container px-sm py-xs rounded-lg items-center gap-xs border border-outline-variant/30">
+              <span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+              <input id="lib-search-input" type="text" placeholder="Search title, author, or subject…" class="bg-transparent border-none focus:ring-0 text-body-md font-body-md flex-grow outline-none"/>
             </div>
-            <div class="flex items-start gap-md p-md hover:bg-surface-container-low/50 transition-colors cursor-pointer">
-              <div class="h-12 w-12 bg-tertiary-container/10 rounded-lg flex items-center justify-center shrink-0 mt-xs">
-                <span class="material-symbols-outlined text-tertiary text-[22px]">biotech</span>
-              </div>
-              <div class="flex-grow min-w-0">
-                <h4 class="font-label-md text-label-md text-primary mb-base leading-snug">Synaptic Plasticity Mechanisms in Adult Hippocampal Neurogenesis</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant mb-xs">Nature Neuroscience · Vol. 27, 2024</p>
-                <div class="flex gap-xs flex-wrap">
-                  <span class="bg-tertiary-container/20 text-tertiary text-[11px] font-semibold px-xs py-[2px] rounded-full">Neurobiology</span>
-                  <span class="bg-surface-container text-on-surface-variant text-[11px] font-semibold px-xs py-[2px] rounded-full">Peer Reviewed</span>
-                </div>
-              </div>
-              <div class="flex flex-col items-end gap-xs shrink-0">
-                <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
-                  <span class="material-symbols-outlined text-primary icon-fill text-[18px]">bookmark</span>
-                </button>
-                <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
-                  <span class="material-symbols-outlined text-on-surface-variant text-[18px]">download</span>
-                </button>
-              </div>
-            </div>
-            <div class="flex items-start gap-md p-md hover:bg-surface-container-low/50 transition-colors cursor-pointer">
-              <div class="h-12 w-12 bg-secondary-container/30 rounded-lg flex items-center justify-center shrink-0 mt-xs">
-                <span class="material-symbols-outlined text-secondary text-[22px]">account_balance</span>
-              </div>
-              <div class="flex-grow min-w-0">
-                <h4 class="font-label-md text-label-md text-primary mb-base leading-snug">Fiscal Policy Responses to Supply Shocks: Evidence from the Post-Pandemic Economy</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant mb-xs">Journal of Economic Perspectives · Vol. 38, 2024</p>
-                <div class="flex gap-xs flex-wrap">
-                  <span class="bg-secondary-container text-on-secondary-container text-[11px] font-semibold px-xs py-[2px] rounded-full">Economics</span>
-                  <span class="bg-surface-container text-on-surface-variant text-[11px] font-semibold px-xs py-[2px] rounded-full">Peer Reviewed</span>
-                </div>
-              </div>
-              <div class="flex flex-col items-end gap-xs shrink-0">
-                <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
-                  <span class="material-symbols-outlined text-on-surface-variant text-[18px]">bookmark_add</span>
-                </button>
-                <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
-                  <span class="material-symbols-outlined text-on-surface-variant text-[18px]">download</span>
-                </button>
-              </div>
-            </div>
-          </div>
+            <button type="submit" class="bg-primary text-on-primary px-lg py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shrink-0">Search</button>
+          </form>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">Search opens results in the Calibre library in a new tab.</p>
         </div>
 
       </div>
 
-      <!-- Right Sidebar -->
+      <!-- Right: how-to + settings -->
       <div class="md:col-span-4 space-y-gutter">
 
-        <!-- Currently Reading -->
+        <!-- How to read -->
         <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
-          <h4 class="font-headline-md text-headline-md text-primary mb-md">Continue Reading</h4>
-          <div class="space-y-sm">
-            <div class="p-sm bg-surface-container-low rounded-lg border border-outline-variant/10 cursor-pointer hover:border-primary/30 transition-all">
-              <div class="flex items-center gap-sm mb-sm">
-                <div class="h-10 w-10 bg-primary-container/15 rounded-lg flex items-center justify-center shrink-0">
-                  <span class="material-symbols-outlined text-primary text-[20px] icon-fill">science</span>
-                </div>
-                <div class="min-w-0">
-                  <span class="block font-label-md text-label-md text-primary truncate">Intro to Quantum Mechanics</span>
-                  <span class="font-body-sm text-body-sm text-on-surface-variant">Chapter 6 · Page 182</span>
-                </div>
-              </div>
-              <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
-                <div class="h-full bg-primary w-[42%] rounded-full"></div>
-              </div>
-              <span class="font-body-sm text-body-sm text-on-surface-variant mt-xs block">42% complete</span>
-            </div>
-            <div class="p-sm bg-surface-container-low rounded-lg border border-outline-variant/10 cursor-pointer hover:border-primary/30 transition-all">
-              <div class="flex items-center gap-sm mb-sm">
-                <div class="h-10 w-10 bg-secondary-container/30 rounded-lg flex items-center justify-center shrink-0">
-                  <span class="material-symbols-outlined text-secondary text-[20px] icon-fill">account_balance</span>
-                </div>
-                <div class="min-w-0">
-                  <span class="block font-label-md text-label-md text-primary truncate">Macroeconomics: Principles</span>
-                  <span class="font-body-sm text-body-sm text-on-surface-variant">Chapter 12 · Page 308</span>
-                </div>
-              </div>
-              <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
-                <div class="h-full bg-secondary w-[67%] rounded-full"></div>
-              </div>
-              <span class="font-body-sm text-body-sm text-on-surface-variant mt-xs block">67% complete</span>
-            </div>
-          </div>
+          <h4 class="font-headline-md text-headline-md text-primary mb-md">How to Read</h4>
+          <ol class="space-y-sm">
+            <li class="flex gap-sm"><span class="h-6 w-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md text-[12px] shrink-0">1</span><span class="font-body-sm text-body-sm text-on-surface-variant">Tap <span class="font-semibold text-on-surface">Open Library</span> and sign in with your school account.</span></li>
+            <li class="flex gap-sm"><span class="h-6 w-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md text-[12px] shrink-0">2</span><span class="font-body-sm text-body-sm text-on-surface-variant">Find a book by subject or search.</span></li>
+            <li class="flex gap-sm"><span class="h-6 w-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md text-[12px] shrink-0">3</span><span class="font-body-sm text-body-sm text-on-surface-variant">Choose <span class="font-semibold text-on-surface">Read in browser</span>, or download the EPUB/PDF.</span></li>
+          </ol>
         </div>
 
-        <!-- Reading Lists -->
+        <!-- Library settings -->
         <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
-          <div class="flex justify-between items-center mb-md">
-            <h4 class="font-headline-md text-headline-md text-primary">Reading Lists</h4>
-            <button class="flex items-center gap-xs font-label-md text-label-md text-primary hover:underline">
-              <span class="material-symbols-outlined text-[16px]">add</span>New
-            </button>
+          <div class="flex items-center gap-xs mb-sm">
+            <span class="material-symbols-outlined text-on-surface-variant text-[20px]">settings</span>
+            <h4 class="font-label-md text-label-md text-on-surface uppercase tracking-wider text-[11px]">Library Server</h4>
           </div>
-          <div class="space-y-sm">
-            <div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg hover:border-primary/30 border border-transparent transition-all cursor-pointer">
-              <span class="material-symbols-outlined text-secondary icon-fill">list_alt</span>
-              <div class="flex-grow">
-                <span class="block font-label-md text-label-md text-on-surface">Quantum Physics Essentials</span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant">8 items · Updated 2 days ago</span>
-              </div>
-              <span class="material-symbols-outlined text-on-surface-variant shrink-0">chevron_right</span>
-            </div>
-            <div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg hover:border-primary/30 border border-transparent transition-all cursor-pointer">
-              <span class="material-symbols-outlined text-tertiary icon-fill">list_alt</span>
-              <div class="flex-grow">
-                <span class="block font-label-md text-label-md text-on-surface">Exam Preparation Oct 2024</span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant">14 items · Updated today</span>
-              </div>
-              <span class="material-symbols-outlined text-on-surface-variant shrink-0">chevron_right</span>
-            </div>
-            <div class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg hover:border-primary/30 border border-transparent transition-all cursor-pointer">
-              <span class="material-symbols-outlined text-primary icon-fill">list_alt</span>
-              <div class="flex-grow">
-                <span class="block font-label-md text-label-md text-on-surface">French Literature References</span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant">5 items · Updated last week</span>
-              </div>
-              <span class="material-symbols-outlined text-on-surface-variant shrink-0">chevron_right</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Library Hours -->
-        <div class="bg-primary rounded-xl p-md text-on-primary shadow-sm">
-          <div class="flex items-center gap-sm mb-sm">
-            <span class="material-symbols-outlined icon-fill text-tertiary-fixed">access_time</span>
-            <span class="font-headline-md text-headline-md">Library Hours</span>
-          </div>
-          <div class="space-y-xs">
-            <div class="flex justify-between font-body-sm text-body-sm">
-              <span class="text-on-primary/70">Mon–Fri</span><span>08:00 – 24:00</span>
-            </div>
-            <div class="flex justify-between font-body-sm text-body-sm">
-              <span class="text-on-primary/70">Saturday</span><span>09:00 – 20:00</span>
-            </div>
-            <div class="flex justify-between font-body-sm text-body-sm">
-              <span class="text-on-primary/70">Sunday</span><span>12:00 – 18:00</span>
-            </div>
-          </div>
-          <div class="mt-md pt-sm border-t border-on-primary/20 flex items-center gap-xs">
-            <span class="h-2 w-2 rounded-full bg-tertiary-fixed animate-pulse"></span>
-            <span class="font-body-sm text-body-sm text-tertiary-fixed font-semibold">Open Now · Extended Hours Active</span>
-          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mb-sm">Calibre-web address for this school. Saved on this device.</p>
+          <input id="lib-url-input" type="url" placeholder="http://library.school.local:8083" class="w-full bg-surface-container px-sm py-xs rounded-lg border border-outline-variant/30 text-body-sm font-body-sm outline-none focus:ring-primary focus:border-primary mb-sm"/>
+          <button id="lib-url-save" class="w-full bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">Save Address</button>
+          <p id="lib-url-msg" class="font-body-sm text-body-sm text-success mt-xs hidden">Saved.</p>
         </div>
 
       </div>
@@ -556,19 +285,74 @@ tailwind.config = {
 
 </main>
 
+<script src="app.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   }
-  // Filter chip toggle
-  document.querySelectorAll('button.filter-inactive, button.filter-active').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('button.filter-active').forEach(b => {
-        b.className = b.className.replace('filter-active','filter-inactive');
-      });
-      this.className = this.className.replace('filter-inactive','filter-active');
+
+  const subjects = [
+    { name: 'Mathematics',    icon: 'functions',    color: 'text-primary',   bg: 'bg-primary-container/10' },
+    { name: 'Science',        icon: 'science',      color: 'text-secondary', bg: 'bg-secondary-container/30' },
+    { name: 'English',        icon: 'menu_book',    color: 'text-tertiary',  bg: 'bg-tertiary-container/10' },
+    { name: 'Social Studies', icon: 'public',       color: 'text-primary',   bg: 'bg-primary-container/10' },
+    { name: 'Reading',        icon: 'auto_stories', color: 'text-secondary', bg: 'bg-secondary-container/30' },
+    { name: 'GED Prep',       icon: 'school',       color: 'text-tertiary',  bg: 'bg-tertiary-container/10' },
+  ];
+
+  function searchUrl(base, q) { return base ? `${base}/search?query=${encodeURIComponent(q)}` : '#'; }
+
+  function render() {
+    const base = getLibraryUrl();
+    const connected = !!base;
+
+    document.getElementById('lib-status').innerHTML = connected
+      ? `<div class="flex items-center gap-sm p-sm rounded-xl bg-success-container/40 border border-success/30">
+           <span class="material-symbols-outlined text-success icon-fill">cloud_done</span>
+           <span class="font-body-sm text-body-sm text-on-surface">Connected to library at <a href="${base}" target="_blank" rel="noopener" class="font-semibold text-primary hover:underline break-all">${base}</a></span>
+         </div>`
+      : `<div class="flex items-start gap-sm p-sm rounded-xl bg-tertiary-container/10 border border-tertiary-container/40">
+           <span class="material-symbols-outlined text-tertiary icon-fill">info</span>
+           <span class="font-body-sm text-body-sm text-on-surface-variant">No library server set yet. Enter your school's Calibre-web address under <span class="font-semibold text-on-surface">Library Server</span> to enable the buttons below.</span>
+         </div>`;
+
+    const open = document.getElementById('open-library');
+    const recent = document.getElementById('recent-link');
+    [open, recent].forEach(a => {
+      a.href = connected ? base : '#';
+      a.classList.toggle('opacity-40', !connected);
+      a.classList.toggle('pointer-events-none', !connected);
     });
+
+    document.getElementById('subject-grid').innerHTML = subjects.map(s => `
+      <a href="${connected ? searchUrl(base, s.name) : '#'}" target="_blank" rel="noopener" class="flex items-center gap-sm p-sm bg-surface-container-low rounded-lg hover:bg-secondary-container/30 transition-colors text-left ${connected ? '' : 'opacity-40 pointer-events-none'}">
+        <div class="h-10 w-10 ${s.bg} rounded-lg flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined ${s.color} text-[20px]">${s.icon}</span>
+        </div>
+        <span class="font-label-md text-label-md text-on-surface">${s.name}</span>
+      </a>`).join('');
+
+    document.getElementById('lib-url-input').value = base;
+  }
+
+  document.getElementById('lib-search').addEventListener('submit', e => {
+    e.preventDefault();
+    const base = getLibraryUrl();
+    if (!base) { alert('Set the library server address first (Library Server panel).'); return; }
+    const q = document.getElementById('lib-search-input').value.trim();
+    window.open(q ? searchUrl(base, q) : base, '_blank', 'noopener');
   });
+
+  document.getElementById('lib-url-save').addEventListener('click', () => {
+    setLibraryUrl(document.getElementById('lib-url-input').value);
+    const msg = document.getElementById('lib-url-msg');
+    msg.classList.remove('hidden');
+    setTimeout(() => msg.classList.add('hidden'), 2000);
+    render();
+  });
+
+  render();
 </script>
+
 </body>
 </html>

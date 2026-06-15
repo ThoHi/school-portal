@@ -143,3 +143,11 @@ function mountTrackToggle(el) {
 document.addEventListener("trackchange", () => {
   document.querySelectorAll("[data-avatar-initials]").forEach(n => n.textContent = getTrack().student.initials);
 });
+
+/* ---------- e-library (Calibre-web) ---------- */
+// Default calibre-web base URL for the school. Leave "" to let each device set it
+// in the E-Library page, or hard-code the school's server here, e.g. "http://library.school.local:8083".
+SCHOLASTICA.libraryUrlDefault = "";
+const LIB_KEY = "scholastica-library-url";
+function getLibraryUrl() { return (localStorage.getItem(LIB_KEY) || SCHOLASTICA.libraryUrlDefault || "").replace(/\/+$/, ""); }
+function setLibraryUrl(u) { localStorage.setItem(LIB_KEY, (u || "").trim().replace(/\/+$/, "")); }

@@ -24,7 +24,7 @@ Track data and grading helpers live in `app.js`.
 | Attendance | `attendance.html` | Attendance tracking — rates by course, calendar heatmap, activity log |
 | Grades | `grades.html` | Grades & GPA — per-course grades, weighted GPA, trend chart by semester |
 | Exam Center | `exam-center.html` | Exams, schedules, and results |
-| E-Library | `e-library.html` | Digital library of learning resources |
+| E-Library | `e-library.html` | Launcher for the school's **Calibre** e-book library (see below) |
 | Research Hub | `research.html` | Research materials and tools |
 | Parent Portal | `parent-portal.html` | Parent view of student progress |
 
@@ -33,6 +33,32 @@ Track data and grading helpers live in `app.js`.
 - 📱 **Installable PWA** — `manifest.json` enables add-to-home-screen with app shortcuts
 - 🔌 **Offline support** — `sw.js` caches all pages for offline use (cache-first strategy)
 - 🎨 Self-contained static HTML — no build step or dependencies required
+
+## E-Library (Calibre)
+
+The E-Library page is a **launcher** for the school's e-book collection, served by
+[calibre-web](https://github.com/janeczku/calibre-web) (a web front-end over a Calibre library with an
+in-browser reader, logins, and search). Because this portal is a static site, it cannot host the books
+itself — calibre-web runs on a separate server and the portal links into it.
+
+**1. Run calibre-web** (Docker example):
+
+```bash
+docker run -d --name calibre-web -p 8083:8083 \
+  -v /path/to/config:/config \
+  -v /path/to/calibre-library:/books \
+  lscr.io/linuxserver/calibre-web:latest
+```
+
+Point `/books` at a folder containing a Calibre library (a `metadata.db` created by the Calibre desktop
+app). Open `http://<server>:8083`, complete setup, and add student accounts.
+
+**2. Point the portal at it.** On the E-Library page, open the **Library Server** panel and enter the
+calibre-web address (e.g. `http://library.school.local:8083`). It's saved per-device in the browser.
+To bake in a default for everyone, set `SCHOLASTICA.libraryUrlDefault` in `app.js`.
+
+Students then tap **Open Library** / a subject / a search to jump straight into calibre-web and read
+online or download the EPUB/PDF.
 
 ## Running locally
 

@@ -1,4 +1,4 @@
-const CACHE = 'scholastica-v3';
+const CACHE = 'scholastica-v4';
 const PAGES = [
   'index.html',
   'attendance.html',
