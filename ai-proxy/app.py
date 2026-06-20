@@ -18,11 +18,12 @@ Env:
   MAX_CONCURRENCY default 1 (CPU does ~1 inference at a time)
 """
 import asyncio
+import hmac
 import json
 import os
 
 import httpx
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 
@@ -33,8 +34,23 @@ CLOUD_API_KEY = os.environ.get("CLOUD_API_KEY", "").strip()
 CLOUD_MODEL = os.environ.get("CLOUD_MODEL", "").strip()
 MAX_CONCURRENCY = int(os.environ.get("MAX_CONCURRENCY", "1"))
 TIMEOUT = float(os.environ.get("REQUEST_TIMEOUT", "180"))
+# Optional access token. When set, callers must send it (Authorization: Bearer
+# <token> or X-Proxy-Token) so the proxy isn't an open relay to your cloud key.
+# Strongly recommended whenever CLOUD_API_KEY is set or the port is reachable
+# beyond a trusted LAN. (Browser clients would expose it, so prefer keeping a
+# cloud-backed proxy off the public network and let server-side callers use it.)
+PROXY_TOKEN = os.environ.get("PROXY_TOKEN", "").strip()
 
 CLOUD_ENABLED = bool(CLOUD_API_URL and CLOUD_API_KEY)
+
+
+def check_token(req):
+    if not PROXY_TOKEN:
+        return
+    sent = req.headers.get("authorization", "")
+    sent = sent[7:].strip() if sent.lower().startswith("bearer ") else req.headers.get("x-proxy-token", "").strip()
+    if not (sent and hmac.compare_digest(sent, PROXY_TOKEN)):
+        raise HTTPException(status_code=401, detail="Invalid or missing proxy token.")
 
 app = FastAPI(title="Scholastica AI proxy")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -84,7 +100,8 @@ async def health():
 
 
 @app.get("/v1/models")
-async def models():
+async def models(req: Request):
+    check_token(req)
     if await local_up():
         try:
             async with httpx.AsyncClient(timeout=3) as c:
@@ -141,6 +158,7 @@ async def _stream(chain, body):
 
 @app.post("/v1/chat/completions")
 async def chat(req: Request):
+    check_token(req)
     body = await req.json()
     chain = await _chain()
     if not chain:

@@ -62,7 +62,8 @@ services:
     restart: unless-stopped
     environment:
       # Shared secret so the student API can read results for the parent portal.
-      - SERVICE_TOKEN=link-token-change-me
+      - SERVICE_TOKEN=${EXAM_SERVICE_TOKEN}
+      # FLASK_DEBUG is OFF unless you set it to 1 locally (debugger = RCE).
     ports:
       - "8084:5000"
     volumes:
@@ -81,11 +82,11 @@ services:
     container_name: scholastica-api
     restart: unless-stopped
     environment:
-      - SECRET_KEY=change-this-api-secret   # set a real secret before production
+      - SECRET_KEY=${API_SECRET_KEY}        # signs session tokens — from .env
       # Pull exam results from the exam app (same compose network) and merge them
       # into each student's report. EXAM_SERVICE_TOKEN must match exam's SERVICE_TOKEN.
       - EXAM_API_URL=http://exam:5000
-      - EXAM_SERVICE_TOKEN=link-token-change-me
+      - EXAM_SERVICE_TOKEN=${EXAM_SERVICE_TOKEN}
     ports:
       - "8085:8000"
     volumes:
@@ -109,10 +110,13 @@ services:
       # Cloud fallback (decide later). Any OpenAI-compatible API works by URL+key:
       #   OpenAI       https://api.openai.com/v1
       #   OpenRouter   https://openrouter.ai/api/v1
-      - CLOUD_API_URL=
-      - CLOUD_API_KEY=
-      - CLOUD_MODEL=
+      - CLOUD_API_URL=${CLOUD_API_URL}
+      - CLOUD_API_KEY=${CLOUD_API_KEY}
+      - CLOUD_MODEL=${CLOUD_MODEL}
       - MAX_CONCURRENCY=1           # CPU does ~1 inference at a time
+      # Access token: empty = open (LAN). Set in .env to stop an open relay —
+      # required reading: README "Security". Browser clients would expose it.
+      - PROXY_TOKEN=${PROXY_TOKEN}
     extra_hosts:
       - "host.docker.internal:host-gateway"   # reach host-installed Ollama on Linux
     ports:
@@ -129,7 +133,9 @@ services:
       - OLLAMA_URL=http://host.docker.internal:11434      # for embeddings
       - EMBED_MODEL=nomic-embed-text                       # ollama pull nomic-embed-text
       - PROXY_URL=http://ai-proxy:8000/v1                  # generation via the proxy
-      - ADMIN_TOKEN=change-me-notebook-admin               # teacher upload token
+      - ADMIN_TOKEN=${NOTEBOOK_ADMIN_TOKEN}                # teacher upload token (.env)
+      - PROXY_TOKEN=${PROXY_TOKEN}                         # sent to ai-proxy if set
+      - MAX_UPLOAD_MB=20
       - TOP_K=3
     extra_hosts:
       - "host.docker.internal:host-gateway"

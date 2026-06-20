@@ -21,6 +21,7 @@ Endpoints:
   DELETE /api/docs/{id}      (admin) remove a doc and its chunks
   POST /api/chat             {question} → SSE stream grounded in the notes
 """
+import hmac
 import io
 import os
 import re
@@ -40,6 +41,9 @@ TOP_K = int(os.environ.get("TOP_K", "3"))
 CHUNK_CHARS = int(os.environ.get("CHUNK_CHARS", "1600"))   # ~400 tokens
 CHUNK_OVERLAP = int(os.environ.get("CHUNK_OVERLAP", "200"))
 DB_PATH = os.environ.get("DB_PATH", "/data/notebook.db")
+MAX_UPLOAD_MB = int(os.environ.get("MAX_UPLOAD_MB", "20"))
+ALLOWED_EXT = (".pdf", ".txt", ".md")
+PROXY_TOKEN = os.environ.get("PROXY_TOKEN", "").strip()   # sent to the ai-proxy if set
 HERE = os.path.dirname(__file__)
 
 app = FastAPI(title="Scholastica AI Notebook")
@@ -80,7 +84,7 @@ init_db()
 
 # ---------- helpers ----------
 def require_admin(token):
-    if token != ADMIN_TOKEN:
+    if not (token and hmac.compare_digest(token, ADMIN_TOKEN)):
         raise HTTPException(status_code=403, detail="Admin token required.")
 
 
@@ -158,10 +162,26 @@ async def health():
     }
 
 
+async def read_limited(file):
+    """Read an upload, rejecting anything over MAX_UPLOAD_MB (avoids memory DoS)."""
+    cap = MAX_UPLOAD_MB * 1024 * 1024
+    buf = b""
+    while True:
+        chunk = await file.read(1024 * 1024)
+        if not chunk:
+            break
+        buf += chunk
+        if len(buf) > cap:
+            raise HTTPException(status_code=413, detail="File too large (max %d MB)." % MAX_UPLOAD_MB)
+    return buf
+
+
 @app.post("/api/ingest")
 async def ingest(file: UploadFile = File(...), x_admin_token: str = Header(default="")):
     require_admin(x_admin_token)
-    raw = await file.read()
+    if not (file.filename or "").lower().endswith(ALLOWED_EXT):
+        raise HTTPException(status_code=400, detail="Only .pdf, .txt or .md files are allowed.")
+    raw = await read_limited(file)
     try:
         text = extract_text(file.filename, raw)
     except Exception as e:
@@ -247,9 +267,10 @@ async def chat(req: Request):
 
     async def gen():
         payload = {"model": "local", "stream": True, "messages": messages, "temperature": 0.2}
+        headers = {"Authorization": "Bearer " + PROXY_TOKEN} if PROXY_TOKEN else {}
         try:
             async with httpx.AsyncClient(timeout=180) as c:
-                async with c.stream("POST", PROXY_URL + "/chat/completions", json=payload) as resp:
+                async with c.stream("POST", PROXY_URL + "/chat/completions", json=payload, headers=headers) as resp:
                     async for chunk in resp.aiter_bytes():
                         if chunk:
                             yield chunk

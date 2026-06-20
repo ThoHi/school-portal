@@ -459,6 +459,38 @@ Each app has its own `sw.js`. When you add or rename a page in an app, update **
 1. The `PAGES` array in that app's `sw.js`
 2. The `CACHE` version string in that `sw.js` so clients fetch the new files
 
+## Security
+
+**Secrets live in a git-ignored `.env`.** Copy `.env.example` → `.env` and set strong random values
+(`python -c "import secrets;print(secrets.token_urlsafe(32))"`) for `API_SECRET_KEY`,
+`EXAM_SERVICE_TOKEN`, and `NOTEBOOK_ADMIN_TOKEN`. docker-compose reads `.env` automatically. The
+student-API secret **must** be strong, or session tokens can be forged.
+
+Hardening already applied:
+
+- **Exam app:** the Werkzeug debugger is **off** by default (`FLASK_DEBUG=1` enables it locally only —
+  it allows remote code execution); the previously **public** grades CSV now requires a signed-in
+  teacher/admin.
+- **AI proxy:** optional `PROXY_TOKEN` so it isn't an open relay to your cloud key. Empty = open (fine
+  on a trusted LAN where the browser Research chat needs no token); **set it** once a cloud key is
+  configured or the port is exposed. Browser clients would expose the token, so keep a cloud-backed,
+  token-protected proxy **off** the public network and let server-side callers (ai-notebook) use it.
+- **AI Notebook:** uploads limited to `MAX_UPLOAD_MB` (default 20) and `.pdf/.txt/.md`; admin token
+  compared in constant time.
+- **Static apps:** baseline headers — `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`,
+  and a CSP (in `nginx/default.conf`).
+
+Still your responsibility before exposing anything publicly:
+
+- **Keep port 8080 (main portal) internal — do not tunnel it.** Its sign-in is client-side demo auth
+  (passwords are in the page and all data ships to the browser). Only the **parent portal (8081)**,
+  whose access is enforced by the student API, is safe to share.
+- **Replace the demo passwords** and add **login rate-limiting** (the API/exam logins currently have
+  none → brute-forceable).
+- **Serve over HTTPS/TLS** beyond a trusted LAN (e.g. a [Caddy](https://caddyserver.com) reverse proxy
+  for automatic certificates), set a real `SECRET_KEY` for the exam app, and run it under gunicorn.
+- **Restrict CORS** to known origins, and review each **AI model**'s own license/terms before deploying.
+
 ## License
 
 This project's own code is licensed under the **[PolyForm Noncommercial License 1.0.0](LICENSE)**.

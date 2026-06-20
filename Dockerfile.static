@@ -8,6 +8,9 @@
 # self-contained images that deploy cleanly to the school server.
 FROM nginx:alpine
 
+# Baseline security headers (X-Frame-Options, nosniff, Referrer-Policy, CSP).
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+
 ARG APP
 # shared/ first (app.js, auth.js, notify.js, icon.svg), then the app's own
 # pages (index.html, sw.js, manifest.json, ...) — no filename overlaps.
