@@ -220,6 +220,41 @@ defaults live in `shared/app.js` (`SCHOLASTICA.llmUrlDefault`, `SCHOLASTICA.llmM
 > blocks the call to `http://localhost` as mixed content — the assistant is meant for on-site/offline
 > use. The status dot turns green when connected, red with a hint when LM Studio isn't reachable.
 
+## AI proxy — local-first LLM with cloud fallback
+
+For the school server you can run **one shared model** instead of per-device LM Studio. The `ai-proxy`
+service (`ai-proxy/`, port **8087**) is an OpenAI-compatible endpoint that **tries a local model first
+and falls back to a cloud API when local is down** — and the cloud key stays server-side, never in the
+browser.
+
+```
+Research page ─▶ ai-proxy (8087) ──▶ LOCAL  (Ollama / LM Studio)   ✅ free, offline
+                  holds cloud key  └▶ CLOUD  (OpenAI-compatible)    ☁️ fallback
+```
+
+**1. Run a local model** — [Ollama](https://ollama.com) is easiest on a server:
+
+```bash
+ollama serve            # OpenAI API at http://localhost:11434/v1
+ollama pull phi3:mini   # or gemma2:2b, qwen2.5:3b … (English-only is fine here)
+```
+
+**2. Configure the proxy** in `docker-compose.yml` (the `ai-proxy` service):
+- `LOCAL_API_URL` — `http://host.docker.internal:11434/v1` (Ollama on host) or `…:1234/v1` (LM Studio).
+- Cloud fallback is **off until you set** `CLOUD_API_URL` + `CLOUD_API_KEY` + `CLOUD_MODEL`. Any
+  OpenAI-compatible API works by URL+key, e.g. OpenAI (`https://api.openai.com/v1`) or OpenRouter
+  (`https://openrouter.ai/api/v1`). (Anthropic's native API needs a small adapter — hook noted in
+  `ai-proxy/app.py`.)
+- `MAX_CONCURRENCY=1` — CPU does ~1 inference at a time; the proxy serializes requests (a simple queue).
+
+```bash
+docker compose up -d --build ai-proxy
+```
+
+**3. Point the Research assistant at it** — on the Research page, open the AI assistant ⚙️ and set the
+server to `http://localhost:8087/v1`. Streaming, `/v1/models`, and graceful "no backend available"
+errors all work; `GET /health` shows which backend is live.
+
 ## Offline Wikipedia (Kiwix) — English / Burmese / Shan
 
 The Research page has a **Wikipedia** tool that **first checks for a local offline library** and falls
@@ -285,6 +320,8 @@ school portal/
 │       └── index.html · login.html · manifest.json · sw.js
 ├── backend/                # Flask student API → port 8085 (authoritative student DB)
 │   ├── app.py · requirements.txt · Dockerfile
+├── ai-proxy/               # FastAPI LLM proxy → port 8087 (local-first + cloud fallback)
+│   ├── app.py · requirements.txt · Dockerfile
 ├── Dockerfile.static       # builds a static app image (shared/ + one app) for portal/parent/elibrary
 ├── docker-compose.yml      # portal 8080 · parent 8081 · elibrary 8082 · exam 8084 · api 8085
 └── README.md
@@ -311,6 +348,7 @@ Then open:
 | E-Library | <http://localhost:8082> | library launcher |
 | Exam app | <http://localhost:8084> | exams (separate Flask app — clone `../exam-test-webapp` first) |
 | Student API | <http://localhost:8085> | backend for the parent app (per-child reports) |
+| AI proxy | <http://localhost:8087> | local-first LLM + cloud fallback for the Research chat |
 
 > The `exam` service builds from `../exam-test-webapp`; clone that repo next to this one or run
 > `docker compose up -d portal parent elibrary` to skip it. calibre-web (for the E-Library) runs on

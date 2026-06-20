@@ -93,6 +93,31 @@ services:
     depends_on:
       - exam
 
+  # AI proxy — one OpenAI-compatible endpoint for the Research chat. Tries the
+  # LOCAL model first (Ollama / LM Studio) and falls back to a CLOUD provider
+  # when local is down. The cloud key stays here, never in the browser. Point the
+  # Research assistant's server URL at http://<host>:8087/v1.
+  ai-proxy:
+    build: ./ai-proxy
+    container_name: scholastica-ai-proxy
+    restart: unless-stopped
+    environment:
+      # Local model (OpenAI-compatible). Ollama on the host = :11434/v1;
+      # LM Studio = :1234/v1. Use host.docker.internal to reach the host.
+      - LOCAL_API_URL=http://host.docker.internal:11434/v1
+      - LOCAL_MODEL=                # optional: force a model name for local
+      # Cloud fallback (decide later). Any OpenAI-compatible API works by URL+key:
+      #   OpenAI       https://api.openai.com/v1
+      #   OpenRouter   https://openrouter.ai/api/v1
+      - CLOUD_API_URL=
+      - CLOUD_API_KEY=
+      - CLOUD_MODEL=
+      - MAX_CONCURRENCY=1           # CPU does ~1 inference at a time
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # reach host-installed Ollama on Linux
+    ports:
+      - "8087:8000"
+
   # Offline Wikipedia (Kiwix). Opt-in: only starts with `--profile wiki`, because
   # it needs ZIM files (multi-GB) downloaded into ./wikipedia/zim first. The
   # Research page probes http://<host>:8086 and falls back to online wikipedia.org.
