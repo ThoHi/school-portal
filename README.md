@@ -27,7 +27,7 @@ The full portal lives in `apps/portal/`:
 | Grades | `apps/portal/grades.html` | Grades & GPA — per-course grades, weighted GPA, trend chart by semester |
 | Exam Center | `apps/portal/exam-center.html` | Launcher for the school's **exam app** (see below) |
 | E-Library | `apps/portal/e-library.html` | Launcher for the school's **Calibre** e-book library (see below) |
-| Research Hub | `apps/portal/research.html` | Research materials and tools |
+| Research Hub | `apps/portal/research.html` | Research tools + **offline AI assistant** via LM Studio (see below) |
 | Parent Portal | `apps/portal/parent-portal.html` | Parent view of student progress |
 
 The **Parent Portal** and **E-Library** are *also* published as standalone, isolated apps
@@ -135,6 +135,32 @@ everyone, set `SCHOLASTICA.examUrlDefault` in `shared/app.js`.
 > tunnel, set a real secret (ideally from an env var), turn off debug, and serve it via a WSGI server
 > (gunicorn) behind HTTPS. Its login is **separate** from the portal's — students sign in to the exam app
 > directly. The SQLite database is persisted by the `exam-data` volume in `docker-compose.yml`.
+
+## Research Hub — offline AI assistant (LM Studio)
+
+The Research page has an **AI Research Assistant** chat that runs entirely **offline** against a local
+[LM Studio](https://lmstudio.ai) model — no internet, no cloud, nothing leaves the device. LM Studio
+exposes an **OpenAI-compatible** server, and the page streams chat completions from it.
+
+**1. Install LM Studio** and download a small **Gemma** model (there is no "Gemma 4" — the current
+small one is **Gemma 3 4B Instruct**; `gemma-3-4b` is the default model id the page uses).
+
+```powershell
+winget install ElementLabs.LMStudio    # Windows 11 (or download from lmstudio.ai)
+```
+
+**2. Start the local server.** In LM Studio → **Developer** (Local Server) tab → load the Gemma model →
+**Start Server** (default `http://localhost:1234`). **Enable CORS** in the server settings — without it
+the browser blocks the page's requests.
+
+**3. Use it.** Open the Research page → the **AI Research Assistant** card. Click the ⚙️ settings to set
+the server (`http://localhost:1234/v1`) and **Test** to auto-detect the loaded model, then chat. The
+defaults live in `shared/app.js` (`SCHOLASTICA.llmUrlDefault`, `SCHOLASTICA.llmModelDefault`).
+
+> **Offline only.** Because the model is at plain `http://localhost:1234`, use the Research page over
+> **`http://localhost:8080`** (local). If you serve the portal over an **HTTPS** tunnel, the browser
+> blocks the call to `http://localhost` as mixed content — the assistant is meant for on-site/offline
+> use. The status dot turns green when connected, red with a hint when LM Studio isn't reachable.
 
 ## Project structure
 

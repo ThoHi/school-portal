@@ -204,6 +204,62 @@ tailwind.config = {
       </div>
     </section>
 
+    <!-- AI Research Assistant (local LLM via LM Studio — offline) -->
+    <section class="mb-gutter">
+      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
+        <!-- Header -->
+        <div class="flex items-center justify-between gap-sm p-md border-b border-outline-variant/20">
+          <div class="flex items-center gap-sm">
+            <div class="h-10 w-10 bg-primary-container/10 rounded-lg flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-primary icon-fill">smart_toy</span>
+            </div>
+            <div>
+              <h3 class="font-headline-md text-headline-md text-primary leading-tight">AI Research Assistant</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-xs">
+                <span id="llm-status-dot" class="h-2 w-2 rounded-full bg-on-surface-variant/40"></span>
+                <span id="llm-status-text">Runs offline on your local LM Studio model</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-xs">
+            <button id="llm-clear" type="button" title="Clear chat" class="p-xs text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">delete_sweep</span></button>
+            <button id="llm-settings-btn" type="button" title="Settings" class="p-xs text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">settings</span></button>
+          </div>
+        </div>
+
+        <!-- Settings (collapsed) -->
+        <div id="llm-settings" class="hidden p-md border-b border-outline-variant/20 bg-surface-container-low space-y-sm">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-sm">
+            <div>
+              <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">LM Studio server (OpenAI API)</label>
+              <input id="llm-url" type="url" placeholder="http://localhost:1234/v1" class="w-full bg-surface-container px-sm py-xs rounded-lg border border-outline-variant/30 text-body-sm font-body-sm outline-none focus:ring-primary focus:border-primary"/>
+            </div>
+            <div>
+              <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Model</label>
+              <div class="flex gap-xs">
+                <input id="llm-model" list="llm-model-list" placeholder="gemma-3-4b" class="flex-grow bg-surface-container px-sm py-xs rounded-lg border border-outline-variant/30 text-body-sm font-body-sm outline-none focus:ring-primary focus:border-primary"/>
+                <datalist id="llm-model-list"></datalist>
+                <button id="llm-test" type="button" class="shrink-0 bg-primary text-on-primary px-sm py-xs rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">Test</button>
+              </div>
+            </div>
+          </div>
+          <p id="llm-settings-msg" class="font-body-sm text-body-sm text-on-surface-variant"></p>
+          <p class="font-body-sm text-body-sm text-on-surface-variant/70">In LM Studio: load a small Gemma model → <span class="font-semibold text-on-surface">Developer ▸ Start Server</span> (port 1234) and enable CORS. No internet needed.</p>
+        </div>
+
+        <!-- Transcript -->
+        <div id="llm-chat" class="p-md space-y-md h-80 overflow-y-auto"></div>
+
+        <!-- Composer -->
+        <form id="llm-form" class="flex items-end gap-sm p-md border-t border-outline-variant/20">
+          <textarea id="llm-input" rows="1" placeholder="Ask about a concept, summarize a paper, brainstorm a research question…" class="flex-grow resize-none bg-surface-container px-sm py-sm rounded-lg border border-outline-variant/30 text-body-md font-body-md outline-none focus:ring-primary focus:border-primary max-h-40"></textarea>
+          <button id="llm-send" type="submit" class="shrink-0 inline-flex items-center gap-xs bg-primary text-on-primary px-md py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity disabled:opacity-50">
+            <span class="material-symbols-outlined text-[20px]">send</span><span class="hidden sm:inline">Send</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
     <!-- Main Grid -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
 
@@ -529,10 +585,131 @@ tailwind.config = {
 
 </main>
 
+<script src="app.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   }
+
+  // --- AI Research Assistant: streams from a local LM Studio (OpenAI-compatible) server ---
+  (function () {
+    const chat = document.getElementById('llm-chat');
+    const form = document.getElementById('llm-form');
+    const input = document.getElementById('llm-input');
+    const sendBtn = document.getElementById('llm-send');
+    const urlInput = document.getElementById('llm-url');
+    const modelInput = document.getElementById('llm-model');
+    const modelList = document.getElementById('llm-model-list');
+    const statusDot = document.getElementById('llm-status-dot');
+    const statusText = document.getElementById('llm-status-text');
+    const settingsMsg = document.getElementById('llm-settings-msg');
+    const SYSTEM = { role: 'system', content: 'You are a helpful study and research assistant for school students. Be clear, accurate and concise. Favour building understanding over handing out answers to graded work, and if you are unsure, say so.' };
+    let history = [];
+    let busy = false;
+
+    document.getElementById('llm-settings-btn').addEventListener('click', () =>
+      document.getElementById('llm-settings').classList.toggle('hidden'));
+    document.getElementById('llm-clear').addEventListener('click', () => { history = []; renderChat(); });
+
+    urlInput.value = getLlmUrl();
+    modelInput.value = getLlmModel();
+    urlInput.addEventListener('change', () => setLlmUrl(urlInput.value));
+    modelInput.addEventListener('change', () => setLlmModel(modelInput.value));
+
+    function setStatus(state, text) {
+      const colors = { on: 'bg-success', off: 'bg-on-surface-variant/40', busy: 'bg-tertiary', err: 'bg-error' };
+      statusDot.className = 'h-2 w-2 rounded-full ' + (colors[state] || colors.off);
+      statusText.textContent = text;
+    }
+    function esc(s) { return s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
+
+    function renderChat() {
+      if (!history.length) {
+        chat.innerHTML = `<div class="text-center text-on-surface-variant py-lg">
+          <span class="material-symbols-outlined text-[40px] text-outline-variant">smart_toy</span>
+          <p class="font-body-sm text-body-sm mt-sm max-w-md mx-auto">Ask the local model to explain a concept, summarize a paper, or brainstorm a research question. Nothing leaves this device.</p>
+        </div>`;
+        return;
+      }
+      chat.innerHTML = history.map(m => m.role === 'user'
+        ? `<div class="flex justify-end"><div class="max-w-[80%] bg-primary text-on-primary rounded-xl rounded-br-sm px-md py-sm font-body-md text-body-md whitespace-pre-wrap">${esc(m.content)}</div></div>`
+        : `<div class="flex justify-start"><div class="max-w-[85%] bg-surface-container rounded-xl rounded-bl-sm px-md py-sm font-body-md text-body-md text-on-surface whitespace-pre-wrap">${esc(m.content) || '<span class="text-on-surface-variant">…</span>'}</div></div>`
+      ).join('');
+      chat.scrollTop = chat.scrollHeight;
+    }
+    renderChat();
+
+    document.getElementById('llm-test').addEventListener('click', async () => {
+      const base = getLlmUrl();
+      settingsMsg.textContent = 'Connecting…';
+      settingsMsg.className = 'font-body-sm text-body-sm text-on-surface-variant';
+      try {
+        const r = await fetch(base + '/models');
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const ids = ((await r.json()).data || []).map(m => m.id);
+        modelList.innerHTML = ids.map(id => `<option value="${esc(id)}"></option>`).join('');
+        if (ids.length && !modelInput.value) { modelInput.value = ids[0]; setLlmModel(ids[0]); }
+        settingsMsg.textContent = ids.length ? `Connected. Loaded model(s): ${ids.join(', ')}` : 'Connected, but no model is loaded in LM Studio yet.';
+        settingsMsg.className = 'font-body-sm text-body-sm ' + (ids.length ? 'text-success' : 'text-error');
+        setStatus(ids.length ? 'on' : 'err', ids.length ? 'Connected · ' + base : 'No model loaded');
+      } catch (e) {
+        settingsMsg.textContent = 'Could not reach LM Studio at ' + base + '. Start its server (Developer ▸ Start Server) and enable CORS.';
+        settingsMsg.className = 'font-body-sm text-body-sm text-error';
+        setStatus('err', 'Not connected');
+      }
+    });
+
+    input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 160) + 'px'; });
+    input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); } });
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (busy) return;
+      const text = input.value.trim();
+      if (!text) return;
+      const base = getLlmUrl(), model = getLlmModel();
+      input.value = ''; input.style.height = 'auto';
+      history.push({ role: 'user', content: text });
+      const assistant = { role: 'assistant', content: '' };
+      history.push(assistant);
+      renderChat();
+      busy = true; sendBtn.disabled = true; setStatus('busy', 'Thinking…');
+      try {
+        const resp = await fetch(base + '/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model, stream: true, messages: [SYSTEM, ...history.slice(0, -1)] })
+        });
+        if (!resp.ok || !resp.body) throw new Error('HTTP ' + resp.status);
+        const reader = resp.body.getReader(), dec = new TextDecoder();
+        let buf = '';
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buf += dec.decode(value, { stream: true });
+          let idx;
+          while ((idx = buf.indexOf('\n')) >= 0) {
+            const line = buf.slice(0, idx).trim();
+            buf = buf.slice(idx + 1);
+            if (!line.startsWith('data:')) continue;
+            const payload = line.slice(5).trim();
+            if (payload === '[DONE]') continue;
+            try {
+              const delta = JSON.parse(payload).choices?.[0]?.delta?.content || '';
+              if (delta) { assistant.content += delta; renderChat(); }
+            } catch (_) { /* ignore partial/non-JSON lines */ }
+          }
+        }
+        setStatus('on', 'Connected · ' + base);
+      } catch (err) {
+        assistant.content += (assistant.content ? '\n\n' : '') + '⚠️ Could not reach the local model at ' + base + '. In LM Studio: load a model, then Developer ▸ Start Server, and enable CORS.';
+        renderChat();
+        setStatus('err', 'Not connected');
+      } finally {
+        busy = false; sendBtn.disabled = false;
+      }
+    });
+  })();
 </script>
 </body>
 </html>

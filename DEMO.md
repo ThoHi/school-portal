@@ -40,6 +40,17 @@ Sign in at any portal app. The **same account works** on the main portal and the
 **Demo flow:** sign in as `teacher` on 8080 → **Grades** → **Edit** → change a score → **Save**
 (fires a "new grade posted" notification). Then sign in as `maya` to see the read-only student view.
 
+## Research AI assistant (offline, LM Studio)
+
+The Research page (on the portal, 8080) has an **AI Research Assistant** that runs offline on a local
+LM Studio model — no account needed.
+
+1. Install **LM Studio** (`winget install ElementLabs.LMStudio`) and download **Gemma 3 4B Instruct**.
+2. LM Studio → **Developer** tab → load the model → **Start Server** (port 1234) → **enable CORS**.
+3. Research page → **AI Research Assistant** → ⚙️ → server `http://localhost:1234/v1` → **Test** → chat.
+
+Use it over `http://localhost:8080` (offline/local) — not over an HTTPS tunnel (mixed-content block).
+
 ## Exam app account (8084)
 
 The exam app has its **own** login, separate from the portal.

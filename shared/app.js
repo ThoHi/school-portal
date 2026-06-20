@@ -209,3 +209,16 @@ SCHOLASTICA.examUrlDefault = "";
 const EXAM_KEY = "scholastica-exam-url";
 function getExamUrl() { return (localStorage.getItem(EXAM_KEY) || SCHOLASTICA.examUrlDefault || "").replace(/\/+$/, ""); }
 function setExamUrl(u) { localStorage.setItem(EXAM_KEY, (u || "").trim().replace(/\/+$/, "")); }
+
+/* ---------- research assistant (local LLM via LM Studio) ----------
+   LM Studio exposes an OpenAI-compatible server (default http://localhost:1234/v1).
+   Load a small Gemma model (e.g. Gemma 3 4B Instruct) in LM Studio, Start Server,
+   and enable CORS so this page can call it. Runs fully offline on-device. */
+SCHOLASTICA.llmUrlDefault = "http://localhost:1234/v1";
+SCHOLASTICA.llmModelDefault = "gemma-3-4b"; // editable on the Research page; auto-detected via /models
+const LLM_URL_KEY = "scholastica-llm-url";
+const LLM_MODEL_KEY = "scholastica-llm-model";
+function getLlmUrl() { return (localStorage.getItem(LLM_URL_KEY) || SCHOLASTICA.llmUrlDefault || "").replace(/\/+$/, ""); }
+function setLlmUrl(u) { localStorage.setItem(LLM_URL_KEY, (u || "").trim().replace(/\/+$/, "")); }
+function getLlmModel() { return localStorage.getItem(LLM_MODEL_KEY) || SCHOLASTICA.llmModelDefault || ""; }
+function setLlmModel(m) { localStorage.setItem(LLM_MODEL_KEY, (m || "").trim()); }
