@@ -208,6 +208,45 @@ Center's *Exam Server* URL at **HTTPS** addresses (the forwarded `https://…dev
 or the cross-origin links are blocked as mixed content. Also harden the exam app before exposing it
 (see [Exam Center](#exam-center-exam-app)).
 
+## Remote access (setup & maintenance)
+
+To administer the server remotely — edit files, restart containers, tail logs — use a **VS Code Remote
+Tunnel**. It gives a browser-based editor **+ integrated terminal + port forwarding**, authenticated by
+your GitHub/Microsoft account, with **no inbound firewall ports opened**.
+
+**On the server** (one-time, in an interactive PowerShell — it prompts for a device login):
+
+```powershell
+code tunnel service install     # runs as a background service, starts at login
+# or: code tunnel               # foreground, to test first
+```
+
+Authenticate with GitHub/Microsoft and name the machine (e.g. `school-server`).
+
+**From anywhere**, open `https://vscode.dev/tunnel/school-server`, sign in with the **same account**,
+then use the Terminal to manage the stack:
+
+```bash
+cd "/c/Users/lenovo/code_hub/school portal"
+docker compose ps                 # status
+docker compose up -d --build      # apply changes after editing files
+docker compose logs -f exam       # tail a service
+```
+
+Service control: `code tunnel service status` · `code tunnel service uninstall`.
+
+**Separate the two concerns:**
+
+| Need | Audience | How |
+|------|----------|-----|
+| **Admin / maintenance** (terminal, edit, restart) | just you | VS Code tunnel — account-authenticated, keep 2FA on |
+| **App access** (open the portal) | students / parents | tunnel **port forwarding** set to *Public* (8081/8082/8084) |
+
+The machine must stay **on and signed in** (and Docker Desktop running) for both the apps and the tunnel
+service. For full OS-level access (RDP / SSH), put the machine on a private mesh with
+[Tailscale](https://tailscale.com) (`winget install tailscale.tailscale`) instead of exposing those
+ports publicly.
+
 ## Updating the offline cache
 
 Each app has its own `sw.js`. When you add or rename a page in an app, update **both**:

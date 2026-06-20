@@ -20,6 +20,10 @@ docker compose up -d --build
 
 Over a VS Code tunnel, replace `localhost:<port>` with each forwarded `https://…devtunnels.ms` URL.
 
+**Remote admin (setup/maintenance):** on the server run `code tunnel service install`, then open
+`https://vscode.dev/tunnel/<machine>` for a browser terminal + editor + port forwarding. Full steps in
+the README's *Remote access* section.
+
 ## Portal accounts (8080 / 8081)
 
 Sign in at any portal app. The **same account works** on the main portal and the parent portal
