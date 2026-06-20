@@ -763,6 +763,7 @@ tailwind.config = {
       my:  { host: 'my.wikipedia.org',  kiwix: 'mya' },
       shn: { host: 'shn.wikipedia.org', kiwix: 'shn' },
     };
+    const LANG_KEY = 'scholastica-wiki-lang';
     const form = document.getElementById('wiki-form');
     const query = document.getElementById('wiki-query');
     const lang = document.getElementById('wiki-lang');
@@ -771,6 +772,16 @@ tailwind.config = {
     const text = document.getElementById('wiki-status-text');
     const browseBtn = document.getElementById('wiki-browse');
     let localUp = false;
+
+    // Restore the saved content language and keep the input's script/lang in sync.
+    if (LANGS[localStorage.getItem(LANG_KEY)]) lang.value = localStorage.getItem(LANG_KEY);
+    const PLACEHOLDER = { en: 'Search Wikipedia…', my: 'ဝီကီပီးဒီးယားတွင် ရှာရန်…', shn: 'သွၵ်ႇႁႃ Wikipedia…' };
+    function applyLang() {
+      query.setAttribute('lang', lang.value);
+      query.placeholder = PLACEHOLDER[lang.value] || PLACEHOLDER.en;
+    }
+    lang.addEventListener('change', () => { localStorage.setItem(LANG_KEY, lang.value); applyLang(); });
+    applyLang();
 
     urlInput.value = getWikiUrl();
     document.getElementById('wiki-settings-btn').addEventListener('click', () =>
