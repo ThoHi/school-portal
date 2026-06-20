@@ -1,0 +1,53 @@
+# Scholastica — three isolated static apps, each on its own port.
+#
+# Each service is an nginx container whose web root contains ONLY that app's
+# pages plus the shared JS/icon (bind-mounted from ./shared). Isolation is
+# physical: the parent container has no grades.html, so it cannot be reached
+# even by guessing the URL.
+#
+# Forward these ports with a VS Code tunnel to expose them publicly:
+#   8080 → main portal   (students / teachers — keep internal)
+#   8081 → parent portal (safe to forward publicly for parents)
+#   8082 → e-library     (launcher; books are served by calibre-web on 8083)
+#
+# Run:  docker compose up -d      Stop:  docker compose down
+
+services:
+  portal:
+    image: nginx:alpine
+    container_name: scholastica-portal
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./apps/portal:/usr/share/nginx/html:ro
+      - ./shared/app.js:/usr/share/nginx/html/app.js:ro
+      - ./shared/auth.js:/usr/share/nginx/html/auth.js:ro
+      - ./shared/notify.js:/usr/share/nginx/html/notify.js:ro
+      - ./shared/icon.svg:/usr/share/nginx/html/icon.svg:ro
+
+  parent:
+    image: nginx:alpine
+    container_name: scholastica-parent
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./apps/parent:/usr/share/nginx/html:ro
+      - ./shared/app.js:/usr/share/nginx/html/app.js:ro
+      - ./shared/auth.js:/usr/share/nginx/html/auth.js:ro
+      - ./shared/notify.js:/usr/share/nginx/html/notify.js:ro
+      - ./shared/icon.svg:/usr/share/nginx/html/icon.svg:ro
+
+  elibrary:
+    image: nginx:alpine
+    container_name: scholastica-elibrary
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    volumes:
+      - ./apps/elibrary:/usr/share/nginx/html:ro
+      - ./shared/app.js:/usr/share/nginx/html/app.js:ro
+      - ./shared/auth.js:/usr/share/nginx/html/auth.js:ro
+      - ./shared/notify.js:/usr/share/nginx/html/notify.js:ro
+      - ./shared/icon.svg:/usr/share/nginx/html/icon.svg:ro

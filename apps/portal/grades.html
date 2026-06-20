@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Grades - Scholastica Portal</title>
+<meta name="theme-color" content="#000a1e"/>
+<meta name="description" content="Grades & GPA — Scholastica Academic Excellence Portal"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon.svg"/>
+<script src="auth.js"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "tertiary-fixed": "#ffe088", "secondary-container": "#d5e3fc", "primary": "#000a1e",
+        "surface-container": "#efedf1", "on-error": "#ffffff", "on-surface-variant": "#44474e",
+        "on-secondary-container": "#57657a", "surface-dim": "#dad9dd", "primary-fixed-dim": "#aec7f6",
+        "tertiary-container": "#cca830", "inverse-primary": "#aec7f6",
+        "surface-container-highest": "#e3e2e6", "on-tertiary-container": "#4f3e00",
+        "surface": "#faf9fd", "surface-variant": "#e3e2e6", "surface-tint": "#465f88",
+        "secondary": "#515f74", "error-container": "#ffdad6", "surface-container-low": "#f4f3f7",
+        "surface-bright": "#faf9fd", "primary-container": "#002147", "tertiary-fixed-dim": "#e9c349",
+        "tertiary": "#735c00", "primary-fixed": "#d6e3ff", "on-primary": "#ffffff",
+        "surface-container-lowest": "#ffffff", "on-error-container": "#93000a",
+        "on-primary-container": "#708ab5", "on-primary-fixed": "#001b3d",
+        "secondary-fixed": "#d5e3fc", "error": "#ba1a1a", "inverse-surface": "#2f3033",
+        "outline-variant": "#c4c6cf", "on-surface": "#1a1b1e", "on-secondary": "#ffffff",
+        "inverse-on-surface": "#f1f0f4", "background": "#faf9fd", "on-tertiary": "#ffffff",
+        "surface-container-high": "#e9e7eb", "secondary-fixed-dim": "#b9c7df", "on-background": "#1a1b1e",
+        "success": "#1a6b3c", "success-container": "#b7f0d0"
+      },
+      borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+      spacing: {
+        "margin-mobile": "16px", "base": "4px", "margin-desktop": "48px",
+        "xs": "8px", "gutter": "24px", "xl": "64px", "lg": "40px", "md": "24px", "sm": "16px"
+      },
+      fontFamily: {
+        "body-sm": ["Public Sans"], "data-mono": ["Public Sans"],
+        "headline-md": ['"Source Serif 4"'], "headline-lg-mobile": ['"Source Serif 4"'],
+        "headline-lg": ['"Source Serif 4"'], "display-lg": ['"Source Serif 4"'],
+        "label-md": ["Public Sans"], "body-lg": ["Public Sans"], "body-md": ["Public Sans"]
+      },
+      fontSize: {
+        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+        "data-mono": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+        "headline-lg-mobile": ["28px", { lineHeight: "36px", fontWeight: "600" }],
+        "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600" }],
+        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }]
+      }
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .nav-active { background-color: #d5e3fc; color: #57657a; font-weight: 700; border-radius: 0.5rem; }
+  .nav-inactive { color: #44474e; border-radius: 0.5rem; }
+  .nav-inactive:hover { background-color: #e9e7eb; }
+</style>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen">
+
+<!-- Sidebar -->
+<aside class="h-screen w-64 fixed left-0 top-0 hidden lg:flex flex-col bg-surface-container-low border-r border-outline-variant/20 z-40">
+  <div class="p-sm flex flex-col h-full">
+    <div class="px-sm py-md mb-2">
+      <h1 class="font-headline-md text-headline-md text-primary leading-tight">Academic Excellence</h1>
+      <p class="font-label-md text-label-md text-on-surface-variant">Modern Scholasticism</p>
+    </div>
+    <nav class="flex-grow space-y-xs overflow-y-auto">
+      <a href="index.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="font-label-md text-label-md">Dashboard</span>
+      </a>
+      <a href="attendance.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">event_available</span>
+        <span class="font-label-md text-label-md">Attendance</span>
+      </a>
+      <a href="grades.html" class="flex items-center gap-sm px-sm py-xs nav-active transition-all">
+        <span class="material-symbols-outlined icon-fill">grade</span>
+        <span class="font-label-md text-label-md">Grades</span>
+      </a>
+      <a href="exam-center.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">quiz</span>
+        <span class="font-label-md text-label-md">Exam Center</span>
+      </a>
+      <a href="e-library.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">menu_book</span>
+        <span class="font-label-md text-label-md">E-Library</span>
+      </a>
+      <a href="research.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">school</span>
+        <span class="font-label-md text-label-md">Research</span>
+      </a>
+      <a href="parent-portal.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">family_restroom</span>
+        <span class="font-label-md text-label-md">Parent Portal</span>
+      </a>
+    </nav>
+    <div class="pt-md border-t border-outline-variant/20 space-y-xs pb-sm">
+      <a href="#" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="font-label-md text-label-md">Settings</span>
+      </a>
+      <a href="#" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="font-label-md text-label-md">Logout</span>
+      </a>
+      <button class="w-full mt-2 bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">Support Desk</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile Bottom Nav -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest border-t border-outline-variant/20 flex">
+  <a href="index.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">dashboard</span>
+    <span class="text-[10px] font-semibold">Home</span>
+  </a>
+  <a href="attendance.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">event_available</span>
+    <span class="text-[10px] font-semibold">Attend</span>
+  </a>
+  <a href="grades.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-primary">
+    <span class="material-symbols-outlined icon-fill text-[22px]">grade</span>
+    <span class="text-[10px] font-semibold">Grades</span>
+  </a>
+  <a href="exam-center.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">quiz</span>
+    <span class="text-[10px] font-semibold">Exams</span>
+  </a>
+  <a href="e-library.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">menu_book</span>
+    <span class="text-[10px] font-semibold">Library</span>
+  </a>
+  <a href="research.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">school</span>
+    <span class="text-[10px] font-semibold">Research</span>
+  </a>
+  <a href="parent-portal.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">family_restroom</span>
+    <span class="text-[10px] font-semibold">Parents</span>
+  </a>
+</nav>
+
+<!-- Main -->
+<main class="lg:pl-64 pb-20 lg:pb-0 flex flex-col min-h-screen">
+
+  <!-- Top Header -->
+  <header class="bg-surface/80 backdrop-blur-md sticky top-0 z-30 border-b border-outline-variant/30 shadow-sm">
+    <div class="flex justify-between items-center h-16 px-gutter w-full max-w-[1280px] mx-auto">
+      <div class="flex items-center gap-md">
+        <span class="font-headline-md text-headline-md font-bold text-primary">Scholastica Portal</span>
+        <div class="hidden md:flex bg-surface-container px-sm py-xs rounded-full items-center gap-xs border border-outline-variant/20">
+          <span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+          <input type="text" placeholder="Search students, classes, reports..." class="bg-transparent border-none focus:ring-0 text-body-sm font-body-sm w-64 outline-none"/>
+        </div>
+      </div>
+      <div class="flex items-center gap-sm">
+        <button class="p-xs text-on-surface-variant hover:text-primary transition-colors relative">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute top-1 right-1 h-2 w-2 bg-error rounded-full"></span>
+        </button>
+        <button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
+          <span class="material-symbols-outlined">translate</span>
+        </button>
+        <div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden ml-xs border border-outline-variant/30 flex items-center justify-center text-on-primary font-label-md text-label-md" data-avatar-initials>MC</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="flex-grow p-sm md:p-gutter max-w-[1280px] mx-auto w-full">
+
+    <!-- Page Heading -->
+    <section class="mb-lg">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+        <div>
+          <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base" id="page-caption">Report Card</p>
+          <h2 class="font-headline-lg text-headline-lg text-primary mb-xs">Grades &amp; Report Card</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant" id="page-desc">Grade report and progress for the current term.</p>
+        </div>
+        <div class="flex gap-sm shrink-0 items-center">
+          <span id="track-toggle"></span>
+          <button class="flex items-center gap-xs bg-primary text-on-primary px-md py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm">
+            <span class="material-symbols-outlined text-[18px]">description</span> Report
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stat Cards -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-sm mb-gutter" id="stat-cards"></section>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+
+      <!-- Left: Grade table -->
+      <div class="md:col-span-8 space-y-gutter">
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
+          <div class="flex justify-between items-center p-md border-b border-outline-variant/20">
+            <h3 class="font-headline-md text-headline-md text-primary">Course Grades</h3>
+            <div class="flex items-center gap-sm">
+              <span class="font-label-md text-label-md text-on-surface-variant" id="course-count">6 courses</span>
+              <span id="edit-controls" class="flex items-center gap-xs"></span>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[560px]">
+              <thead id="grade-head"></thead>
+              <tbody class="divide-y divide-outline-variant/20" id="grade-rows"></tbody>
+              <tfoot id="grade-foot"></tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- GPA Trend -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <div class="flex justify-between items-center mb-md">
+            <h3 class="font-headline-md text-headline-md text-primary" id="trend-title">Progress</h3>
+            <span class="font-label-md text-label-md text-success flex items-center gap-xs" id="trend-note"></span>
+          </div>
+          <div class="flex items-end justify-between gap-sm h-44 pt-md" id="trend-chart"></div>
+        </div>
+      </div>
+
+      <!-- Right: Distribution + honors -->
+      <div class="md:col-span-4 space-y-gutter">
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <h4 class="font-headline-md text-headline-md text-primary mb-md">Grade Distribution</h4>
+          <div class="space-y-sm" id="distribution"></div>
+        </div>
+
+        <!-- Standing -->
+        <div id="standing-card" class="bg-primary rounded-xl p-md text-on-primary shadow-sm"></div>
+
+        <!-- Grading reference -->
+        <div id="scale-card" class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full py-md mt-xl bg-surface-container-highest border-t border-outline-variant">
+    <div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop w-full max-w-[1280px] mx-auto">
+      <div class="mb-sm md:mb-0">
+        <span class="font-label-md text-label-md font-bold text-primary">Scholastica Portal</span>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">© 2026 Scholastica Academic Systems. All Rights Reserved.</p>
+      </div>
+      <div class="flex gap-md flex-wrap justify-center">
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Privacy Policy</a>
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Terms of Service</a>
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Academic Calendar</a>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="app.js"></script>
+<script src="notify.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  }
+
+  let editMode = false;
+
+  // Editor-only controls in the Course Grades header (Edit / Save / Cancel).
+  function renderEditControls() {
+    const host = document.getElementById('edit-controls');
+    if (!host) return;
+    if (!(window.Auth && Auth.canEdit())) { host.innerHTML = ''; return; }
+    if (!editMode) {
+      host.innerHTML = `<button id="grade-edit" class="flex items-center gap-xs bg-secondary-container text-on-secondary-container px-sm py-xs rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+        <span class="material-symbols-outlined text-[18px]">edit</span> Edit</button>`;
+      host.querySelector('#grade-edit').addEventListener('click', () => { editMode = true; renderGrades(); });
+    } else {
+      host.innerHTML = `
+        <button id="grade-cancel" class="px-sm py-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors">Cancel</button>
+        <button id="grade-save" class="flex items-center gap-xs bg-primary text-on-primary px-sm py-xs rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+          <span class="material-symbols-outlined text-[18px]">save</span> Save</button>`;
+      host.querySelector('#grade-cancel').addEventListener('click', () => { editMode = false; renderGrades(); });
+      host.querySelector('#grade-save').addEventListener('click', saveGrades);
+    }
+  }
+
+  function saveGrades() {
+    const t = getTrack();
+    const id = getTrackId();
+    const inputs = document.querySelectorAll('[data-score-idx]');
+    const changed = [];
+    inputs.forEach(inp => {
+      const i = +inp.dataset.scoreIdx;
+      let v = Math.round(+inp.value);
+      if (isNaN(v)) return;
+      v = Math.max(t.grading === 'ged' ? 100 : 0, Math.min(t.grading === 'ged' ? 200 : 100, v));
+      if (v !== t.subjects[i].score) {
+        const prev = t.subjects[i].score;
+        updateSubject(id, i, { score: v, trend: v > prev ? 'up' : (v < prev ? 'down' : 'flat') });
+        changed.push({ name: t.subjects[i].name, score: v });
+      }
+    });
+    editMode = false;
+    renderGrades();
+    // Local notification for each posted grade (best-effort).
+    if (window.Notify) changed.forEach(c =>
+      Notify.gradePosted(c.name, t.grading === 'ged' ? String(c.score) : c.score + '%', t.student.fullName));
+  }
+
+  function renderGrades() {
+    const t = getTrack();
+    const isGed = t.grading === 'ged';
+    const scores = t.subjects.map(s => s.score);
+    const mean = avg(scores);
+
+    document.getElementById('page-caption').textContent = isGed ? 'GED Program' : 'Report Card · ' + t.term;
+    document.getElementById('page-desc').textContent = isGed
+      ? `Practice-test scores on the GED 100–200 scale (145 = pass) for ${t.student.fullName}.`
+      : `Report card and progress for ${t.student.fullName}, ${t.student.grade}.`;
+
+    // --- stat cards ---
+    let cards;
+    if (isGed) {
+      const passing = scores.filter(s => s >= 145).length;
+      const ready = scores.filter(s => s >= 165).length;
+      cards = [
+        { dark: true, label: 'Avg Practice Score', value: Math.round(mean), sub: 'on the 100–200 scale', icon: 'trending_up' },
+        { label: 'Subjects Passing', value: `${passing} / 4`, sub: 'score ≥ 145', icon: 'verified', color: 'text-success' },
+        { label: 'College Ready', value: `${ready} / 4`, sub: 'score ≥ 165', icon: 'school', color: 'text-secondary' },
+        { label: 'Next Official Test', value: 'Jul 6', sub: 'Science', icon: 'event', color: 'text-tertiary' },
+      ];
+    } else {
+      const letter = letterFromPct(mean);
+      const honor = mean >= 90;
+      cards = [
+        { dark: true, label: 'Term Average', value: `${Math.round(mean)}%`, sub: `across ${t.subjects.length} subjects`, icon: 'trending_up' },
+        { label: 'Overall Grade', value: letter, sub: 'letter grade', icon: 'grade', color: 'text-secondary' },
+        { label: 'Subjects', value: t.subjects.length, sub: 'this term', icon: 'menu_book', color: 'text-tertiary' },
+        { label: 'Honor Roll', value: honor ? 'Yes' : '—', sub: honor ? 'avg ≥ 90%' : 'avg below 90%', icon: 'workspace_premium', color: 'text-tertiary' },
+      ];
+    }
+    document.getElementById('stat-cards').innerHTML = cards.map(c => `
+      <div class="${c.dark ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest border border-outline-variant/30'} rounded-xl p-md shadow-sm">
+        <div class="flex items-center justify-between mb-sm">
+          <span class="font-label-md text-label-md ${c.dark ? 'text-on-primary/70' : 'text-on-surface-variant'} uppercase tracking-wider text-[11px]">${c.label}</span>
+          <span class="material-symbols-outlined icon-fill text-[20px] ${c.dark ? 'text-tertiary-fixed' : (c.color || 'text-secondary')}">${c.icon}</span>
+        </div>
+        <span class="block font-headline-lg text-headline-lg tabular-nums ${c.dark ? '' : 'text-on-surface'}">${c.value}</span>
+        <span class="font-body-sm text-body-sm ${c.dark ? 'text-on-primary/70' : 'text-on-surface-variant'}">${c.sub}</span>
+      </div>`).join('');
+
+    // --- table head ---
+    const cols = isGed ? ['Subject', 'Practice Score', 'Status', 'Trend'] : ['Subject', 'Score', 'Grade', 'Trend'];
+    document.getElementById('grade-head').innerHTML = `
+      <tr class="bg-surface-container-low">
+        <th class="text-left px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[0]}</th>
+        <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[1]}</th>
+        <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[2]}</th>
+        <th class="text-right px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[3]}</th>
+      </tr>`;
+
+    // --- rows ---
+    document.getElementById('grade-rows').innerHTML = t.subjects.map((s, i) => {
+      let scoreCell, badgeCell;
+      if (editMode) {
+        // Teacher edit mode: score is an editable number input.
+        const min = isGed ? 100 : 0, max = isGed ? 200 : 100;
+        scoreCell = `<input type="number" data-score-idx="${i}" value="${s.score}" min="${min}" max="${max}"
+          class="w-20 text-center rounded-lg border-outline-variant/60 bg-surface-container-low focus:border-primary focus:ring-primary font-data-mono text-data-mono"/>`;
+      } else if (isGed) {
+        const b = gedBand(s.score);
+        scoreCell = `<span class="font-data-mono text-data-mono ${b.text}">${s.score}</span>`;
+      } else {
+        const col = s.score >= 90 ? 'text-success' : (s.score >= 80 ? 'text-primary' : 'text-tertiary');
+        scoreCell = `<span class="font-data-mono text-data-mono ${col}">${s.score}%</span>`;
+      }
+      if (isGed) {
+        const b = gedBand(s.score);
+        badgeCell = `<span class="${b.badge} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${b.label}</span>`;
+      } else {
+        const l = letterFromPct(s.score);
+        badgeCell = `<span class="${letterBadge(l)} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${l}</span>`;
+      }
+      return `
+        <tr class="hover:bg-surface-container-low/50 transition-colors">
+          <td class="px-md py-sm">
+            <span class="font-label-md text-label-md text-on-surface">${s.name}</span>
+            <span class="block font-body-sm text-body-sm text-on-surface-variant">${s.code}</span>
+          </td>
+          <td class="px-sm py-sm text-center">${scoreCell}</td>
+          <td class="px-sm py-sm text-center">${badgeCell}</td>
+          <td class="px-md py-sm text-right">${trendIcon(s.trend)}</td>
+        </tr>`;
+    }).join('');
+
+    renderEditControls();
+
+    // --- footer ---
+    document.getElementById('grade-foot').innerHTML = isGed ? `
+      <tr class="bg-surface-container-low border-t-2 border-outline-variant/30">
+        <td class="px-md py-sm font-label-md text-label-md text-primary">Average Score</td>
+        <td class="px-sm py-sm text-center font-data-mono text-data-mono font-bold text-primary">${Math.round(mean)}</td>
+        <td class="px-sm py-sm"></td><td class="px-md py-sm"></td>
+      </tr>` : `
+      <tr class="bg-surface-container-low border-t-2 border-outline-variant/30">
+        <td class="px-md py-sm font-label-md text-label-md text-primary">Term Average</td>
+        <td class="px-sm py-sm text-center font-data-mono text-data-mono font-bold text-primary">${Math.round(mean)}%</td>
+        <td class="px-sm py-sm text-center"><span class="${letterBadge(letterFromPct(mean))} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${letterFromPct(mean)}</span></td>
+        <td class="px-md py-sm"></td>
+      </tr>`;
+    document.getElementById('course-count').textContent = `${t.subjects.length} subjects`;
+
+    // --- trend chart ---
+    const maxV = isGed ? 200 : 100;
+    document.getElementById('trend-title').textContent = isGed ? 'Practice Score Trend' : 'Progress';
+    const first = t.trend[0].value, last = t.trend[t.trend.length - 1].value;
+    const up = last >= first;
+    const note = document.getElementById('trend-note');
+    note.innerHTML = `<span class="material-symbols-outlined text-[16px] icon-fill">${up ? 'trending_up' : 'trending_down'}</span> ${up ? '+' : ''}${last - first}${isGed ? ' pts' : '%'} since ${t.trend[0].term}`;
+    note.className = 'font-label-md text-label-md flex items-center gap-xs ' + (up ? 'text-success' : 'text-error');
+    document.getElementById('trend-chart').innerHTML = t.trend.map((d, i) => {
+      const h = Math.round((d.value / maxV) * 100);
+      const isLast = i === t.trend.length - 1;
+      return `
+        <div class="flex-1 flex flex-col items-center gap-xs h-full justify-end">
+          <span class="font-data-mono text-[11px] ${isLast ? 'text-primary font-bold' : 'text-on-surface-variant'} tabular-nums">${d.value}</span>
+          <div class="w-full ${isLast ? 'bg-primary' : 'bg-primary-fixed-dim'} rounded-t-lg transition-all" style="height:${h}%"></div>
+          <span class="font-label-md text-[10px] text-on-surface-variant uppercase">${d.term}</span>
+        </div>`;
+    }).join('');
+
+    // --- distribution ---
+    let dist;
+    if (isGed) {
+      const b = { 'Honors': 0, 'College Ready': 0, 'Passing': 0, 'Not Yet Passing': 0 };
+      t.subjects.forEach(s => b[gedBand(s.score).label]++);
+      dist = [
+        { label: 'College Ready (165+)', n: b['College Ready'] + b['Honors'], color: 'bg-secondary' },
+        { label: 'Passing (145–164)', n: b['Passing'], color: 'bg-success' },
+        { label: 'Not Yet Passing', n: b['Not Yet Passing'], color: 'bg-error' },
+      ];
+    } else {
+      const b = { A: 0, B: 0, C: 0, DF: 0 };
+      t.subjects.forEach(s => { const l = letterFromPct(s.score); if (l[0] === 'A') b.A++; else if (l[0] === 'B') b.B++; else if (l[0] === 'C') b.C++; else b.DF++; });
+      dist = [
+        { label: 'A range', n: b.A, color: 'bg-success' },
+        { label: 'B range', n: b.B, color: 'bg-secondary' },
+        { label: 'C range', n: b.C, color: 'bg-tertiary' },
+        { label: 'D / F', n: b.DF, color: 'bg-error' },
+      ];
+    }
+    const total = t.subjects.length;
+    document.getElementById('distribution').innerHTML = dist.map(d => {
+      const pct = total ? Math.round((d.n / total) * 100) : 0;
+      return `
+        <div>
+          <div class="flex justify-between items-baseline mb-xs">
+            <span class="font-body-sm text-body-sm text-on-surface">${d.label}</span>
+            <span class="font-data-mono text-data-mono text-on-surface-variant">${d.n} subject${d.n === 1 ? '' : 's'}</span>
+          </div>
+          <div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+            <div class="h-full ${d.color} rounded-full" style="width:${pct}%"></div>
+          </div>
+        </div>`;
+    }).join('');
+
+    // --- standing card ---
+    document.getElementById('standing-card').innerHTML = `
+      <div class="flex items-center gap-sm mb-sm">
+        <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[32px]">military_tech</span>
+        <div>
+          <span class="block font-label-md text-label-md text-on-primary/70 uppercase tracking-widest text-[10px]">${t.achievement.tag}</span>
+          <span class="block font-headline-md text-headline-md">${t.achievement.title}</span>
+        </div>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-primary/80">${t.achievement.note}</p>`;
+
+    // --- grading reference ---
+    document.getElementById('scale-card').innerHTML = isGed ? `
+      <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px] mb-sm">GED Score Bands</h4>
+      <div class="space-y-xs font-body-sm text-body-sm text-on-surface-variant">
+        <div class="flex justify-between"><span>Not yet passing</span><span class="font-data-mono">100–144</span></div>
+        <div class="flex justify-between"><span>GED Pass</span><span class="font-data-mono">145–164</span></div>
+        <div class="flex justify-between"><span>College Ready</span><span class="font-data-mono">165–174</span></div>
+        <div class="flex justify-between"><span>College Ready + Credit</span><span class="font-data-mono">175–200</span></div>
+      </div>` : `
+      <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px] mb-sm">Grading Scale</h4>
+      <div class="grid grid-cols-2 gap-x-md gap-y-xs font-body-sm text-body-sm text-on-surface-variant">
+        <span>A <span class="float-right font-data-mono">93–100%</span></span>
+        <span>A− <span class="float-right font-data-mono">90–92%</span></span>
+        <span>B <span class="float-right font-data-mono">83–86%</span></span>
+        <span>C <span class="float-right font-data-mono">73–76%</span></span>
+      </div>`;
+  }
+
+  mountTrackToggle(document.getElementById('track-toggle'));
+  document.addEventListener('trackchange', renderGrades);
+  renderGrades();
+</script>
+</body>
+</html>

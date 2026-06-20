@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sign in - Scholastica Portal</title>
+<meta name="theme-color" content="#000a1e"/>
+<meta name="description" content="Sign in to the Scholastica Academic Excellence Portal"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon.svg"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "tertiary-fixed": "#ffe088", "secondary-container": "#d5e3fc", "primary": "#000a1e",
+        "surface-container": "#efedf1", "on-error": "#ffffff", "on-surface-variant": "#44474e",
+        "on-secondary-container": "#57657a", "surface-dim": "#dad9dd", "primary-fixed-dim": "#aec7f6",
+        "tertiary-container": "#cca830", "inverse-primary": "#aec7f6",
+        "surface-container-highest": "#e3e2e6", "on-tertiary-container": "#4f3e00",
+        "surface": "#faf9fd", "surface-variant": "#e3e2e6", "surface-tint": "#465f88",
+        "secondary": "#515f74", "error-container": "#ffdad6", "surface-container-low": "#f4f3f7",
+        "surface-bright": "#faf9fd", "primary-container": "#002147", "tertiary-fixed-dim": "#e9c349",
+        "tertiary": "#735c00", "primary-fixed": "#d6e3ff", "on-primary": "#ffffff",
+        "surface-container-lowest": "#ffffff", "on-error-container": "#93000a",
+        "on-primary-container": "#708ab5", "on-primary-fixed": "#001b3d",
+        "secondary-fixed": "#d5e3fc", "error": "#ba1a1a", "inverse-surface": "#2f3033",
+        "outline-variant": "#c4c6cf", "on-surface": "#1a1b1e", "on-secondary": "#ffffff",
+        "inverse-on-surface": "#f1f0f4", "background": "#faf9fd", "on-tertiary": "#ffffff",
+        "surface-container-high": "#e9e7eb", "secondary-fixed-dim": "#b9c7df", "on-background": "#1a1b1e",
+        "success": "#1a6b3c", "success-container": "#b7f0d0"
+      },
+      borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+      spacing: {
+        "margin-mobile": "16px", "base": "4px", "margin-desktop": "48px",
+        "xs": "8px", "gutter": "24px", "xl": "64px", "lg": "40px", "md": "24px", "sm": "16px"
+      },
+      fontFamily: {
+        "body-sm": ["Public Sans"], "data-mono": ["Public Sans"],
+        "headline-md": ['"Source Serif 4"'], "headline-lg-mobile": ['"Source Serif 4"'],
+        "headline-lg": ['"Source Serif 4"'], "display-lg": ['"Source Serif 4"'],
+        "label-md": ["Public Sans"], "body-lg": ["Public Sans"], "body-md": ["Public Sans"]
+      },
+      fontSize: {
+        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+        "data-mono": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+        "headline-lg-mobile": ["28px", { lineHeight: "36px", fontWeight: "600" }],
+        "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600" }],
+        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }]
+      }
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen flex items-center justify-center p-sm">
+
+  <div class="w-full max-w-md">
+    <!-- Brand -->
+    <div class="text-center mb-lg">
+      <div class="inline-flex h-14 w-14 rounded-xl bg-primary text-on-primary items-center justify-center mb-sm shadow-sm">
+        <span class="material-symbols-outlined icon-fill text-[30px]">school</span>
+      </div>
+      <h1 class="font-headline-lg text-headline-lg text-primary">Scholastica Portal</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">Academic Excellence — sign in to continue</p>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm p-md md:p-lg">
+      <form id="login-form" class="space-y-md" autocomplete="off">
+        <div>
+          <label for="username" class="block font-label-md text-label-md text-on-surface-variant mb-xs">Username</label>
+          <input id="username" name="username" type="text" required autofocus
+            class="w-full rounded-lg border-outline-variant/60 bg-surface-container-low focus:border-primary focus:ring-primary font-body-md text-body-md"
+            placeholder="e.g. teacher"/>
+        </div>
+        <div>
+          <label for="password" class="block font-label-md text-label-md text-on-surface-variant mb-xs">Password</label>
+          <input id="password" name="password" type="password" required
+            class="w-full rounded-lg border-outline-variant/60 bg-surface-container-low focus:border-primary focus:ring-primary font-body-md text-body-md"
+            placeholder="••••••••"/>
+        </div>
+
+        <p id="login-error" class="hidden font-body-sm text-body-sm text-error bg-error-container/30 border border-error/20 rounded-lg px-sm py-xs"></p>
+
+        <button type="submit"
+          class="w-full bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm flex items-center justify-center gap-xs">
+          <span class="material-symbols-outlined text-[18px]">login</span> Sign in
+        </button>
+      </form>
+    </div>
+
+    <!-- Demo accounts helper -->
+    <div class="mt-md bg-surface-container-low border border-outline-variant/20 rounded-xl p-sm">
+      <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px] mb-xs">Demo accounts</p>
+      <div class="grid grid-cols-1 gap-xs font-body-sm text-body-sm text-on-surface-variant">
+        <button data-fill="teacher" class="text-left flex justify-between hover:text-primary transition-colors"><span>Teacher (can edit grades)</span><span class="font-data-mono">teacher / teach123</span></button>
+        <button data-fill="maya"    class="text-left flex justify-between hover:text-primary transition-colors"><span>Student · Grade 6</span><span class="font-data-mono">maya / maya123</span></button>
+        <button data-fill="james"   class="text-left flex justify-between hover:text-primary transition-colors"><span>Student · GED</span><span class="font-data-mono">james / james123</span></button>
+        <button data-fill="parent"  class="text-left flex justify-between hover:text-primary transition-colors"><span>Parent</span><span class="font-data-mono">parent / parent123</span></button>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant/70 mt-xs">Demo sign-in only — accounts are stored in this browser, not a server.</p>
+    </div>
+  </div>
+
+<script src="auth.js"></script>
+<script>
+  // If already signed in, skip the login page.
+  if (Auth.getSession()) location.replace("index.html");
+
+  const creds = { teacher: "teach123", maya: "maya123", james: "james123", parent: "parent123" };
+  document.querySelectorAll("[data-fill]").forEach(b => {
+    b.addEventListener("click", () => {
+      const u = b.dataset.fill;
+      document.getElementById("username").value = u;
+      document.getElementById("password").value = creds[u] || "";
+      document.getElementById("password").focus();
+    });
+  });
+
+  document.getElementById("login-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const err = document.getElementById("login-error");
+    const res = Auth.login(
+      document.getElementById("username").value,
+      document.getElementById("password").value
+    );
+    if (res.ok) {
+      location.href = "index.html";
+    } else {
+      err.textContent = res.error;
+      err.classList.remove("hidden");
+    }
+  });
+</script>
+</body>
+</html>

@@ -3,11 +3,13 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Grades - Scholastica Portal</title>
+<title>Attendance - Scholastica Portal</title>
 <meta name="theme-color" content="#000a1e"/>
-<meta name="description" content="Grades & GPA — Scholastica Academic Excellence Portal"/>
+<meta name="description" content="Attendance Tracking — Scholastica Academic Excellence Portal"/>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icon.svg"/>
+<script src="auth.js"></script>
+<script src="notify.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -66,6 +68,7 @@ tailwind.config = {
   .nav-active { background-color: #d5e3fc; color: #57657a; font-weight: 700; border-radius: 0.5rem; }
   .nav-inactive { color: #44474e; border-radius: 0.5rem; }
   .nav-inactive:hover { background-color: #e9e7eb; }
+  .cal-cell { aspect-ratio: 1; }
 </style>
 </head>
 <body class="bg-background font-body-md text-on-background min-h-screen">
@@ -82,12 +85,12 @@ tailwind.config = {
         <span class="material-symbols-outlined">dashboard</span>
         <span class="font-label-md text-label-md">Dashboard</span>
       </a>
-      <a href="attendance.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
-        <span class="material-symbols-outlined">event_available</span>
+      <a href="attendance.html" class="flex items-center gap-sm px-sm py-xs nav-active transition-all">
+        <span class="material-symbols-outlined icon-fill">event_available</span>
         <span class="font-label-md text-label-md">Attendance</span>
       </a>
-      <a href="grades.html" class="flex items-center gap-sm px-sm py-xs nav-active transition-all">
-        <span class="material-symbols-outlined icon-fill">grade</span>
+      <a href="grades.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">grade</span>
         <span class="font-label-md text-label-md">Grades</span>
       </a>
       <a href="exam-center.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
@@ -127,12 +130,12 @@ tailwind.config = {
     <span class="material-symbols-outlined text-[22px]">dashboard</span>
     <span class="text-[10px] font-semibold">Home</span>
   </a>
-  <a href="attendance.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
-    <span class="material-symbols-outlined text-[22px]">event_available</span>
+  <a href="attendance.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-primary">
+    <span class="material-symbols-outlined icon-fill text-[22px]">event_available</span>
     <span class="text-[10px] font-semibold">Attend</span>
   </a>
-  <a href="grades.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-primary">
-    <span class="material-symbols-outlined icon-fill text-[22px]">grade</span>
+  <a href="grades.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">grade</span>
     <span class="text-[10px] font-semibold">Grades</span>
   </a>
   <a href="exam-center.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
@@ -186,63 +189,87 @@ tailwind.config = {
     <section class="mb-lg">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
         <div>
-          <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base" id="page-caption">Report Card</p>
-          <h2 class="font-headline-lg text-headline-lg text-primary mb-xs">Grades &amp; Report Card</h2>
-          <p class="font-body-md text-body-md text-on-surface-variant" id="page-desc">Grade report and progress for the current term.</p>
+          <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base" id="page-caption">Spring Term 2026</p>
+          <h2 class="font-headline-lg text-headline-lg text-primary mb-xs">Attendance Tracking</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant" id="page-desc">Monitor class attendance, absences, and punctuality across all subjects.</p>
         </div>
         <div class="flex gap-sm shrink-0 items-center">
           <span id="track-toggle"></span>
           <button class="flex items-center gap-xs bg-primary text-on-primary px-md py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm">
-            <span class="material-symbols-outlined text-[18px]">description</span> Report
+            <span class="material-symbols-outlined text-[18px]">flag</span> Report Absence
           </button>
         </div>
       </div>
     </section>
 
     <!-- Stat Cards -->
-    <section class="grid grid-cols-2 lg:grid-cols-4 gap-sm mb-gutter" id="stat-cards"></section>
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-sm mb-gutter" id="att-stats"></section>
 
     <!-- Main Grid -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
 
-      <!-- Left: Grade table -->
-      <div class="md:col-span-8 space-y-gutter">
-        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
-          <div class="flex justify-between items-center p-md border-b border-outline-variant/20">
-            <h3 class="font-headline-md text-headline-md text-primary">Course Grades</h3>
-            <span class="font-label-md text-label-md text-on-surface-variant" id="course-count">6 courses</span>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full min-w-[560px]">
-              <thead id="grade-head"></thead>
-              <tbody class="divide-y divide-outline-variant/20" id="grade-rows"></tbody>
-              <tfoot id="grade-foot"></tfoot>
-            </table>
-          </div>
-        </div>
-
-        <!-- GPA Trend -->
+      <!-- Left: Subject breakdown -->
+      <div class="md:col-span-7 space-y-gutter">
         <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
           <div class="flex justify-between items-center mb-md">
-            <h3 class="font-headline-md text-headline-md text-primary" id="trend-title">Progress</h3>
-            <span class="font-label-md text-label-md text-success flex items-center gap-xs" id="trend-note"></span>
+            <h3 class="font-headline-md text-headline-md text-primary" id="bycourse-title">By Subject</h3>
+            <span class="font-label-md text-label-md text-on-surface-variant" id="course-count">—</span>
           </div>
-          <div class="flex items-end justify-between gap-sm h-44 pt-md" id="trend-chart"></div>
+          <div class="space-y-md" id="subject-list"></div>
+        </div>
+
+        <!-- Recent Log -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <div class="flex justify-between items-center mb-md">
+            <h3 class="font-headline-md text-headline-md text-primary">Recent Activity</h3>
+            <a href="#" class="font-label-md text-label-md text-primary hover:underline">View All</a>
+          </div>
+          <div class="space-y-xs" id="recent-log"></div>
         </div>
       </div>
 
-      <!-- Right: Distribution + honors -->
-      <div class="md:col-span-4 space-y-gutter">
+      <!-- Right: Calendar -->
+      <div class="md:col-span-5 space-y-gutter">
         <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
-          <h4 class="font-headline-md text-headline-md text-primary mb-md">Grade Distribution</h4>
-          <div class="space-y-sm" id="distribution"></div>
+          <div class="flex justify-between items-center mb-md">
+            <h3 class="font-headline-md text-headline-md text-primary" id="cal-title">Calendar</h3>
+            <div class="flex gap-xs">
+              <button id="cal-prev" class="p-xs hover:bg-surface-container rounded-full transition-colors">
+                <span class="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_left</span>
+              </button>
+              <button id="cal-next" class="p-xs hover:bg-surface-container rounded-full transition-colors">
+                <span class="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span>
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-7 gap-1 mb-1 text-center">
+            <span class="font-label-md text-[11px] text-on-surface-variant">S</span>
+            <span class="font-label-md text-[11px] text-on-surface-variant">M</span>
+            <span class="font-label-md text-[11px] text-on-surface-variant">T</span>
+            <span class="font-label-md text-[11px] text-on-surface-variant">W</span>
+            <span class="font-label-md text-[11px] text-on-surface-variant">T</span>
+            <span class="font-label-md text-[11px] text-on-surface-variant">F</span>
+            <span class="font-label-md text-[11px] text-on-surface-variant">S</span>
+          </div>
+          <div class="grid grid-cols-7 gap-1" id="cal-grid"></div>
+          <div class="flex flex-wrap gap-md mt-md pt-md border-t border-outline-variant/20">
+            <span class="flex items-center gap-xs font-body-sm text-body-sm text-on-surface-variant"><span class="h-3 w-3 rounded bg-success-container"></span>Present</span>
+            <span class="flex items-center gap-xs font-body-sm text-body-sm text-on-surface-variant"><span class="h-3 w-3 rounded bg-tertiary-fixed"></span>Late</span>
+            <span class="flex items-center gap-xs font-body-sm text-body-sm text-on-surface-variant"><span class="h-3 w-3 rounded bg-error-container"></span>Absent</span>
+            <span class="flex items-center gap-xs font-body-sm text-body-sm text-on-surface-variant"><span class="h-3 w-3 rounded bg-surface-container-high"></span>No class</span>
+          </div>
         </div>
 
-        <!-- Standing -->
-        <div id="standing-card" class="bg-primary rounded-xl p-md text-on-primary shadow-sm"></div>
-
-        <!-- Grading reference -->
-        <div id="scale-card" class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm"></div>
+        <!-- Attendance Alert -->
+        <div class="bg-tertiary-container/10 border border-tertiary-container/40 rounded-xl p-md shadow-sm">
+          <div class="flex items-start gap-sm">
+            <span class="material-symbols-outlined text-tertiary icon-fill">notifications_active</span>
+            <div>
+              <span class="block font-label-md text-label-md text-on-surface">Attendance Policy</span>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-xs" id="att-alert"></p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -270,39 +297,40 @@ tailwind.config = {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   }
 
-  function renderGrades() {
+  function barColor(pct) {
+    if (pct >= 90) return "bg-success";
+    if (pct >= 85) return "bg-tertiary";
+    return "bg-error";
+  }
+  function pctText(pct) {
+    if (pct >= 90) return "text-success";
+    if (pct >= 85) return "text-tertiary";
+    return "text-error";
+  }
+
+  function renderAttendance() {
     const t = getTrack();
     const isGed = t.grading === 'ged';
-    const scores = t.subjects.map(s => s.score);
-    const mean = avg(scores);
+    const subs = t.subjects;
+    const totalSessions = subs.reduce((a, s) => a + s.total, 0);
+    const attended = subs.reduce((a, s) => a + s.attended, 0);
+    const absent = totalSessions - attended;
+    const rate = Math.round((attended / totalSessions) * 100);
 
-    document.getElementById('page-caption').textContent = isGed ? 'GED Program' : 'Report Card · ' + t.term;
+    document.getElementById('page-caption').textContent = t.term;
     document.getElementById('page-desc').textContent = isGed
-      ? `Practice-test scores on the GED 100–200 scale (145 = pass) for ${t.student.fullName}.`
-      : `Report card and progress for ${t.student.fullName}, ${t.student.grade}.`;
+      ? `Class attendance for ${t.student.fullName}, GED evening program.`
+      : `Attendance for ${t.student.fullName}, ${t.student.grade}.`;
+    document.getElementById('course-count').textContent = `${subs.length} subjects`;
 
     // --- stat cards ---
-    let cards;
-    if (isGed) {
-      const passing = scores.filter(s => s >= 145).length;
-      const ready = scores.filter(s => s >= 165).length;
-      cards = [
-        { dark: true, label: 'Avg Practice Score', value: Math.round(mean), sub: 'on the 100–200 scale', icon: 'trending_up' },
-        { label: 'Subjects Passing', value: `${passing} / 4`, sub: 'score ≥ 145', icon: 'verified', color: 'text-success' },
-        { label: 'College Ready', value: `${ready} / 4`, sub: 'score ≥ 165', icon: 'school', color: 'text-secondary' },
-        { label: 'Next Official Test', value: 'Jul 6', sub: 'Science', icon: 'event', color: 'text-tertiary' },
-      ];
-    } else {
-      const letter = letterFromPct(mean);
-      const honor = mean >= 90;
-      cards = [
-        { dark: true, label: 'Term Average', value: `${Math.round(mean)}%`, sub: `across ${t.subjects.length} subjects`, icon: 'trending_up' },
-        { label: 'Overall Grade', value: letter, sub: 'letter grade', icon: 'grade', color: 'text-secondary' },
-        { label: 'Subjects', value: t.subjects.length, sub: 'this term', icon: 'menu_book', color: 'text-tertiary' },
-        { label: 'Honor Roll', value: honor ? 'Yes' : '—', sub: honor ? 'avg ≥ 90%' : 'avg below 90%', icon: 'workspace_premium', color: 'text-tertiary' },
-      ];
-    }
-    document.getElementById('stat-cards').innerHTML = cards.map(c => `
+    const cards = [
+      { dark: true, label: 'Overall Rate', value: rate + '%', sub: `${attended} of ${totalSessions} sessions`, icon: 'verified' },
+      { label: 'Present', value: attended, sub: 'sessions attended', icon: 'check_circle', color: 'text-success' },
+      { label: 'Absent', value: absent, sub: 'sessions missed', icon: 'cancel', color: 'text-error' },
+      { label: 'Subjects', value: subs.length, sub: 'tracked this term', icon: 'menu_book', color: 'text-secondary' },
+    ];
+    document.getElementById('att-stats').innerHTML = cards.map(c => `
       <div class="${c.dark ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest border border-outline-variant/30'} rounded-xl p-md shadow-sm">
         <div class="flex items-center justify-between mb-sm">
           <span class="font-label-md text-label-md ${c.dark ? 'text-on-primary/70' : 'text-on-surface-variant'} uppercase tracking-wider text-[11px]">${c.label}</span>
@@ -312,142 +340,100 @@ tailwind.config = {
         <span class="font-body-sm text-body-sm ${c.dark ? 'text-on-primary/70' : 'text-on-surface-variant'}">${c.sub}</span>
       </div>`).join('');
 
-    // --- table head ---
-    const cols = isGed ? ['Subject', 'Practice Score', 'Status', 'Trend'] : ['Subject', 'Score', 'Grade', 'Trend'];
-    document.getElementById('grade-head').innerHTML = `
-      <tr class="bg-surface-container-low">
-        <th class="text-left px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[0]}</th>
-        <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[1]}</th>
-        <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[2]}</th>
-        <th class="text-right px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">${cols[3]}</th>
-      </tr>`;
-
-    // --- rows ---
-    document.getElementById('grade-rows').innerHTML = t.subjects.map(s => {
-      let scoreCell, badgeCell;
-      if (isGed) {
-        const b = gedBand(s.score);
-        scoreCell = `<span class="font-data-mono text-data-mono ${b.text}">${s.score}</span>`;
-        badgeCell = `<span class="${b.badge} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${b.label}</span>`;
-      } else {
-        const l = letterFromPct(s.score);
-        const col = s.score >= 90 ? 'text-success' : (s.score >= 80 ? 'text-primary' : 'text-tertiary');
-        scoreCell = `<span class="font-data-mono text-data-mono ${col}">${s.score}%</span>`;
-        badgeCell = `<span class="${letterBadge(l)} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${l}</span>`;
-      }
-      return `
-        <tr class="hover:bg-surface-container-low/50 transition-colors">
-          <td class="px-md py-sm">
-            <span class="font-label-md text-label-md text-on-surface">${s.name}</span>
-            <span class="block font-body-sm text-body-sm text-on-surface-variant">${s.code}</span>
-          </td>
-          <td class="px-sm py-sm text-center">${scoreCell}</td>
-          <td class="px-sm py-sm text-center">${badgeCell}</td>
-          <td class="px-md py-sm text-right">${trendIcon(s.trend)}</td>
-        </tr>`;
-    }).join('');
-
-    // --- footer ---
-    document.getElementById('grade-foot').innerHTML = isGed ? `
-      <tr class="bg-surface-container-low border-t-2 border-outline-variant/30">
-        <td class="px-md py-sm font-label-md text-label-md text-primary">Average Score</td>
-        <td class="px-sm py-sm text-center font-data-mono text-data-mono font-bold text-primary">${Math.round(mean)}</td>
-        <td class="px-sm py-sm"></td><td class="px-md py-sm"></td>
-      </tr>` : `
-      <tr class="bg-surface-container-low border-t-2 border-outline-variant/30">
-        <td class="px-md py-sm font-label-md text-label-md text-primary">Term Average</td>
-        <td class="px-sm py-sm text-center font-data-mono text-data-mono font-bold text-primary">${Math.round(mean)}%</td>
-        <td class="px-sm py-sm text-center"><span class="${letterBadge(letterFromPct(mean))} text-[11px] font-bold px-xs py-[2px] rounded uppercase">${letterFromPct(mean)}</span></td>
-        <td class="px-md py-sm"></td>
-      </tr>`;
-    document.getElementById('course-count').textContent = `${t.subjects.length} subjects`;
-
-    // --- trend chart ---
-    const maxV = isGed ? 200 : 100;
-    document.getElementById('trend-title').textContent = isGed ? 'Practice Score Trend' : 'Progress';
-    const first = t.trend[0].value, last = t.trend[t.trend.length - 1].value;
-    const up = last >= first;
-    const note = document.getElementById('trend-note');
-    note.innerHTML = `<span class="material-symbols-outlined text-[16px] icon-fill">${up ? 'trending_up' : 'trending_down'}</span> ${up ? '+' : ''}${last - first}${isGed ? ' pts' : '%'} since ${t.trend[0].term}`;
-    note.className = 'font-label-md text-label-md flex items-center gap-xs ' + (up ? 'text-success' : 'text-error');
-    document.getElementById('trend-chart').innerHTML = t.trend.map((d, i) => {
-      const h = Math.round((d.value / maxV) * 100);
-      const isLast = i === t.trend.length - 1;
-      return `
-        <div class="flex-1 flex flex-col items-center gap-xs h-full justify-end">
-          <span class="font-data-mono text-[11px] ${isLast ? 'text-primary font-bold' : 'text-on-surface-variant'} tabular-nums">${d.value}</span>
-          <div class="w-full ${isLast ? 'bg-primary' : 'bg-primary-fixed-dim'} rounded-t-lg transition-all" style="height:${h}%"></div>
-          <span class="font-label-md text-[10px] text-on-surface-variant uppercase">${d.term}</span>
-        </div>`;
-    }).join('');
-
-    // --- distribution ---
-    let dist;
-    if (isGed) {
-      const b = { 'Honors': 0, 'College Ready': 0, 'Passing': 0, 'Not Yet Passing': 0 };
-      t.subjects.forEach(s => b[gedBand(s.score).label]++);
-      dist = [
-        { label: 'College Ready (165+)', n: b['College Ready'] + b['Honors'], color: 'bg-secondary' },
-        { label: 'Passing (145–164)', n: b['Passing'], color: 'bg-success' },
-        { label: 'Not Yet Passing', n: b['Not Yet Passing'], color: 'bg-error' },
-      ];
-    } else {
-      const b = { A: 0, B: 0, C: 0, DF: 0 };
-      t.subjects.forEach(s => { const l = letterFromPct(s.score); if (l[0] === 'A') b.A++; else if (l[0] === 'B') b.B++; else if (l[0] === 'C') b.C++; else b.DF++; });
-      dist = [
-        { label: 'A range', n: b.A, color: 'bg-success' },
-        { label: 'B range', n: b.B, color: 'bg-secondary' },
-        { label: 'C range', n: b.C, color: 'bg-tertiary' },
-        { label: 'D / F', n: b.DF, color: 'bg-error' },
-      ];
-    }
-    const total = t.subjects.length;
-    document.getElementById('distribution').innerHTML = dist.map(d => {
-      const pct = total ? Math.round((d.n / total) * 100) : 0;
+    // --- by subject ---
+    document.getElementById('subject-list').innerHTML = subs.map(s => {
+      const pct = Math.round((s.attended / s.total) * 100);
       return `
         <div>
           <div class="flex justify-between items-baseline mb-xs">
-            <span class="font-body-sm text-body-sm text-on-surface">${d.label}</span>
-            <span class="font-data-mono text-data-mono text-on-surface-variant">${d.n} subject${d.n === 1 ? '' : 's'}</span>
+            <div>
+              <span class="font-label-md text-label-md text-on-surface">${s.name}</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant ml-xs">${s.code}</span>
+            </div>
+            <span class="font-data-mono text-data-mono font-bold ${pctText(pct)} tabular-nums">${pct}%</span>
           </div>
           <div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
-            <div class="h-full ${d.color} rounded-full" style="width:${pct}%"></div>
+            <div class="h-full ${barColor(pct)} rounded-full" style="width:${pct}%"></div>
           </div>
+          <span class="block font-body-sm text-body-sm text-on-surface-variant mt-xs">${s.attended} of ${s.total} sessions attended</span>
         </div>`;
     }).join('');
 
-    // --- standing card ---
-    document.getElementById('standing-card').innerHTML = `
-      <div class="flex items-center gap-sm mb-sm">
-        <span class="material-symbols-outlined text-tertiary-fixed icon-fill text-[32px]">military_tech</span>
-        <div>
-          <span class="block font-label-md text-label-md text-on-primary/70 uppercase tracking-widest text-[10px]">${t.achievement.tag}</span>
-          <span class="block font-headline-md text-headline-md">${t.achievement.title}</span>
-        </div>
-      </div>
-      <p class="font-body-sm text-body-sm text-on-primary/80">${t.achievement.note}</p>`;
+    // --- recent log (sampled from this track's subjects) ---
+    const statusMeta = {
+      present: { icon: "check_circle", color: "text-success", bg: "bg-success-container/40", label: "Present" },
+      late:    { icon: "schedule",     color: "text-tertiary", bg: "bg-tertiary-fixed/40", label: "Late" },
+      absent:  { icon: "cancel",       color: "text-error", bg: "bg-error-container/50", label: "Absent" },
+      excused: { icon: "event_busy",   color: "text-secondary", bg: "bg-secondary-container/50", label: "Excused" },
+    };
+    const when = ['Today, 9:00 AM', 'Today, 10:30 AM', 'Yesterday', '2 days ago', '3 days ago', 'Last week'];
+    const seq = ['present', 'present', 'late', 'present', 'absent', 'present'];
+    const log = subs.slice(0, 6).map((s, i) => ({ status: seq[i % seq.length], subject: s.name, date: when[i % when.length] }));
+    document.getElementById('recent-log').innerHTML = log.map(l => {
+      const m = statusMeta[l.status];
+      return `
+        <div class="flex items-center gap-sm p-sm rounded-lg hover:bg-surface-container-low transition-colors">
+          <span class="h-9 w-9 rounded-full ${m.bg} flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined ${m.color} icon-fill text-[18px]">${m.icon}</span>
+          </span>
+          <div class="flex-grow min-w-0">
+            <span class="block font-label-md text-label-md text-on-surface truncate">${l.subject}</span>
+            <span class="block font-body-sm text-body-sm text-on-surface-variant">${l.date}</span>
+          </div>
+          <span class="font-label-md text-[11px] uppercase ${m.color} shrink-0">${m.label}</span>
+        </div>`;
+    }).join('');
 
-    // --- grading reference ---
-    document.getElementById('scale-card').innerHTML = isGed ? `
-      <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px] mb-sm">GED Score Bands</h4>
-      <div class="space-y-xs font-body-sm text-body-sm text-on-surface-variant">
-        <div class="flex justify-between"><span>Not yet passing</span><span class="font-data-mono">100–144</span></div>
-        <div class="flex justify-between"><span>GED Pass</span><span class="font-data-mono">145–164</span></div>
-        <div class="flex justify-between"><span>College Ready</span><span class="font-data-mono">165–174</span></div>
-        <div class="flex justify-between"><span>College Ready + Credit</span><span class="font-data-mono">175–200</span></div>
-      </div>` : `
-      <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px] mb-sm">Grading Scale</h4>
-      <div class="grid grid-cols-2 gap-x-md gap-y-xs font-body-sm text-body-sm text-on-surface-variant">
-        <span>A <span class="float-right font-data-mono">93–100%</span></span>
-        <span>A− <span class="float-right font-data-mono">90–92%</span></span>
-        <span>B <span class="float-right font-data-mono">83–86%</span></span>
-        <span>C <span class="float-right font-data-mono">73–76%</span></span>
-      </div>`;
+    // --- policy alert: lowest-attendance subject ---
+    const lowest = subs.reduce((a, b) => (a.attended / a.total) <= (b.attended / b.total) ? a : b);
+    const lowestPct = Math.round((lowest.attended / lowest.total) * 100);
+    const threshold = isGed ? 80 : 85;
+    document.getElementById('att-alert').innerHTML = lowestPct < threshold
+      ? `A minimum ${threshold}% attendance is expected. <span class="font-semibold text-tertiary">${lowest.name}</span> is at ${lowestPct}% — below the threshold.`
+      : `A minimum ${threshold}% attendance is expected. All subjects are above the threshold — lowest is <span class="font-semibold text-tertiary">${lowest.name}</span> at ${lowestPct}%.`;
   }
 
+  // --- Calendar heatmap (program-independent) ---
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let viewDate = new Date();
+  viewDate.setDate(1);
+
+  // Deterministic pseudo-status per date so the heatmap is stable
+  function dayStatus(y, m, d) {
+    const dow = new Date(y, m, d).getDay();
+    if (dow === 0 || dow === 6) return 'none';
+    const seed = (y * 372 + m * 31 + d) % 17;
+    if (seed === 0) return 'absent';
+    if (seed === 5 || seed === 11) return 'late';
+    return 'present';
+  }
+  const cellBg = { present: 'bg-success-container text-success', late: 'bg-tertiary-fixed text-on-tertiary-container', absent: 'bg-error-container text-error', none: 'bg-surface-container-high/50 text-on-surface-variant' };
+
+  function renderCalendar() {
+    const y = viewDate.getFullYear(), m = viewDate.getMonth();
+    document.getElementById('cal-title').textContent = `${months[m]} ${y}`;
+    const firstDow = new Date(y, m, 1).getDay();
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    const today = new Date();
+    let cells = '';
+    for (let i = 0; i < firstDow; i++) cells += `<div class="cal-cell"></div>`;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const isFuture = new Date(y, m, d) > today;
+      const isToday = today.getFullYear() === y && today.getMonth() === m && today.getDate() === d;
+      const st = isFuture ? 'none' : dayStatus(y, m, d);
+      const ring = isToday ? 'ring-2 ring-primary' : '';
+      const cls = isFuture ? 'bg-surface-container-low text-on-surface-variant/40' : cellBg[st];
+      cells += `<div class="cal-cell ${cls} ${ring} rounded-lg flex items-center justify-center font-data-mono text-[12px] font-semibold">${d}</div>`;
+    }
+    document.getElementById('cal-grid').innerHTML = cells;
+  }
+  document.getElementById('cal-prev').onclick = () => { viewDate.setMonth(viewDate.getMonth() - 1); renderCalendar(); };
+  document.getElementById('cal-next').onclick = () => { viewDate.setMonth(viewDate.getMonth() + 1); renderCalendar(); };
+
   mountTrackToggle(document.getElementById('track-toggle'));
-  document.addEventListener('trackchange', renderGrades);
-  renderGrades();
+  document.addEventListener('trackchange', renderAttendance);
+  renderAttendance();
+  renderCalendar();
 </script>
 </body>
 </html>

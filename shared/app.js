@@ -75,6 +75,45 @@ const SCHOLASTICA = {
   },
 };
 
+/* ---------- editable data persistence ----------
+   SCHOLASTICA.tracks above is the SEED (defaults shipped with the app).
+   Teachers can edit grades/attendance; edits are saved per-device in
+   localStorage and layered over the seed. Bump DATA_KEY's version if the
+   seed shape changes so stale saved data is ignored. */
+const SEED_TRACKS = JSON.parse(JSON.stringify(SCHOLASTICA.tracks));
+const DATA_KEY = "scholastica-data-v1";
+function loadData() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(DATA_KEY));
+    if (saved && saved.primary && saved.ged) SCHOLASTICA.tracks = saved;
+  } catch (_) { /* ignore corrupt data, fall back to seed */ }
+}
+function saveData() {
+  localStorage.setItem(DATA_KEY, JSON.stringify(SCHOLASTICA.tracks));
+  document.dispatchEvent(new CustomEvent("datachange"));
+}
+function resetData() {
+  SCHOLASTICA.tracks = JSON.parse(JSON.stringify(SEED_TRACKS));
+  saveData();
+}
+// Update one subject's editable fields on a track, then persist.
+function updateSubject(trackId, index, fields) {
+  const track = SCHOLASTICA.tracks[trackId];
+  if (!track || !track.subjects[index]) return;
+  Object.assign(track.subjects[index], fields);
+  saveData();
+}
+// Export the current saved data as a downloadable JSON backup.
+function exportData() {
+  const blob = new Blob([JSON.stringify(SCHOLASTICA.tracks, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "scholastica-data.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+loadData();
+
 /* ---------- track state ---------- */
 const TRACK_KEY = "scholastica-track";
 function getTrackId() {
@@ -124,6 +163,15 @@ function avg(nums) { return nums.reduce((a, b) => a + b, 0) / nums.length; }
 /* ---------- track toggle UI ---------- */
 function mountTrackToggle(el) {
   if (!el) return;
+  // Students & parents are pinned to their own track — show a static label,
+  // not a switcher (only teachers/admins can flip between programs).
+  if (typeof Auth !== "undefined" && Auth.getSession() && !Auth.canEdit()) {
+    el.innerHTML = `
+      <span class="inline-flex items-center gap-xs bg-surface-container rounded-full px-md py-xs border border-outline-variant/30 font-label-md text-label-md text-on-surface-variant">
+        <span class="material-symbols-outlined text-[16px]">school</span>${getTrack().label}
+      </span>`;
+    return;
+  }
   function render() {
     const cur = getTrackId();
     el.innerHTML = `

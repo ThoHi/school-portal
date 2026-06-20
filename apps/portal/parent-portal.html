@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Parent Portal - Scholastica Portal</title>
+<meta name="theme-color" content="#000a1e"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon.svg"/>
+<script src="auth.js"></script>
+<script src="notify.js"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "tertiary-fixed": "#ffe088", "secondary-container": "#d5e3fc", "primary": "#000a1e",
+        "surface-container": "#efedf1", "on-error": "#ffffff", "on-surface-variant": "#44474e",
+        "on-secondary-container": "#57657a", "surface-dim": "#dad9dd", "primary-fixed-dim": "#aec7f6",
+        "tertiary-container": "#cca830", "inverse-primary": "#aec7f6",
+        "surface-container-highest": "#e3e2e6", "on-tertiary-container": "#4f3e00",
+        "surface": "#faf9fd", "surface-variant": "#e3e2e6", "surface-tint": "#465f88",
+        "secondary": "#515f74", "error-container": "#ffdad6", "surface-container-low": "#f4f3f7",
+        "surface-bright": "#faf9fd", "primary-container": "#002147", "tertiary-fixed-dim": "#e9c349",
+        "tertiary": "#735c00", "primary-fixed": "#d6e3ff", "on-primary": "#ffffff",
+        "surface-container-lowest": "#ffffff", "on-error-container": "#93000a",
+        "on-primary-container": "#708ab5", "on-primary-fixed": "#001b3d",
+        "secondary-fixed": "#d5e3fc", "error": "#ba1a1a", "inverse-surface": "#2f3033",
+        "outline-variant": "#c4c6cf", "on-surface": "#1a1b1e", "on-secondary": "#ffffff",
+        "inverse-on-surface": "#f1f0f4", "background": "#faf9fd", "on-tertiary": "#ffffff",
+        "surface-container-high": "#e9e7eb", "secondary-fixed-dim": "#b9c7df", "on-background": "#1a1b1e",
+        "success": "#1a6b3c", "success-container": "#b7f0d0"
+      },
+      borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+      spacing: {
+        "margin-mobile": "16px", "base": "4px", "margin-desktop": "48px",
+        "xs": "8px", "gutter": "24px", "xl": "64px", "lg": "40px", "md": "24px", "sm": "16px"
+      },
+      fontFamily: {
+        "body-sm": ["Public Sans"], "data-mono": ["Public Sans"],
+        "headline-md": ['"Source Serif 4"'], "headline-lg-mobile": ['"Source Serif 4"'],
+        "headline-lg": ['"Source Serif 4"'], "display-lg": ['"Source Serif 4"'],
+        "label-md": ["Public Sans"], "body-lg": ["Public Sans"], "body-md": ["Public Sans"]
+      },
+      fontSize: {
+        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+        "data-mono": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+        "headline-lg-mobile": ["28px", { lineHeight: "36px", fontWeight: "600" }],
+        "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600" }],
+        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }]
+      }
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .nav-active { background-color: #d5e3fc; color: #57657a; font-weight: 700; border-radius: 0.5rem; }
+  .nav-inactive { color: #44474e; border-radius: 0.5rem; }
+  .nav-inactive:hover { background-color: #e9e7eb; }
+  .tab-active { border-bottom: 2px solid #000a1e; color: #000a1e; font-weight: 700; }
+  .tab-inactive { color: #44474e; border-bottom: 2px solid transparent; }
+  .tab-inactive:hover { color: #1a1b1e; }
+</style>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen">
+
+<!-- Sidebar -->
+<aside class="h-screen w-64 fixed left-0 top-0 hidden lg:flex flex-col bg-surface-container-low border-r border-outline-variant/20 z-40">
+  <div class="p-sm flex flex-col h-full">
+    <div class="px-sm py-md mb-2">
+      <h1 class="font-headline-md text-headline-md text-primary leading-tight">Academic Excellence</h1>
+      <p class="font-label-md text-label-md text-on-surface-variant">Modern Scholasticism</p>
+    </div>
+    <nav class="flex-grow space-y-xs">
+      <a href="index.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="font-label-md text-label-md">Dashboard</span>
+      </a>
+      <a href="attendance.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">event_available</span>
+        <span class="font-label-md text-label-md">Attendance</span>
+      </a>
+      <a href="grades.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">grade</span>
+        <span class="font-label-md text-label-md">Grades</span>
+      </a>
+      <a href="exam-center.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">quiz</span>
+        <span class="font-label-md text-label-md">Exam Center</span>
+      </a>
+      <a href="e-library.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">menu_book</span>
+        <span class="font-label-md text-label-md">E-Library</span>
+      </a>
+      <a href="research.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">school</span>
+        <span class="font-label-md text-label-md">Research</span>
+      </a>
+      <a href="parent-portal.html" class="flex items-center gap-sm px-sm py-xs nav-active transition-all">
+        <span class="material-symbols-outlined icon-fill">family_restroom</span>
+        <span class="font-label-md text-label-md">Parent Portal</span>
+      </a>
+    </nav>
+    <div class="pt-md border-t border-outline-variant/20 space-y-xs pb-sm">
+      <a href="#" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="font-label-md text-label-md">Settings</span>
+      </a>
+      <a href="#" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="font-label-md text-label-md">Logout</span>
+      </a>
+      <button class="w-full mt-2 bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">Support Desk</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile Bottom Nav -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest border-t border-outline-variant/20 flex">
+  <a href="index.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">dashboard</span>
+    <span class="text-[10px] font-semibold">Home</span>
+  </a>
+  <a href="attendance.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">event_available</span>
+    <span class="text-[10px] font-semibold">Attend</span>
+  </a>
+  <a href="grades.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">grade</span>
+    <span class="text-[10px] font-semibold">Grades</span>
+  </a>
+  <a href="exam-center.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">quiz</span>
+    <span class="text-[10px] font-semibold">Exams</span>
+  </a>
+  <a href="e-library.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">menu_book</span>
+    <span class="text-[10px] font-semibold">Library</span>
+  </a>
+  <a href="research.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
+    <span class="material-symbols-outlined text-[22px]">school</span>
+    <span class="text-[10px] font-semibold">Research</span>
+  </a>
+  <a href="parent-portal.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-primary">
+    <span class="material-symbols-outlined icon-fill text-[22px]">family_restroom</span>
+    <span class="text-[10px] font-semibold">Parents</span>
+  </a>
+</nav>
+
+<main class="lg:pl-64 pb-20 lg:pb-0 flex flex-col min-h-screen">
+
+  <!-- Top Header -->
+  <header class="bg-surface/80 backdrop-blur-md sticky top-0 z-30 border-b border-outline-variant/30 shadow-sm">
+    <div class="flex justify-between items-center h-16 px-gutter w-full max-w-[1280px] mx-auto">
+      <div class="flex items-center gap-md">
+        <span class="font-headline-md text-headline-md font-bold text-primary">Scholastica Portal</span>
+        <div class="hidden md:flex bg-surface-container px-sm py-xs rounded-full items-center gap-xs border border-outline-variant/20">
+          <span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+          <input type="text" placeholder="Search student records..." class="bg-transparent border-none focus:ring-0 text-body-sm font-body-sm w-64 outline-none"/>
+        </div>
+      </div>
+      <div class="flex items-center gap-sm">
+        <button class="p-xs text-on-surface-variant hover:text-primary transition-colors relative">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute top-1 right-1 h-2 w-2 bg-error rounded-full"></span>
+        </button>
+        <button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
+          <span class="material-symbols-outlined">translate</span>
+        </button>
+        <div class="h-8 w-8 rounded-full bg-primary-container overflow-hidden ml-xs border border-outline-variant/30">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwVyycLry4BRwiiIdSNwoC99vti7mdyi0_-jYETAw0wegipHA_DrkRr6dCMb8TUqaxOcteeIHC0QCFBPGmX7JpssTQBCPbBdSdOjbzNcxjsDBDxUOnlT7gp2Ta7YwuMkCFUobwTKfG-aSQ5ZUUdxyCWGzqFVOs26AvUii8_xNMonkq330diC7VK9SJKn-35fHKqHuinD2hPSJ4XdHPMXB5xdj4CmITH5qfOitjRw1Xm1ewSswasHkf_qQbYtoIul5NLB9xZqK-2vg" alt="Profile"/>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex-grow p-sm md:p-gutter max-w-[1280px] mx-auto w-full">
+
+    <!-- Page Header -->
+    <section class="mb-lg">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+        <div>
+          <h2 class="font-headline-lg text-headline-lg text-primary mb-base">Parent Portal</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant">View your child's academic progress, attendance, and communicate with faculty.</p>
+        </div>
+        <button class="flex items-center gap-xs px-md py-sm bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm self-start md:self-auto">
+          <span class="material-symbols-outlined text-[18px]">download</span>Full Report
+        </button>
+      </div>
+    </section>
+
+    <!-- Student Overview Card -->
+    <div class="bg-primary rounded-2xl p-md mb-gutter shadow-sm text-on-primary overflow-hidden relative">
+      <div class="absolute top-0 right-0 w-48 h-48 rounded-full bg-on-primary/5 -translate-y-16 translate-x-16"></div>
+      <div class="absolute bottom-0 left-24 w-32 h-32 rounded-full bg-on-primary/5 translate-y-12"></div>
+      <div class="relative flex flex-col md:flex-row items-start md:items-center gap-md">
+        <div class="h-20 w-20 rounded-xl overflow-hidden border-2 border-on-primary/20 shrink-0">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwVyycLry4BRwiiIdSNwoC99vti7mdyi0_-jYETAw0wegipHA_DrkRr6dCMb8TUqaxOcteeIHC0QCFBPGmX7JpssTQBCPbBdSdOjbzNcxjsDBDxUOnlT7gp2Ta7YwuMkCFUobwTKfG-aSQ5ZUUdxyCWGzqFVOs26AvUii8_xNMonkq330diC7VK9SJKn-35fHKqHuinD2hPSJ4XdHPMXB5xdj4CmITH5qfOitjRw1Xm1ewSswasHkf_qQbYtoIul5NLB9xZqK-2vg" alt="Student"/>
+        </div>
+        <div class="flex-grow">
+          <div class="flex items-center gap-sm flex-wrap mb-xs">
+            <h3 class="font-headline-md text-headline-md">Alexandra Chen</h3>
+            <span class="bg-tertiary-container text-on-tertiary-container text-[10px] font-bold px-xs py-[2px] rounded-full uppercase tracking-widest">Dean's List</span>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-primary/80 mb-sm">Student ID: SC-2021-4892 · BSc Physics · Year 3 · Academic Year 2024/25</p>
+          <div class="flex flex-wrap gap-md">
+            <div>
+              <span class="block font-data-mono text-data-mono text-tertiary-fixed text-[20px] font-bold">3.87</span>
+              <span class="font-body-sm text-body-sm text-on-primary/60">Cumulative GPA</span>
+            </div>
+            <div>
+              <span class="block font-data-mono text-data-mono text-on-primary text-[20px] font-bold">96.2%</span>
+              <span class="font-body-sm text-body-sm text-on-primary/60">Attendance Rate</span>
+            </div>
+            <div>
+              <span class="block font-data-mono text-data-mono text-on-primary text-[20px] font-bold">68/120</span>
+              <span class="font-body-sm text-body-sm text-on-primary/60">Credit Hours</span>
+            </div>
+            <div>
+              <span class="block font-data-mono text-data-mono text-tertiary-fixed text-[20px] font-bold">#7</span>
+              <span class="font-body-sm text-body-sm text-on-primary/60">Class Rank</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-sm shrink-0">
+          <button class="flex items-center gap-xs px-md py-sm border border-on-primary/30 text-on-primary rounded-lg font-label-md text-label-md hover:bg-on-primary/10 transition-colors">
+            <span class="material-symbols-outlined text-[18px]">message</span>Message
+          </button>
+          <button class="flex items-center gap-xs px-md py-sm bg-on-primary text-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined text-[18px]">event</span>Schedule Meeting
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+
+      <!-- Left: Grades + Attendance -->
+      <div class="md:col-span-8 space-y-gutter">
+
+        <!-- Academic Performance -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
+          <div class="flex justify-between items-center p-md border-b border-outline-variant/20">
+            <h3 class="font-headline-md text-headline-md text-primary">Academic Performance</h3>
+            <div class="flex gap-xs">
+              <button class="px-sm py-xs font-label-md text-label-md bg-primary text-on-primary rounded-lg text-[12px]">This Semester</button>
+              <button class="px-sm py-xs font-label-md text-label-md text-on-surface-variant hover:bg-surface-container rounded-lg text-[12px] transition-colors">All Time</button>
+            </div>
+          </div>
+          <table class="w-full">
+            <thead>
+              <tr class="bg-surface-container-low">
+                <th class="text-left px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Course</th>
+                <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Score</th>
+                <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Grade</th>
+                <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Credits</th>
+                <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Teacher</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/20">
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="px-md py-sm">
+                  <span class="block font-label-md text-label-md text-on-surface">Advanced Quantum Mechanics</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">PHY 4201 · In Progress</span>
+                </td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-primary">—</td>
+                <td class="px-sm py-sm text-center"><span class="bg-primary-container text-on-primary-container text-[11px] font-bold px-xs py-[2px] rounded">Active</span></td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface-variant">4</td>
+                <td class="px-sm py-sm text-center font-body-sm text-body-sm text-on-surface-variant">Prof. Nakamura</td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="px-md py-sm">
+                  <span class="block font-label-md text-label-md text-on-surface">Macroeconomics</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">ECO 3101 · Completed</span>
+                </td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-tertiary">94%</td>
+                <td class="px-sm py-sm text-center"><span class="bg-success-container text-success text-[11px] font-bold px-xs py-[2px] rounded">A</span></td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface-variant">3</td>
+                <td class="px-sm py-sm text-center font-body-sm text-body-sm text-on-surface-variant">Prof. Adeyemi</td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="px-md py-sm">
+                  <span class="block font-label-md text-label-md text-on-surface">French Language C1</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">FRN 3001 · Completed</span>
+                </td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-primary">82%</td>
+                <td class="px-sm py-sm text-center"><span class="bg-secondary-container text-on-secondary-container text-[11px] font-bold px-xs py-[2px] rounded">B+</span></td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface-variant">2</td>
+                <td class="px-sm py-sm text-center font-body-sm text-body-sm text-on-surface-variant">Prof. Dubois</td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="px-md py-sm">
+                  <span class="block font-label-md text-label-md text-on-surface">Structural Analysis I</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">ENG 3204 · Completed</span>
+                </td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-primary">88%</td>
+                <td class="px-sm py-sm text-center"><span class="bg-secondary-container text-on-secondary-container text-[11px] font-bold px-xs py-[2px] rounded">B+</span></td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface-variant">4</td>
+                <td class="px-sm py-sm text-center font-body-sm text-body-sm text-on-surface-variant">Dr. Martinez</td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="px-md py-sm">
+                  <span class="block font-label-md text-label-md text-on-surface">Inorganic Chemistry</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">CHM 3302 · In Review</span>
+                </td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface-variant">—</td>
+                <td class="px-sm py-sm text-center"><span class="bg-primary-container text-on-primary-container text-[11px] font-bold px-xs py-[2px] rounded">Review</span></td>
+                <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface-variant">3</td>
+                <td class="px-sm py-sm text-center font-body-sm text-body-sm text-on-surface-variant">Dr. Okafor</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="p-md flex items-center justify-between bg-surface-container-low border-t border-outline-variant/20">
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Semester GPA (Projected)</span>
+            <span class="font-data-mono text-data-mono text-tertiary font-bold text-[18px]">3.91</span>
+          </div>
+        </div>
+
+        <!-- Attendance Record -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <div class="flex justify-between items-center mb-md">
+            <h3 class="font-headline-md text-headline-md text-primary">Attendance — October 2024</h3>
+            <button class="p-xs hover:bg-surface-container rounded-full transition-colors">
+              <span class="material-symbols-outlined text-on-surface-variant">chevron_left</span>
+            </button>
+          </div>
+          <!-- Attendance summary bars -->
+          <div class="space-y-sm mb-md">
+            <div class="flex items-center gap-sm">
+              <span class="font-body-sm text-body-sm text-on-surface-variant w-40 shrink-0 truncate">Quantum Mechanics</span>
+              <div class="flex-grow h-3 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full rounded-full" style="width: 100%; background-color: #1a6b3c;"></div>
+              </div>
+              <span class="font-data-mono text-data-mono text-on-surface w-12 text-right shrink-0">100%</span>
+            </div>
+            <div class="flex items-center gap-sm">
+              <span class="font-body-sm text-body-sm text-on-surface-variant w-40 shrink-0 truncate">Macroeconomics</span>
+              <div class="flex-grow h-3 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full rounded-full" style="width: 93%; background-color: #1a6b3c;"></div>
+              </div>
+              <span class="font-data-mono text-data-mono text-on-surface w-12 text-right shrink-0">93%</span>
+            </div>
+            <div class="flex items-center gap-sm">
+              <span class="font-body-sm text-body-sm text-on-surface-variant w-40 shrink-0 truncate">French C1</span>
+              <div class="flex-grow h-3 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full rounded-full" style="width: 96%; background-color: #1a6b3c;"></div>
+              </div>
+              <span class="font-data-mono text-data-mono text-on-surface w-12 text-right shrink-0">96%</span>
+            </div>
+            <div class="flex items-center gap-sm">
+              <span class="font-body-sm text-body-sm text-on-surface-variant w-40 shrink-0 truncate">Structural Analysis</span>
+              <div class="flex-grow h-3 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full rounded-full" style="width: 88%; background-color: #515f74;"></div>
+              </div>
+              <span class="font-data-mono text-data-mono text-on-surface w-12 text-right shrink-0">88%</span>
+            </div>
+            <div class="flex items-center gap-sm">
+              <span class="font-body-sm text-body-sm text-on-surface-variant w-40 shrink-0 truncate">Inorganic Chemistry</span>
+              <div class="flex-grow h-3 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full rounded-full" style="width: 100%; background-color: #1a6b3c;"></div>
+              </div>
+              <span class="font-data-mono text-data-mono text-on-surface w-12 text-right shrink-0">100%</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between bg-surface-container-low rounded-lg px-md py-sm">
+            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-[11px]">Overall Attendance</span>
+            <span class="font-headline-md text-headline-md text-primary tabular-nums">96.2%</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Messages + Events -->
+      <div class="md:col-span-4 space-y-gutter">
+
+        <!-- Messages from Teachers -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
+          <div class="flex justify-between items-center p-md border-b border-outline-variant/20">
+            <div class="flex items-center gap-sm">
+              <h4 class="font-headline-md text-headline-md text-primary">Messages</h4>
+              <span class="bg-error h-5 w-5 rounded-full flex items-center justify-center text-on-error text-[11px] font-bold">1</span>
+            </div>
+            <button class="flex items-center gap-xs font-label-md text-label-md text-primary hover:underline text-[12px]">
+              <span class="material-symbols-outlined text-[16px]">edit</span>Compose
+            </button>
+          </div>
+          <div class="divide-y divide-outline-variant/20">
+            <div class="p-md hover:bg-surface-container-low/50 transition-colors cursor-pointer">
+              <div class="flex items-start gap-sm">
+                <div class="h-10 w-10 bg-primary-container/15 rounded-full flex items-center justify-center shrink-0 font-bold text-primary text-[14px]">YN</div>
+                <div class="flex-grow min-w-0">
+                  <div class="flex items-center justify-between gap-xs mb-xs">
+                    <span class="font-label-md text-label-md text-primary truncate">Prof. Nakamura</span>
+                    <div class="flex items-center gap-xs shrink-0">
+                      <span class="h-2 w-2 bg-error rounded-full"></span>
+                      <span class="font-body-sm text-body-sm text-on-surface-variant text-[11px]">2h ago</span>
+                    </div>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">Re: Exam results — Alexandra's performance in Section 3 shows...</p>
+                </div>
+              </div>
+            </div>
+            <div class="p-md hover:bg-surface-container-low/50 transition-colors cursor-pointer opacity-70">
+              <div class="flex items-start gap-sm">
+                <div class="h-10 w-10 bg-secondary-container/30 rounded-full flex items-center justify-center shrink-0 font-bold text-secondary text-[14px]">JD</div>
+                <div class="flex-grow min-w-0">
+                  <div class="flex items-center justify-between gap-xs mb-xs">
+                    <span class="font-label-md text-label-md text-primary truncate">Prof. Dubois</span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant text-[11px] shrink-0">Yesterday</span>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">French C1 oral presentation feedback attached. Excellent accent...</p>
+                </div>
+              </div>
+            </div>
+            <div class="p-md hover:bg-surface-container-low/50 transition-colors cursor-pointer opacity-70">
+              <div class="flex items-start gap-sm">
+                <div class="h-10 w-10 bg-tertiary-container/20 rounded-full flex items-center justify-center shrink-0 font-bold text-tertiary text-[14px]">RA</div>
+                <div class="flex-grow min-w-0">
+                  <div class="flex items-center justify-between gap-xs mb-xs">
+                    <span class="font-label-md text-label-md text-primary truncate">Prof. Adeyemi</span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant text-[11px] shrink-0">Oct 18</span>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">Macroeconomics final grade confirmation. Outstanding work on...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="p-md border-t border-outline-variant/20">
+            <button class="w-full py-xs font-label-md text-label-md text-primary hover:underline">View All Messages</button>
+          </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <h4 class="font-headline-md text-headline-md text-primary mb-md">Upcoming Events</h4>
+          <div class="space-y-sm">
+            <div class="flex gap-sm items-start">
+              <div class="text-center bg-primary rounded-lg px-sm py-xs shrink-0 min-w-[48px]">
+                <span class="block font-data-mono text-data-mono text-on-primary font-bold text-[18px]">24</span>
+                <span class="block font-body-sm text-body-sm text-on-primary/70 text-[10px] uppercase">Oct</span>
+              </div>
+              <div>
+                <span class="block font-label-md text-label-md text-on-surface">Late Medieval Literature Exam</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">2:00 PM · Hall A · 2 hrs</span>
+              </div>
+            </div>
+            <div class="flex gap-sm items-start">
+              <div class="text-center bg-surface-container rounded-lg px-sm py-xs shrink-0 min-w-[48px] border border-outline-variant/30">
+                <span class="block font-data-mono text-data-mono text-on-surface-variant font-bold text-[18px]">28</span>
+                <span class="block font-body-sm text-body-sm text-on-surface-variant text-[10px] uppercase">Oct</span>
+              </div>
+              <div>
+                <span class="block font-label-md text-label-md text-on-surface">Neurobiology Finals</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">9:00 AM · Hall C · 3 hrs</span>
+              </div>
+            </div>
+            <div class="flex gap-sm items-start">
+              <div class="text-center bg-surface-container rounded-lg px-sm py-xs shrink-0 min-w-[48px] border border-outline-variant/30">
+                <span class="block font-data-mono text-data-mono text-on-surface-variant font-bold text-[18px]">30</span>
+                <span class="block font-body-sm text-body-sm text-on-surface-variant text-[10px] uppercase">Oct</span>
+              </div>
+              <div>
+                <span class="block font-label-md text-label-md text-on-surface">Registration Deadline</span>
+                <span class="font-body-sm text-body-sm text-error font-semibold">Spring Semester · Urgent</span>
+              </div>
+            </div>
+            <div class="flex gap-sm items-start">
+              <div class="text-center bg-tertiary-container/20 rounded-lg px-sm py-xs shrink-0 min-w-[48px] border border-tertiary-container/30">
+                <span class="block font-data-mono text-data-mono text-tertiary font-bold text-[18px]">05</span>
+                <span class="block font-body-sm text-body-sm text-tertiary text-[10px] uppercase">Nov</span>
+              </div>
+              <div>
+                <span class="block font-label-md text-label-md text-on-surface">Honors Convocation</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">3:00 PM · Grand Hall · Parent Invite</span>
+              </div>
+            </div>
+          </div>
+          <button class="w-full mt-md py-sm border border-outline text-primary font-label-md text-label-md rounded-lg hover:bg-surface-container transition-colors">
+            Add to Calendar
+          </button>
+        </div>
+
+        <!-- Fee Summary -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <h4 class="font-headline-md text-headline-md text-primary mb-md">Fee Summary</h4>
+          <div class="space-y-sm mb-md">
+            <div class="flex justify-between items-center py-xs border-b border-outline-variant/20">
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Tuition (Semester 1)</span>
+              <span class="font-data-mono text-data-mono text-on-surface">$6,800.00</span>
+            </div>
+            <div class="flex justify-between items-center py-xs border-b border-outline-variant/20">
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Library &amp; Lab Fees</span>
+              <span class="font-data-mono text-data-mono text-on-surface">$320.00</span>
+            </div>
+            <div class="flex justify-between items-center py-xs border-b border-outline-variant/20">
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Student Services</span>
+              <span class="font-data-mono text-data-mono text-on-surface">$180.00</span>
+            </div>
+            <div class="flex justify-between items-center py-xs">
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Amount Paid</span>
+              <span class="font-data-mono text-data-mono text-success font-bold">-$7,300.00</span>
+            </div>
+          </div>
+          <div class="flex justify-between items-center bg-surface-container-low rounded-lg px-md py-sm mb-md">
+            <span class="font-label-md text-label-md text-on-surface uppercase tracking-wider text-[11px]">Balance Due</span>
+            <span class="font-headline-md text-headline-md text-primary tabular-nums">$0.00</span>
+          </div>
+          <div class="flex items-center gap-xs text-success font-body-sm text-body-sm mb-md">
+            <span class="material-symbols-outlined icon-fill text-[18px]">check_circle</span>All fees settled for Semester 1
+          </div>
+          <button class="w-full py-sm border border-outline text-primary font-label-md text-label-md rounded-lg hover:bg-surface-container transition-colors flex items-center justify-center gap-xs">
+            <span class="material-symbols-outlined text-[18px]">receipt_long</span>View Receipts
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full py-md mt-xl bg-surface-container-highest border-t border-outline-variant">
+    <div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop w-full max-w-[1280px] mx-auto">
+      <div class="mb-sm md:mb-0">
+        <span class="font-label-md text-label-md font-bold text-primary">Scholastica Portal</span>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">© 2024 Scholastica Academic Systems. All Rights Reserved.</p>
+      </div>
+      <div class="flex gap-md flex-wrap justify-center">
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Privacy Policy</a>
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Terms of Service</a>
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Institutional Ethics</a>
+        <a href="#" class="font-body-sm text-body-sm text-on-surface-variant hover:underline">Academic Calendar</a>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  }
+</script>
+</body>
+</html>
