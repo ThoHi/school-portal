@@ -204,6 +204,39 @@ tailwind.config = {
       </div>
     </section>
 
+    <!-- Live Exam App launcher (Flask exam-test-webapp) -->
+    <section class="mb-gutter">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <!-- Launch card -->
+        <div class="md:col-span-2 bg-primary text-on-primary rounded-xl p-md shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-sm mb-sm">
+              <span class="material-symbols-outlined icon-fill text-[28px] text-tertiary-fixed">quiz</span>
+              <h3 class="font-headline-md text-headline-md">Live Exam App</h3>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-primary/80 mb-md max-w-xl">Take and grade exams in the school's secure exam app. It opens in a new tab and has its own sign-in (separate from the portal).</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-sm">
+            <button id="exam-open" class="inline-flex items-center gap-xs bg-on-primary text-primary px-md py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+              <span class="material-symbols-outlined text-[20px]">open_in_new</span> Open Exam App
+            </button>
+            <span id="exam-open-hint" class="font-body-sm text-body-sm text-on-primary/70 hidden">Set the exam server address first →</span>
+          </div>
+        </div>
+        <!-- Server config -->
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
+          <div class="flex items-center gap-xs mb-sm">
+            <span class="material-symbols-outlined text-on-surface-variant text-[20px]">dns</span>
+            <h4 class="font-label-md text-label-md text-on-surface uppercase tracking-wider text-[11px]">Exam Server</h4>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mb-sm">Address of the exam app (saved on this device).</p>
+          <input id="exam-url-input" type="url" placeholder="http://exams.school.local:8084" class="w-full bg-surface-container px-sm py-xs rounded-lg border border-outline-variant/30 text-body-sm font-body-sm outline-none focus:ring-primary focus:border-primary mb-sm"/>
+          <button id="exam-url-save" class="w-full bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">Save Address</button>
+          <p id="exam-url-msg" class="font-body-sm text-body-sm text-success mt-xs hidden">Saved.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- Bento Grid Layout -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
 
@@ -420,10 +453,36 @@ tailwind.config = {
 
 </main>
 
+<script src="app.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   }
+
+  // --- Live Exam App launcher (opens the Flask exam app in a new tab) ---
+  (function () {
+    const input = document.getElementById('exam-url-input');
+    const openBtn = document.getElementById('exam-open');
+    const hint = document.getElementById('exam-open-hint');
+    function refresh() {
+      const base = getExamUrl();
+      input.value = base;
+      hint.classList.toggle('hidden', !!base);
+    }
+    openBtn.addEventListener('click', () => {
+      const base = getExamUrl();
+      if (!base) { input.focus(); hint.classList.remove('hidden'); return; }
+      window.open(base, '_blank', 'noopener');
+    });
+    document.getElementById('exam-url-save').addEventListener('click', () => {
+      setExamUrl(input.value);
+      const msg = document.getElementById('exam-url-msg');
+      msg.classList.remove('hidden');
+      setTimeout(() => msg.classList.add('hidden'), 1500);
+      refresh();
+    });
+    refresh();
+  })();
 
   // Timer
   let totalSeconds = 1 * 3600 + 42 * 60 + 15;

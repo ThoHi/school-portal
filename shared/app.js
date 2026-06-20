@@ -199,3 +199,13 @@ SCHOLASTICA.libraryUrlDefault = "";
 const LIB_KEY = "scholastica-library-url";
 function getLibraryUrl() { return (localStorage.getItem(LIB_KEY) || SCHOLASTICA.libraryUrlDefault || "").replace(/\/+$/, ""); }
 function setLibraryUrl(u) { localStorage.setItem(LIB_KEY, (u || "").trim().replace(/\/+$/, "")); }
+
+/* ---------- exam center (Flask exam-test-webapp) ---------- */
+// The Exam Center page is a launcher for the school's exam app
+// (https://github.com/ThoHi/exam-test-webapp), a separate Flask service with
+// its own login. Leave "" to set it per-device on the Exam Center page, or
+// hard-code the school's server here, e.g. "http://exams.school.local:8084".
+SCHOLASTICA.examUrlDefault = "";
+const EXAM_KEY = "scholastica-exam-url";
+function getExamUrl() { return (localStorage.getItem(EXAM_KEY) || SCHOLASTICA.examUrlDefault || "").replace(/\/+$/, ""); }
+function setExamUrl(u) { localStorage.setItem(EXAM_KEY, (u || "").trim().replace(/\/+$/, "")); }

@@ -51,3 +51,24 @@ services:
       - ./shared/auth.js:/usr/share/nginx/html/auth.js:ro
       - ./shared/notify.js:/usr/share/nginx/html/notify.js:ro
       - ./shared/icon.svg:/usr/share/nginx/html/icon.svg:ro
+
+  # Exam app — the separate Flask project ThoHi/exam-test-webapp.
+  # Clone it next to this repo so the build context ../exam-test-webapp exists:
+  #   git clone https://github.com/ThoHi/exam-test-webapp ../exam-test-webapp
+  # The portal's Exam Center page launches into http://<host>:8084.
+  exam:
+    build: ../exam-test-webapp
+    container_name: scholastica-exam
+    restart: unless-stopped
+    ports:
+      - "8084:5000"
+    volumes:
+      # Persist the SQLite database across rebuilds. Flask-SQLAlchemy 3.x keeps
+      # sqlite:///exam.db under the instance folder (/app/instance). If that
+      # project pins SQLAlchemy 2.x, the file is /app/exam.db instead — change
+      # the target path below to match. Verify with:
+      #   docker compose exec exam sh -c 'find / -name exam.db 2>/dev/null'
+      - exam-data:/app/instance
+
+volumes:
+  exam-data:

@@ -25,7 +25,7 @@ The full portal lives in `apps/portal/`:
 | Dashboard | `apps/portal/index.html` | Main landing dashboard and navigation hub |
 | Attendance | `apps/portal/attendance.html` | Attendance tracking — rates by course, calendar heatmap, activity log |
 | Grades | `apps/portal/grades.html` | Grades & GPA — per-course grades, weighted GPA, trend chart by semester |
-| Exam Center | `apps/portal/exam-center.html` | Exams, schedules, and results |
+| Exam Center | `apps/portal/exam-center.html` | Launcher for the school's **exam app** (see below) |
 | E-Library | `apps/portal/e-library.html` | Launcher for the school's **Calibre** e-book library (see below) |
 | Research Hub | `apps/portal/research.html` | Research materials and tools |
 | Parent Portal | `apps/portal/parent-portal.html` | Parent view of student progress |
@@ -100,6 +100,30 @@ online or download the EPUB/PDF.
 > certificate (e.g. Let's Encrypt), then use the `https://…` address as the Library Server URL. For
 > local testing over plain HTTP this isn't an issue.
 
+## Exam Center (exam app)
+
+The Exam Center page is a **launcher** for [ThoHi/exam-test-webapp](https://github.com/ThoHi/exam-test-webapp)
+— a separate **Flask** app (Flask-Login + SQLAlchemy/SQLite) with its own login and admin/teacher/student
+roles, exam-taking, results, and grading. Like the E-Library, the portal links into it rather than hosting
+it; it runs as its own service on **port 8084**.
+
+**1. Clone it next to this repo** (so the compose build context `../exam-test-webapp` resolves):
+
+```bash
+git clone https://github.com/ThoHi/exam-test-webapp ../exam-test-webapp
+docker compose up -d exam      # or `docker compose up -d` to start everything
+```
+
+**2. Point the portal at it.** On the Exam Center page, open the **Exam Server** panel and enter the exam
+app's address (e.g. `http://exams.school.local:8084`). It's saved per-device. To bake in a default for
+everyone, set `SCHOLASTICA.examUrlDefault` in `shared/app.js`.
+
+> **⚠️ Harden before exposing it publicly.** The exam app currently runs Flask with `debug=True` and a
+> hard-coded `SECRET_KEY = 'change-this-secret'` (see its `app.py`). Before forwarding port 8084 through a
+> tunnel, set a real secret (ideally from an env var), turn off debug, and serve it via a WSGI server
+> (gunicorn) behind HTTPS. Its login is **separate** from the portal's — students sign in to the exam app
+> directly. The SQLite database is persisted by the `exam-data` volume in `docker-compose.yml`.
+
 ## Project structure
 
 The portal is split into **three independent apps**, each served on its own port. Shared JavaScript
@@ -133,7 +157,7 @@ has its own login session.
 ## Running locally (Docker)
 
 ```bash
-docker compose up -d      # build & start all three apps
+docker compose up -d      # build & start every app
 docker compose down       # stop
 ```
 
@@ -144,10 +168,15 @@ Then open:
 | Main portal | <http://localhost:8080> | students & teachers (internal) |
 | Parent portal | <http://localhost:8081> | parents |
 | E-Library | <http://localhost:8082> | library launcher |
+| Exam app | <http://localhost:8084> | exams (separate Flask app — clone `../exam-test-webapp` first) |
 
-> Service workers need HTTP (not `file://`), which nginx provides. To preview a single app without
-> Docker you can run `python -m http.server` inside an app folder, but the `shared/` assets won't be
-> present — Docker (or copying `shared/*` in) is the supported path.
+> The `exam` service builds from `../exam-test-webapp`; clone that repo next to this one or run
+> `docker compose up -d portal parent elibrary` to skip it. calibre-web (for the E-Library) runs on
+> **8083** as its own container (see [E-Library](#e-library-calibre)).
+
+> Service workers need HTTP (not `file://`), which nginx provides. To preview a single static app
+> without Docker you can run `python -m http.server` inside an app folder, but the `shared/` assets
+> won't be present — Docker (or copying `shared/*` in) is the supported path.
 
 ## Multi-port deployment & VS Code tunnel
 
@@ -155,14 +184,15 @@ To reach the school server from a public browser, forward the ports with a
 [VS Code tunnel](https://code.visualstudio.com/docs/remote/tunnels):
 
 1. On the server: `docker compose up -d`, then `code tunnel` (or **Ports** panel → *Forward a Port*).
-2. Forward the ports you want public — typically **8081** (parents) and **8082** (e-library), plus
-   **8083** for calibre-web. Keep **8080** (full portal) unforwarded / internal.
+2. Forward the ports you want public — typically **8081** (parents), **8082** (e-library), **8083**
+   (calibre-web), and **8084** (exam app). Keep **8080** (full portal) unforwarded / internal.
 3. Each forwarded port gets its own public `https://…devtunnels.ms` URL. Set port **visibility** to
-   *Public* only for the parent/library ports.
+   *Public* only for the ports you intend to share.
 
-Because tunnels serve over **HTTPS**, point the E-Library's *Library Server* URL at an **HTTPS**
-calibre-web address too, or the cross-origin links are blocked as mixed content (see the E-Library
-note above).
+Because tunnels serve over **HTTPS**, point the E-Library's *Library Server* URL **and** the Exam
+Center's *Exam Server* URL at **HTTPS** addresses (the forwarded `https://…devtunnels.ms` URLs work),
+or the cross-origin links are blocked as mixed content. Also harden the exam app before exposing it
+(see [Exam Center](#exam-center-exam-app)).
 
 ## Updating the offline cache
 
