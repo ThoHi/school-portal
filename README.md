@@ -75,21 +75,33 @@ The E-Library page is a **launcher** for the school's e-book collection, served 
 in-browser reader, logins, and search). Because this portal is a static site, it cannot host the books
 itself — calibre-web runs on a separate server and the portal links into it.
 
-**1. Run calibre-web** (Docker example):
+**1. Build the library with Calibre desktop.** Install the [Calibre](https://calibre-ebook.com) desktop
+app, create a library folder, and **Add books** to it. This produces a `metadata.db` in that folder —
+calibre-web serves it.
+
+```powershell
+winget install calibre.calibre      # Windows 11 (or download from calibre-ebook.com)
+```
+
+```bash
+sudo apt install calibre            # Debian/Ubuntu server, if building the library there
+```
+
+**2. Run calibre-web** (Docker example) and point `/books` at the library folder from step 1:
 
 ```bash
 docker run -d --name calibre-web -p 8083:8083 \
   -v /path/to/config:/config \
-  -v /path/to/calibre-library:/books \
+  -v "C:/calibre-library":/books \
   lscr.io/linuxserver/calibre-web:latest
 ```
 
-Point `/books` at a folder containing a Calibre library (a `metadata.db` created by the Calibre desktop
-app). Open `http://<server>:8083`, complete setup, and add student accounts.
+Open `http://<server>:8083`, set the database location to **`/books`** when prompted, then sign in with
+the default **`admin` / `admin123`** — **change this immediately** and add student accounts under Admin.
 
-**2. Point the portal at it.** On the E-Library page, open the **Library Server** panel and enter the
+**3. Point the portal at it.** On the E-Library page, open the **Library Server** panel and enter the
 calibre-web address (e.g. `http://library.school.local:8083`). It's saved per-device in the browser.
-To bake in a default for everyone, set `SCHOLASTICA.libraryUrlDefault` in `app.js`.
+To bake in a default for everyone, set `SCHOLASTICA.libraryUrlDefault` in `shared/app.js`.
 
 Students then tap **Open Library** / a subject / a search to jump straight into calibre-web and read
 online or download the EPUB/PDF.

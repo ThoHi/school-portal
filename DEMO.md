@@ -50,6 +50,15 @@ and click **Open Exam App**.
 
 ## E-Library (8082 / calibre-web on 8083)
 
-The E-Library is a launcher. Run calibre-web separately (port 8083), then on the E-Library page set the
-**Library Server** address to your calibre-web URL. calibre-web has its own accounts (set during its
-first-run setup).
+The E-Library is a launcher. You need two things:
+
+1. **Calibre desktop** (`winget install calibre.calibre`) to build a library folder — Add books, which
+   creates `metadata.db`.
+2. **calibre-web** in Docker on port 8083, pointed at that folder. Default login below.
+
+| Service | URL | Username | Password |
+|---------|-----|----------|----------|
+| calibre-web | http://localhost:8083 | `admin` | `admin123` (change on first login) |
+
+Then on the E-Library page (8082) set the **Library Server** address to `http://localhost:8083`
+(or the tunnel URL). Full steps are in the README's *E-Library (Calibre)* section.
