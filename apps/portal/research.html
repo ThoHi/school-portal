@@ -260,6 +260,51 @@ tailwind.config = {
       </div>
     </section>
 
+    <!-- Wikipedia (offline via Kiwix, online fallback) -->
+    <section class="mb-gutter">
+      <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm p-md">
+        <div class="flex items-center justify-between gap-sm mb-md">
+          <div class="flex items-center gap-sm">
+            <div class="h-10 w-10 bg-secondary-container/30 rounded-lg flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-secondary icon-fill">menu_book</span>
+            </div>
+            <div>
+              <h3 class="font-headline-md text-headline-md text-primary leading-tight">Wikipedia</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-xs">
+                <span id="wiki-status-dot" class="h-2 w-2 rounded-full bg-on-surface-variant/40"></span>
+                <span id="wiki-status-text">Checking for offline library…</span>
+              </p>
+            </div>
+          </div>
+          <button id="wiki-settings-btn" type="button" title="Settings" class="p-xs text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">settings</span></button>
+        </div>
+
+        <div id="wiki-settings" class="hidden mb-md p-sm bg-surface-container-low rounded-lg">
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Offline Wikipedia server (Kiwix)</label>
+          <div class="flex gap-xs">
+            <input id="wiki-url" type="url" placeholder="http://localhost:8086" class="flex-grow bg-surface-container px-sm py-xs rounded-lg border border-outline-variant/30 text-body-sm font-body-sm outline-none focus:ring-primary focus:border-primary"/>
+            <button id="wiki-recheck" type="button" class="shrink-0 bg-primary text-on-primary px-sm py-xs rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">Re-check</button>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant/70 mt-xs">If no offline server is found, searches open online wikipedia.org.</p>
+        </div>
+
+        <form id="wiki-form" class="flex flex-col sm:flex-row gap-sm">
+          <select id="wiki-lang" class="sm:w-44 rounded-lg border-outline-variant/60 bg-surface-container-low focus:border-primary focus:ring-primary font-body-md text-body-md">
+            <option value="en">English</option>
+            <option value="my">Burmese · မြန်မာ</option>
+            <option value="shn">Shan · တႆး</option>
+          </select>
+          <input id="wiki-query" type="text" placeholder="Search Wikipedia…" class="flex-grow rounded-lg border-outline-variant/60 bg-surface-container-low focus:border-primary focus:ring-primary font-body-md text-body-md"/>
+          <button id="wiki-search" type="submit" class="shrink-0 inline-flex items-center justify-center gap-xs bg-primary text-on-primary px-md py-sm rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined text-[20px]">search</span> Search
+          </button>
+          <button id="wiki-browse" type="button" class="hidden shrink-0 inline-flex items-center justify-center gap-xs border border-outline text-primary px-md py-sm rounded-lg font-label-md text-label-md hover:bg-surface-container transition-colors">
+            <span class="material-symbols-outlined text-[20px]">local_library</span> Browse offline
+          </button>
+        </form>
+      </div>
+    </section>
+
     <!-- Main Grid -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
 
@@ -709,6 +754,67 @@ tailwind.config = {
         busy = false; sendBtn.disabled = false;
       }
     });
+  })();
+
+  // --- Wikipedia: offline via local Kiwix server, online fallback ---
+  (function () {
+    const LANGS = {
+      en:  { host: 'en.wikipedia.org',  kiwix: 'eng' },
+      my:  { host: 'my.wikipedia.org',  kiwix: 'mya' },
+      shn: { host: 'shn.wikipedia.org', kiwix: 'shn' },
+    };
+    const form = document.getElementById('wiki-form');
+    const query = document.getElementById('wiki-query');
+    const lang = document.getElementById('wiki-lang');
+    const urlInput = document.getElementById('wiki-url');
+    const dot = document.getElementById('wiki-status-dot');
+    const text = document.getElementById('wiki-status-text');
+    const browseBtn = document.getElementById('wiki-browse');
+    let localUp = false;
+
+    urlInput.value = getWikiUrl();
+    document.getElementById('wiki-settings-btn').addEventListener('click', () =>
+      document.getElementById('wiki-settings').classList.toggle('hidden'));
+    urlInput.addEventListener('change', () => { setWikiUrl(urlInput.value); checkLocal(); });
+    document.getElementById('wiki-recheck').addEventListener('click', checkLocal);
+
+    function setStatus(up, msg) {
+      dot.className = 'h-2 w-2 rounded-full ' + (up ? 'bg-success' : 'bg-on-surface-variant/40');
+      text.textContent = msg;
+      browseBtn.classList.toggle('hidden', !up);
+    }
+
+    // Reachability probe: a no-cors fetch resolves (opaque) if the server is up,
+    // rejects on connection failure — works without Kiwix sending CORS headers.
+    async function checkLocal() {
+      const base = getWikiUrl();
+      if (!base) { localUp = false; return setStatus(false, 'Using online Wikipedia (no offline server set)'); }
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 2500);
+      try {
+        await fetch(base + '/', { mode: 'no-cors', signal: ctrl.signal });
+        clearTimeout(timer); localUp = true;
+        setStatus(true, 'Offline library available · reads work without internet');
+      } catch (_) {
+        clearTimeout(timer); localUp = false;
+        setStatus(false, 'Offline library not found · using online Wikipedia');
+      }
+    }
+
+    browseBtn.addEventListener('click', () => { if (getWikiUrl()) window.open(getWikiUrl() + '/', '_blank', 'noopener'); });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const q = query.value.trim();
+      if (!q) return;
+      const L = LANGS[lang.value] || LANGS.en;
+      const url = localUp
+        ? getWikiUrl() + '/search?pattern=' + encodeURIComponent(q) + '&books.filter.lang=' + L.kiwix
+        : 'https://' + L.host + '/w/index.php?search=' + encodeURIComponent(q);
+      window.open(url, '_blank', 'noopener');
+    });
+
+    checkLocal();
   })();
 </script>
 </body>

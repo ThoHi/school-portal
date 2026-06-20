@@ -222,3 +222,12 @@ function getLlmUrl() { return (localStorage.getItem(LLM_URL_KEY) || SCHOLASTICA.
 function setLlmUrl(u) { localStorage.setItem(LLM_URL_KEY, (u || "").trim().replace(/\/+$/, "")); }
 function getLlmModel() { return localStorage.getItem(LLM_MODEL_KEY) || SCHOLASTICA.llmModelDefault || ""; }
 function setLlmModel(m) { localStorage.setItem(LLM_MODEL_KEY, (m || "").trim()); }
+
+/* ---------- Wikipedia (offline via Kiwix, online fallback) ----------
+   Offline Wikipedia is served by a local Kiwix server (kiwix-serve) with ZIM
+   files for English / Burmese / Shan. The Research page probes this URL; if it
+   isn't reachable it falls back to online wikipedia.org. */
+SCHOLASTICA.wikiUrlDefault = "http://localhost:8086"; // local kiwix-serve
+const WIKI_KEY = "scholastica-wiki-url";
+function getWikiUrl() { return (localStorage.getItem(WIKI_KEY) || SCHOLASTICA.wikiUrlDefault || "").replace(/\/+$/, ""); }
+function setWikiUrl(u) { localStorage.setItem(WIKI_KEY, (u || "").trim().replace(/\/+$/, "")); }

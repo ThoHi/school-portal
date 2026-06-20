@@ -93,6 +93,21 @@ services:
     depends_on:
       - exam
 
+  # Offline Wikipedia (Kiwix). Opt-in: only starts with `--profile wiki`, because
+  # it needs ZIM files (multi-GB) downloaded into ./wikipedia/zim first. The
+  # Research page probes http://<host>:8086 and falls back to online wikipedia.org.
+  #   docker compose --profile wiki up -d wikipedia
+  wikipedia:
+    image: ghcr.io/kiwix/kiwix-tools
+    container_name: scholastica-wikipedia
+    restart: unless-stopped
+    profiles: ["wiki"]
+    command: ["sh", "-c", "kiwix-serve --port=8080 /data/*.zim"]
+    ports:
+      - "8086:8080"
+    volumes:
+      - ./wikipedia/zim:/data:ro
+
 volumes:
   exam-data:
   api-data:

@@ -17,3 +17,6 @@ node_modules/
 # Build output
 dist/
 build/
+
+# Kiwix ZIM files (large, downloaded separately)
+wikipedia/zim/*.zim

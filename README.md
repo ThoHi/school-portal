@@ -27,7 +27,7 @@ The full portal lives in `apps/portal/`:
 | Grades | `apps/portal/grades.html` | Grades & GPA — per-course grades, weighted GPA, trend chart by semester |
 | Exam Center | `apps/portal/exam-center.html` | Launcher for the school's **exam app** (see below) |
 | E-Library | `apps/portal/e-library.html` | Launcher for the school's **Calibre** e-book library (see below) |
-| Research Hub | `apps/portal/research.html` | Research tools + **offline AI assistant** via LM Studio (see below) |
+| Research Hub | `apps/portal/research.html` | Research tools, **offline AI assistant** (LM Studio) + **Wikipedia** (offline Kiwix / online) |
 | Parent Portal | `apps/portal/parent-portal.html` | Static demo parent view (internal). **Real per-child access is the standalone parent app — see below** |
 
 The **Parent Portal** and **E-Library** are *also* published as standalone, isolated apps
@@ -219,6 +219,47 @@ defaults live in `shared/app.js` (`SCHOLASTICA.llmUrlDefault`, `SCHOLASTICA.llmM
 > **`http://localhost:8080`** (local). If you serve the portal over an **HTTPS** tunnel, the browser
 > blocks the call to `http://localhost` as mixed content — the assistant is meant for on-site/offline
 > use. The status dot turns green when connected, red with a hint when LM Studio isn't reachable.
+
+## Offline Wikipedia (Kiwix) — English / Burmese / Shan
+
+The Research page has a **Wikipedia** tool that **first checks for a local offline library** and falls
+back to online `wikipedia.org` if none is found. Offline Wikipedia is served by
+[Kiwix](https://kiwix.org) from **ZIM** files. The page probes `http://localhost:8086`; the language
+selector covers **English, Burmese (my), and Shan (shn)**.
+
+**1. Download ZIM files** for the three languages from
+<https://download.kiwix.org/zim/wikipedia/> into `./wikipedia/zim/` (filenames include a date, so pick
+the latest). Smaller `nopic`/`mini` variants are far smaller than the full `maxi` ones:
+
+| Language | Code | File pattern |
+|----------|------|--------------|
+| English | `en` | `wikipedia_en_all_nopic.zim` (or `_mini` / `_maxi`) |
+| Burmese | `my` | `wikipedia_my_all_maxi.zim` (or `_nopic`) |
+| Shan | `shn` | `wikipedia_shn_all_maxi.zim` (or `_nopic`) |
+
+```bash
+mkdir -p wikipedia/zim
+cd wikipedia/zim
+# example — check the directory for the current dated filename first:
+curl -O https://download.kiwix.org/zim/wikipedia/wikipedia_en_all_nopic.zim
+curl -O https://download.kiwix.org/zim/wikipedia/wikipedia_my_all_maxi.zim
+curl -O https://download.kiwix.org/zim/wikipedia/wikipedia_shn_all_maxi.zim
+```
+
+**2. Start the Kiwix server** (opt-in profile, since the ZIMs are large):
+
+```bash
+docker compose --profile wiki up -d wikipedia    # serves all *.zim on port 8086
+```
+
+**3. Use it.** Open the Research page → **Wikipedia**: the status dot turns green ("Offline library
+available") and searches open in Kiwix offline. With the server stopped, it shows "using online
+Wikipedia" and searches open `en/my/shn.wikipedia.org`. Set the server URL under ⚙️ (default
+`http://localhost:8086`; `SCHOLASTICA.wikiUrlDefault` in `shared/app.js`).
+
+> ZIM files are **not** committed (git-ignored). Offline reads need the portal over
+> `http://localhost:8080`; over an HTTPS tunnel the `http://localhost:8086` call is blocked as mixed
+> content (same as the AI assistant) — offline Wikipedia is for on-site use.
 
 ## Project structure
 
