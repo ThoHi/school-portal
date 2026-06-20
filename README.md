@@ -130,6 +130,14 @@ docker compose up -d exam      # or `docker compose up -d` to start everything
 app's address (e.g. `http://exams.school.local:8084`). It's saved per-device. To bake in a default for
 everyone, set `SCHOLASTICA.examUrlDefault` in `shared/app.js`.
 
+**3. Link results to the parent portal.** When a teacher/admin registers a student in the exam app, set
+their **username = the student ID** used in the student database (e.g. `maya`). Their exam scores then
+appear in that child's parent portal automatically — see
+[Exam results in the parent portal](#exam-results-in-the-parent-portal). This uses a new service
+endpoint, `GET /api/student-results/<username>` (requires the `X-Service-Token` header == the exam app's
+`SERVICE_TOKEN`). **Note:** this endpoint is an addition to the exam-test-webapp project — commit/push it
+in that repo too.
+
 > **⚠️ Harden before exposing it publicly.** The exam app currently runs Flask with `debug=True` and a
 > hard-coded `SECRET_KEY = 'change-this-secret'` (see its `app.py`). Before forwarding port 8084 through a
 > tunnel, set a real secret (ideally from an env var), turn off debug, and serve it via a WSGI server
@@ -168,6 +176,23 @@ Parent app (8081)  ──login──▶  Student API (8085)  ──▶  SQLite (
 
 **API endpoints:** `POST /api/login` · `GET /api/me` · `GET /api/my-report` · `GET /api/students`
 (staff only) · `GET /api/students/<id>` (authorized only). Token-based (`Authorization: Bearer …`).
+
+### Exam results in the parent portal
+
+Each student's report also includes their **exam results from the exam app** (see
+[Exam Center](#exam-center-exam-app)). The student API fetches them **server-to-server** and merges
+them into the report, so the parent sees them under *Exam Results*:
+
+```
+Parent app ─▶ Student API ──(X-Service-Token)──▶ Exam app  /api/student-results/<id>
+                          merges report.exams ◀──            (Grade rows for that student)
+```
+
+**The link key is the student ID = the exam-app username.** So when a teacher registers a student in
+the exam app, use the **same ID** as in the student database (e.g. `maya`). That student's scores then
+appear automatically in their parent's portal. The two services share a secret: the exam app's
+`SERVICE_TOKEN` must equal the API's `EXAM_SERVICE_TOKEN` (set in `docker-compose.yml`). If the exam
+app is down, the report still loads — just without exam results.
 
 ## Research Hub — offline AI assistant (LM Studio)
 

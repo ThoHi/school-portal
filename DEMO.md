@@ -53,6 +53,11 @@ The parent portal is backed by the **Student API** (8085) and enforces per-child
 **Demo flow:** open 8081 → sign in as `parent_maya` → you see Maya's report. There is no way to reach
 James's data (the server returns 403). Sign out, sign in as `parent_james` to see the other child.
 
+**Exam results show here too.** The report includes an **Exam Results** table pulled from the exam app
+(8084). For a student's scores to appear, the teacher must register them in the exam app with
+**username = the student ID** (e.g. `maya`). The two services share a token (`SERVICE_TOKEN` /
+`EXAM_SERVICE_TOKEN` in `docker-compose.yml`).
+
 ## Research AI assistant (offline, LM Studio)
 
 The Research page (on the portal, 8080) has an **AI Research Assistant** that runs offline on a local

@@ -60,6 +60,9 @@ services:
     build: ../exam-test-webapp
     container_name: scholastica-exam
     restart: unless-stopped
+    environment:
+      # Shared secret so the student API can read results for the parent portal.
+      - SERVICE_TOKEN=link-token-change-me
     ports:
       - "8084:5000"
     volumes:
@@ -79,10 +82,16 @@ services:
     restart: unless-stopped
     environment:
       - SECRET_KEY=change-this-api-secret   # set a real secret before production
+      # Pull exam results from the exam app (same compose network) and merge them
+      # into each student's report. EXAM_SERVICE_TOKEN must match exam's SERVICE_TOKEN.
+      - EXAM_API_URL=http://exam:5000
+      - EXAM_SERVICE_TOKEN=link-token-change-me
     ports:
       - "8085:8000"
     volumes:
       - api-data:/data
+    depends_on:
+      - exam
 
 volumes:
   exam-data:

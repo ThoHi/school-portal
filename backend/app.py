@@ -12,6 +12,8 @@ headaches. Seed accounts and data cover the two demo students, Maya and James.
 import json
 import os
 import sqlite3
+import urllib.request
+import urllib.error
 
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
@@ -25,6 +27,25 @@ SECRET = os.environ.get("SECRET_KEY", "dev-change-me")
 DB_PATH = os.environ.get("DB_PATH", "/data/students.db")
 TOKEN_MAX_AGE = 60 * 60 * 12  # 12 hours
 signer = URLSafeTimedSerializer(SECRET, salt="scholastica-auth")
+
+# Exam app link: the student API pulls each student's exam results from the exam
+# app (server-to-server, shared token) and merges them into the report, so the
+# parent portal shows them. The join key is the student id == exam username.
+EXAM_API_URL = os.environ.get("EXAM_API_URL", "").rstrip("/")
+EXAM_SERVICE_TOKEN = os.environ.get("EXAM_SERVICE_TOKEN", "")
+
+
+def fetch_exam_results(student_id):
+    if not EXAM_API_URL or not EXAM_SERVICE_TOKEN:
+        return []
+    url = "%s/api/student-results/%s" % (EXAM_API_URL, student_id)
+    req = urllib.request.Request(url, headers={"X-Service-Token": EXAM_SERVICE_TOKEN})
+    try:
+        with urllib.request.urlopen(req, timeout=4) as resp:
+            return (json.loads(resp.read().decode()) or {}).get("results", [])
+    except (urllib.error.URLError, ValueError, OSError):
+        # Exam app down / misconfigured → just omit exam results, don't fail.
+        return []
 
 
 # ---------- database ----------
@@ -168,7 +189,9 @@ def can_view_student(user, student_id):
 def student_payload(row, include_report=True):
     out = {"id": row["id"], "name": row["name"], "program": row["program"], "grade": row["grade"]}
     if include_report:
-        out["report"] = json.loads(row["report_json"])
+        report = json.loads(row["report_json"])
+        report["exams"] = fetch_exam_results(row["id"])  # live from the exam app
+        out["report"] = report
     return out
 
 

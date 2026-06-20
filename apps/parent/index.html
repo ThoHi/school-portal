@@ -233,6 +233,18 @@ tailwind.config = {
       </div>`;
     }).join('');
 
+    const exams = r.exams || [];
+    const examRows = exams.length ? exams.map(e => {
+      const pct = (e.percent == null) ? '—' : e.percent + '%';
+      const col = (e.percent == null) ? 'text-on-surface-variant' : (e.percent >= 50 ? 'text-success' : 'text-error');
+      const date = e.completed_at ? new Date(e.completed_at).toLocaleDateString() : '';
+      return `<tr class="hover:bg-surface-container-low/50">
+        <td class="px-md py-sm"><span class="font-label-md text-label-md text-on-surface">${esc(e.exam)}</span>${date ? `<span class="block font-body-sm text-body-sm text-on-surface-variant">${date}</span>` : ''}</td>
+        <td class="px-sm py-sm text-center font-data-mono text-data-mono text-on-surface">${e.score}/${e.total}</td>
+        <td class="px-md py-sm text-right font-data-mono text-data-mono ${col}">${pct}</td>
+      </tr>`;
+    }).join('') : `<tr><td colspan="3" class="px-md py-md text-center font-body-sm text-body-sm text-on-surface-variant">No exam results yet.</td></tr>`;
+
     document.getElementById('report-body').innerHTML = `
       <section class="mb-lg">
         <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-base">${esc(r.term)}</p>
@@ -265,6 +277,20 @@ tailwind.config = {
           <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-md shadow-sm">
             <h3 class="font-headline-md text-headline-md text-primary mb-md">${isGed ? 'Practice Score Trend' : 'Progress'}</h3>
             <div class="flex items-end justify-between gap-sm h-44 pt-md">${bars}</div>
+          </div>
+          <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
+            <div class="p-md border-b border-outline-variant/20 flex items-center gap-sm">
+              <span class="material-symbols-outlined text-primary">quiz</span>
+              <h3 class="font-headline-md text-headline-md text-primary">Exam Results</h3>
+            </div>
+            <div class="overflow-x-auto"><table class="w-full min-w-[360px]">
+              <thead><tr class="bg-surface-container-low">
+                <th class="text-left px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase text-[11px]">Exam</th>
+                <th class="text-center px-sm py-xs font-label-md text-label-md text-on-surface-variant uppercase text-[11px]">Score</th>
+                <th class="text-right px-md py-xs font-label-md text-label-md text-on-surface-variant uppercase text-[11px]">Result</th>
+              </tr></thead>
+              <tbody class="divide-y divide-outline-variant/20">${examRows}</tbody>
+            </table></div>
           </div>
         </div>
         <div class="space-y-gutter">
