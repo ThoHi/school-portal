@@ -8,17 +8,29 @@ to a phone or desktop home screen.
 > **not for commercial use**. Licensed under [PolyForm Noncommercial 1.0.0](LICENSE). See
 > [License](#license).
 
-## Programs
+## Programs (any grade / class)
 
-The school runs two programs, and the portal switches between them with a **track toggle** (top of the
-Dashboard, Grades, and Attendance pages). The choice is saved in the browser and shared across pages.
+The portal is **not limited to particular grades or classes** — you define as many **programs**
+("tracks") as you like, each with its own subjects, students, and grading style. A **track toggle**
+(top of the Dashboard, Grades, and Attendance pages) switches between them.
 
-- **Grade 5/6 (Primary)** — elementary subjects (Math, English Language Arts, Science, Social Studies,
-  Reading, Art, PE) graded with **letter grades + percentages** (e.g. 92% = A−).
-- **GED** — the four GED subjects (Mathematical Reasoning, RLA, Science, Social Studies) scored on the
-  official **100–200 scale** (145 = pass, 165 = college-ready, 175 = honors).
+Two programs ship as **examples** so you can see both grading styles:
 
-Track data and grading helpers live in `app.js`.
+- **Grade 5/6 (Primary)** — example of **percentage + letter** grading (e.g. 92% = A−), which works for
+  **any K–12 grade or subject list**.
+- **GED** — example of a **custom scale** (the official GED **100–200** scale: 145 = pass, 165 =
+  college-ready, 175 = honors).
+
+**Add your own grades/classes** by editing the seed data — they're plain objects:
+
+- **Static portal:** the `SCHOLASTICA.tracks` object in [`shared/app.js`](shared/app.js). Add a track
+  (any name — "Grade 3", "Form 4B", "Diploma Year 1"…), list its subjects, and pick `grading: "letter"`
+  (percentage) or add your own band logic. The track toggle and every page pick it up automatically.
+- **Parent portal / student database:** the `students` seed in [`backend/app.py`](backend/app.py) — add
+  students for any class with their own report (subjects, grading, term).
+
+So "Grade 5/6" and "GED" are just the starting samples; rename them, remove them, or add new programs
+for whatever classes your school runs.
 
 ## Pages
 
