@@ -28,7 +28,7 @@ The full portal lives in `apps/portal/`:
 | Exam Center | `apps/portal/exam-center.html` | Launcher for the school's **exam app** (see below) |
 | E-Library | `apps/portal/e-library.html` | Launcher for the school's **Calibre** e-book library (see below) |
 | Research Hub | `apps/portal/research.html` | Research tools + **offline AI assistant** via LM Studio (see below) |
-| Parent Portal | `apps/portal/parent-portal.html` | Parent view of student progress |
+| Parent Portal | `apps/portal/parent-portal.html` | Static demo parent view (internal). **Real per-child access is the standalone parent app — see below** |
 
 The **Parent Portal** and **E-Library** are *also* published as standalone, isolated apps
 (`apps/parent/` and `apps/elibrary/`) so they can be forwarded publicly on their own ports without
@@ -136,6 +136,39 @@ everyone, set `SCHOLASTICA.examUrlDefault` in `shared/app.js`.
 > (gunicorn) behind HTTPS. Its login is **separate** from the portal's — students sign in to the exam app
 > directly. The SQLite database is persisted by the `exam-data` volume in `docker-compose.yml`.
 
+## Parent Portal — per-child access (student API)
+
+The standalone **parent app** (`apps/parent/`, port **8081**) is backed by a real **student API**
+(`backend/`, a small Flask service on port **8085**) — the authoritative student database. Each parent
+is linked to exactly one student, and **the server returns only that child's report**: a request for
+another student gets **403**, so student B's data never reaches parent A's browser.
+
+This is different from the portal's client-side demo accounts: there, all data ships to every browser
+and access is UI-only. Here the check is on the server, so it is **real isolation**.
+
+```
+Parent app (8081)  ──login──▶  Student API (8085)  ──▶  SQLite (students, users)
+   renders report   ◀─token──     authorizes by             parent → one student
+                                   parent↔student link
+```
+
+**Accounts** (seeded in `backend/app.py`):
+
+| Username | Password | Role | Sees |
+|----------|----------|------|------|
+| `parent_maya` | `parent123` | parent | **only** Maya's report |
+| `parent_james` | `parent123` | parent | **only** James's report |
+| `maya` / `james` | `maya123` / `james123` | student | only their own report |
+| `teacher` / `admin` | `teach123` / `admin123` | staff | any student |
+
+**Use it:** `docker compose up -d --build api parent`, open <http://localhost:8081>, sign in as
+`parent_maya`. The app calls `http://localhost:8085`; change it under *Advanced* on the login screen
+(saved per-device) or via `SECRET_KEY`/ports in `docker-compose.yml`. Set a real `SECRET_KEY` for the
+`api` service before production.
+
+**API endpoints:** `POST /api/login` · `GET /api/me` · `GET /api/my-report` · `GET /api/students`
+(staff only) · `GET /api/students/<id>` (authorized only). Token-based (`Authorization: Bearer …`).
+
 ## Research Hub — offline AI assistant (LM Studio)
 
 The Research page has an **AI Research Assistant** chat that runs entirely **offline** against a local
@@ -180,12 +213,14 @@ school portal/
 │   │   ├── index.html · login.html · attendance.html · grades.html
 │   │   ├── exam-center.html · e-library.html · research.html · parent-portal.html
 │   │   ├── manifest.json · sw.js
-│   ├── parent/             # standalone Parent Portal → port 8081 (safe to forward publicly)
-│   │   └── index.html · login.html · manifest.json · sw.js
+│   ├── parent/             # standalone Parent Portal → port 8081 (API-driven; own login)
+│   │   └── index.html · manifest.json · sw.js
 │   └── elibrary/           # standalone E-Library launcher → port 8082
 │       └── index.html · login.html · manifest.json · sw.js
+├── backend/                # Flask student API → port 8085 (authoritative student DB)
+│   ├── app.py · requirements.txt · Dockerfile
 ├── Dockerfile.static       # builds a static app image (shared/ + one app) for portal/parent/elibrary
-├── docker-compose.yml      # portal 8080 · parent 8081 · elibrary 8082 · exam 8084
+├── docker-compose.yml      # portal 8080 · parent 8081 · elibrary 8082 · exam 8084 · api 8085
 └── README.md
 ```
 
@@ -206,9 +241,10 @@ Then open:
 | App | URL | For |
 |-----|-----|-----|
 | Main portal | <http://localhost:8080> | students & teachers (internal) |
-| Parent portal | <http://localhost:8081> | parents |
+| Parent portal | <http://localhost:8081> | parents (needs the **student API** on 8085) |
 | E-Library | <http://localhost:8082> | library launcher |
 | Exam app | <http://localhost:8084> | exams (separate Flask app — clone `../exam-test-webapp` first) |
+| Student API | <http://localhost:8085> | backend for the parent app (per-child reports) |
 
 > The `exam` service builds from `../exam-test-webapp`; clone that repo next to this one or run
 > `docker compose up -d portal parent elibrary` to skip it. calibre-web (for the E-Library) runs on

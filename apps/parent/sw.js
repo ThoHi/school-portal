@@ -1,10 +1,8 @@
-const CACHE = 'scholastica-parent-v1';
+const CACHE = 'scholastica-parent-v2';
+// Backend-driven app: only its own page + PWA assets. Auth + data come from the
+// student API at runtime (not cached), so reports are never stored offline.
 const PAGES = [
   'index.html',
-  'login.html',
-  'app.js',
-  'auth.js',
-  'notify.js',
   'manifest.json',
   'icon.svg'
 ];

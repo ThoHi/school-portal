@@ -70,5 +70,20 @@ services:
       #   docker compose exec exam sh -c 'find / -name exam.db 2>/dev/null'
       - exam-data:/app/instance
 
+  # Student API — the authoritative student database (backend/). Authenticates
+  # each parent and returns ONLY their child's report (parent A asking for
+  # student B gets 403). The parent app (8081) reads from http://<host>:8085.
+  api:
+    build: ./backend
+    container_name: scholastica-api
+    restart: unless-stopped
+    environment:
+      - SECRET_KEY=change-this-api-secret   # set a real secret before production
+    ports:
+      - "8085:8000"
+    volumes:
+      - api-data:/data
+
 volumes:
   exam-data:
+  api-data:

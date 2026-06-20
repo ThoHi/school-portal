@@ -14,9 +14,10 @@ docker compose up -d --build
 | App | URL | What it is |
 |-----|-----|------------|
 | 🏫 **Main portal** | http://localhost:8080 | Full app — students & teachers (keep internal) |
-| 👪 **Parent portal** | http://localhost:8081 | Standalone parent view (safe to share) |
+| 👪 **Parent portal** | http://localhost:8081 | Per-child report view (needs the Student API on 8085) |
 | 📚 **E-Library** | http://localhost:8082 | Launcher for the Calibre library |
 | 📝 **Exam app** | http://localhost:8084 | Separate Flask exam system (its own login) |
+| 🗄️ **Student API** | http://localhost:8085 | Backend for the parent portal (per-child reports) |
 
 Over a VS Code tunnel, replace `localhost:<port>` with each forwarded `https://…devtunnels.ms` URL.
 
@@ -24,10 +25,9 @@ Over a VS Code tunnel, replace `localhost:<port>` with each forwarded `https://�
 `https://vscode.dev/tunnel/<machine>` for a browser terminal + editor + port forwarding. Full steps in
 the README's *Remote access* section.
 
-## Portal accounts (8080 / 8081)
+## Main portal accounts (8080)
 
-Sign in at any portal app. The **same account works** on the main portal and the parent portal
-(each port is a separate login session, so sign in on each).
+Client-side demo sign-in for the full portal:
 
 | Username | Password | Role | What they can do |
 |----------|----------|------|------------------|
@@ -35,10 +35,23 @@ Sign in at any portal app. The **same account works** on the main portal and the
 | `admin` | `admin123` | Admin | Everything + edit grades |
 | `maya` | `maya123` | Student | Read-only — Grade 6 program |
 | `james` | `james123` | Student | Read-only — GED program |
-| `parent` | `parent123` | Parent | Read-only — their child's program |
+| `parent` | `parent123` | Parent | Read-only (static demo view) |
 
 **Demo flow:** sign in as `teacher` on 8080 → **Grades** → **Edit** → change a score → **Save**
 (fires a "new grade posted" notification). Then sign in as `maya` to see the read-only student view.
+
+## Parent portal accounts (8081, via Student API)
+
+The parent portal is backed by the **Student API** (8085) and enforces per-child access on the
+**server** — a parent can only see their own child's report.
+
+| Username | Password | Sees |
+|----------|----------|------|
+| `parent_maya` | `parent123` | **only** Maya's report |
+| `parent_james` | `parent123` | **only** James's report |
+
+**Demo flow:** open 8081 → sign in as `parent_maya` → you see Maya's report. There is no way to reach
+James's data (the server returns 403). Sign out, sign in as `parent_james` to see the other child.
 
 ## Research AI assistant (offline, LM Studio)
 
