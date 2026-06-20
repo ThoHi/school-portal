@@ -4,6 +4,10 @@ A unified school management portal for **students, teachers, and parents**, buil
 [Progressive Web App (PWA)](https://web.dev/progressive-web-apps/). It works offline and can be added
 to a phone or desktop home screen.
 
+> 🚫 **Non-commercial use only.** Free for schools, nonprofits, research, and personal use —
+> **not for commercial use**. Licensed under [PolyForm Noncommercial 1.0.0](LICENSE). See
+> [License](#license).
+
 ## Programs
 
 The school runs two programs, and the portal switches between them with a **track toggle** (top of the
@@ -454,3 +458,23 @@ Each app has its own `sw.js`. When you add or rename a page in an app, update **
 
 1. The `PAGES` array in that app's `sw.js`
 2. The `CACHE` version string in that `sw.js` so clients fetch the new files
+
+## License
+
+This project's own code is licensed under the **[PolyForm Noncommercial License 1.0.0](LICENSE)**.
+
+- ✅ **Free** to use, modify, and share for any **non-commercial** purpose — schools, universities,
+  nonprofits, government, research, and personal/hobby use.
+- 🚫 **Not for commercial use** — you may not use it for commercial advantage or monetary compensation
+  (e.g. selling it, or running it as part of a for-profit product/service) without a separate license.
+- Keep the copyright/`Required Notice` line if you redistribute (see `LICENSE`).
+
+**Third-party components keep their own licenses.** This repository only licenses the original code
+here. Bundled or required tools — Flask, FastAPI, Tailwind, Material Symbols, Kiwix, calibre-web, the
+exam app, Ollama, etc. — and especially any **AI models** you run (e.g. **Gemma** under the Gemma Terms
+of Use, **Phi-3** under MIT, **Qwen** under its license) are governed by **their own terms**, which this
+license does not override. Review a model's license before deploying it, particularly for anything
+beyond personal/educational use.
+
+> Want to allow some commercial use later (e.g. paid support) or need a commercial license yourself?
+> The copyright holder can dual-license or grant exceptions — that's your call as the author.
