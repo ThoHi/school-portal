@@ -7,6 +7,8 @@
 <meta name="theme-color" content="#000a1e"/>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icon.svg"/>
+<script src="auth.js"></script>
+<script src="notify.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -79,32 +81,9 @@ tailwind.config = {
       <h1 class="font-headline-md text-headline-md text-primary leading-tight">Academic Excellence</h1>
       <p class="font-label-md text-label-md text-on-surface-variant">Modern Scholasticism</p>
     </div>
+    <!-- Standalone Parent Portal app — isolated; no links into the main portal. -->
     <nav class="flex-grow space-y-xs">
-      <a href="index.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
-        <span class="material-symbols-outlined">dashboard</span>
-        <span class="font-label-md text-label-md">Dashboard</span>
-      </a>
-      <a href="attendance.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
-        <span class="material-symbols-outlined">event_available</span>
-        <span class="font-label-md text-label-md">Attendance</span>
-      </a>
-      <a href="grades.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
-        <span class="material-symbols-outlined">grade</span>
-        <span class="font-label-md text-label-md">Grades</span>
-      </a>
-      <a href="exam-center.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
-        <span class="material-symbols-outlined">quiz</span>
-        <span class="font-label-md text-label-md">Exam Center</span>
-      </a>
-      <a href="e-library.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
-        <span class="material-symbols-outlined">menu_book</span>
-        <span class="font-label-md text-label-md">E-Library</span>
-      </a>
-      <a href="research.html" class="flex items-center gap-sm px-sm py-xs nav-inactive transition-all">
-        <span class="material-symbols-outlined">school</span>
-        <span class="font-label-md text-label-md">Research</span>
-      </a>
-      <a href="parent-portal.html" class="flex items-center gap-sm px-sm py-xs nav-active transition-all">
+      <a href="index.html" class="flex items-center gap-sm px-sm py-xs nav-active transition-all">
         <span class="material-symbols-outlined icon-fill">family_restroom</span>
         <span class="font-label-md text-label-md">Parent Portal</span>
       </a>
@@ -125,33 +104,9 @@ tailwind.config = {
 
 <!-- Mobile Bottom Nav -->
 <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest border-t border-outline-variant/20 flex">
-  <a href="index.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
-    <span class="material-symbols-outlined text-[22px]">dashboard</span>
-    <span class="text-[10px] font-semibold">Home</span>
-  </a>
-  <a href="attendance.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
-    <span class="material-symbols-outlined text-[22px]">event_available</span>
-    <span class="text-[10px] font-semibold">Attend</span>
-  </a>
-  <a href="grades.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
-    <span class="material-symbols-outlined text-[22px]">grade</span>
-    <span class="text-[10px] font-semibold">Grades</span>
-  </a>
-  <a href="exam-center.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
-    <span class="material-symbols-outlined text-[22px]">quiz</span>
-    <span class="text-[10px] font-semibold">Exams</span>
-  </a>
-  <a href="e-library.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
-    <span class="material-symbols-outlined text-[22px]">menu_book</span>
-    <span class="text-[10px] font-semibold">Library</span>
-  </a>
-  <a href="research.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-on-surface-variant">
-    <span class="material-symbols-outlined text-[22px]">school</span>
-    <span class="text-[10px] font-semibold">Research</span>
-  </a>
-  <a href="parent-portal.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-primary">
+  <a href="index.html" class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-primary">
     <span class="material-symbols-outlined icon-fill text-[22px]">family_restroom</span>
-    <span class="text-[10px] font-semibold">Parents</span>
+    <span class="text-[10px] font-semibold">Parent Portal</span>
   </a>
 </nav>
 

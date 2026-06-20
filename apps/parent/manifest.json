@@ -1,0 +1,20 @@
+{
+  "name": "Scholastica Parent Portal",
+  "short_name": "Parent",
+  "description": "Parent view of student progress — Scholastica",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf9fd",
+  "theme_color": "#000a1e",
+  "orientation": "portrait-primary",
+  "categories": ["education"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
