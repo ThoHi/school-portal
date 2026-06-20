@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+httpx
+numpy
+pypdf
+python-multipart

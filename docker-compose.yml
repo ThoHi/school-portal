@@ -118,6 +118,28 @@ services:
     ports:
       - "8087:8000"
 
+  # AI Notebook — "ask my school notes" (RAG) for students. A teacher uploads
+  # notes/PDFs; questions are answered from those notes. Embeddings via Ollama,
+  # generation via the ai-proxy (so it inherits local-first + cloud fallback).
+  ai-notebook:
+    build: ./ai-notebook
+    container_name: scholastica-ai-notebook
+    restart: unless-stopped
+    environment:
+      - OLLAMA_URL=http://host.docker.internal:11434      # for embeddings
+      - EMBED_MODEL=nomic-embed-text                       # ollama pull nomic-embed-text
+      - PROXY_URL=http://ai-proxy:8000/v1                  # generation via the proxy
+      - ADMIN_TOKEN=change-me-notebook-admin               # teacher upload token
+      - TOP_K=3
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8088:8000"
+    volumes:
+      - notebook-data:/data
+    depends_on:
+      - ai-proxy
+
   # Offline Wikipedia (Kiwix). Opt-in: only starts with `--profile wiki`, because
   # it needs ZIM files (multi-GB) downloaded into ./wikipedia/zim first. The
   # Research page probes http://<host>:8086 and falls back to online wikipedia.org.
@@ -136,3 +158,4 @@ services:
 volumes:
   exam-data:
   api-data:
+  notebook-data:

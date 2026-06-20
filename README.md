@@ -255,6 +255,38 @@ docker compose up -d --build ai-proxy
 server to `http://localhost:8087/v1`. Streaming, `/v1/models`, and graceful "no backend available"
 errors all work; `GET /health` shows which backend is live.
 
+## AI Notebook — "ask my school notes" (RAG)
+
+`ai-notebook` (port **8088**) lets students ask questions answered from the school's own notes, not the
+model's imagination. A teacher uploads notes/PDFs; each question retrieves the most relevant passages
+and the answer is grounded in them, with sources.
+
+```
+question → embed (Ollama) → top-K similar chunks (local vector store) → inject into prompt
+        → answer streamed via the ai-proxy (local-first + cloud fallback)
+```
+
+- **Embeddings:** Ollama (`EMBED_MODEL`, default `nomic-embed-text`) — `ollama pull nomic-embed-text`.
+- **Vector store:** a tiny built-in store (SQLite + numpy cosine) — instant at a school's scale and
+  dependency-light; swap in ChromaDB only if the corpus grows huge.
+- **Generation:** delegated to the [ai-proxy](#ai-proxy--local-first-llm-with-cloud-fallback), so it
+  reuses local-first + cloud fallback + the single-inference queue.
+
+**Use it:**
+
+```bash
+ollama pull nomic-embed-text          # embeddings model (plus a chat model for the proxy)
+docker compose up -d --build ai-notebook
+```
+
+Open <http://localhost:8088> → **Teacher** → enter the admin token (`ADMIN_TOKEN` in
+`docker-compose.yml`, default `change-me-notebook-admin`) → upload `.pdf`/`.txt`/`.md` notes. Students
+then ask questions in the chat; if nothing is uploaded yet, or a model is missing, it says so clearly.
+`GET /health` shows doc/chunk counts and whether Ollama + the proxy are reachable.
+
+> Uploads are gated by the admin token; student chat is open on the LAN. For attributable per-student
+> use, put it behind the portal/login later. The notes DB is persisted in the `notebook-data` volume.
+
 ## Offline Wikipedia (Kiwix) — English / Burmese / Shan
 
 The Research page has a **Wikipedia** tool that **first checks for a local offline library** and falls
@@ -322,6 +354,8 @@ school portal/
 │   ├── app.py · requirements.txt · Dockerfile
 ├── ai-proxy/               # FastAPI LLM proxy → port 8087 (local-first + cloud fallback)
 │   ├── app.py · requirements.txt · Dockerfile
+├── ai-notebook/            # FastAPI RAG "ask my school notes" → port 8088
+│   ├── app.py · static/index.html · requirements.txt · Dockerfile
 ├── Dockerfile.static       # builds a static app image (shared/ + one app) for portal/parent/elibrary
 ├── docker-compose.yml      # portal 8080 · parent 8081 · elibrary 8082 · exam 8084 · api 8085
 └── README.md
@@ -349,6 +383,7 @@ Then open:
 | Exam app | <http://localhost:8084> | exams (separate Flask app — clone `../exam-test-webapp` first) |
 | Student API | <http://localhost:8085> | backend for the parent app (per-child reports) |
 | AI proxy | <http://localhost:8087> | local-first LLM + cloud fallback for the Research chat |
+| AI Notebook | <http://localhost:8088> | RAG — students ask questions answered from school notes |
 
 > The `exam` service builds from `../exam-test-webapp`; clone that repo next to this one or run
 > `docker compose up -d portal parent elibrary` to skip it. calibre-web (for the E-Library) runs on

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ask School Notes - Scholastica</title>
+<meta name="theme-color" content="#000a1e"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = { theme: { extend: { colors: {
+  primary: "#000a1e", "on-primary": "#ffffff", "primary-container": "#002147",
+  secondary: "#515f74", "secondary-container": "#d5e3fc", "on-secondary-container": "#57657a",
+  surface: "#faf9fd", "surface-container": "#efedf1", "surface-container-low": "#f4f3f7",
+  "surface-container-lowest": "#ffffff", "surface-container-high": "#e9e7eb",
+  "on-surface": "#1a1b1e", "on-surface-variant": "#44474e", "outline-variant": "#c4c6cf",
+  background: "#faf9fd", success: "#1a6b3c", error: "#ba1a1a", "error-container": "#ffdad6",
+  tertiary: "#735c00"
+}, fontFamily: { sans: ["Public Sans"], serif: ['"Source Serif 4"'] } } } };
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400; }
+  .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 400; }
+  body { font-family: "Public Sans", sans-serif; }
+</style>
+</head>
+<body class="bg-background text-on-surface min-h-screen">
+
+<div class="max-w-3xl mx-auto p-4">
+  <!-- Header -->
+  <header class="flex items-center justify-between py-4 mb-2">
+    <div class="flex items-center gap-3">
+      <div class="h-10 w-10 rounded-xl bg-primary text-on-primary flex items-center justify-center">
+        <span class="material-symbols-outlined icon-fill">menu_book</span>
+      </div>
+      <div>
+        <h1 class="font-serif text-2xl font-semibold text-primary leading-tight">Ask School Notes</h1>
+        <p class="text-sm text-on-surface-variant flex items-center gap-1">
+          <span id="status-dot" class="h-2 w-2 rounded-full bg-on-surface-variant/40"></span>
+          <span id="status-text">Checking…</span>
+        </p>
+      </div>
+    </div>
+    <button id="admin-toggle" class="flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary px-3 py-2 rounded-lg hover:bg-surface-container transition-colors">
+      <span class="material-symbols-outlined text-[20px]">admin_panel_settings</span> Teacher
+    </button>
+  </header>
+
+  <!-- Admin panel -->
+  <section id="admin" class="hidden mb-4 bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-4">
+    <h2 class="font-semibold text-primary mb-2">Teacher — manage notes</h2>
+    <label class="block text-sm text-on-surface-variant mb-1">Admin token</label>
+    <input id="admin-token" type="password" placeholder="admin token" class="w-full rounded-lg border-outline-variant/60 bg-surface-container-low text-sm mb-3"/>
+    <div class="flex flex-col sm:flex-row gap-2">
+      <input id="file" type="file" accept=".pdf,.txt,.md" class="flex-grow text-sm"/>
+      <button id="upload" class="shrink-0 bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90">Upload &amp; index</button>
+    </div>
+    <p id="admin-msg" class="text-sm mt-2"></p>
+    <div id="doc-list" class="mt-3 space-y-1"></div>
+  </section>
+
+  <!-- Chat -->
+  <div id="chat" class="space-y-4 min-h-[55vh] mb-4"></div>
+
+  <form id="form" class="sticky bottom-4 flex items-end gap-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-2 shadow-sm">
+    <textarea id="q" rows="1" placeholder="Ask a question about your school notes…" class="flex-grow resize-none border-0 focus:ring-0 bg-transparent text-base max-h-40 outline-none"></textarea>
+    <button id="send" type="submit" class="shrink-0 inline-flex items-center gap-1 bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-50">
+      <span class="material-symbols-outlined text-[20px]">send</span>
+    </button>
+  </form>
+</div>
+
+<script>
+  const API = location.origin;
+  const chat = document.getElementById('chat');
+  const form = document.getElementById('form');
+  const q = document.getElementById('q');
+  const sendBtn = document.getElementById('send');
+  const statusDot = document.getElementById('status-dot');
+  const statusText = document.getElementById('status-text');
+  const TOKEN_KEY = 'scholastica-notebook-admin';
+  let history = [];
+  let busy = false;
+
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+  function render() {
+    if (!history.length) {
+      chat.innerHTML = `<div class="text-center text-on-surface-variant py-16">
+        <span class="material-symbols-outlined text-5xl text-outline-variant icon-fill">quiz</span>
+        <p class="text-sm mt-2 max-w-sm mx-auto">Ask about anything in your school notes. Answers are grounded in the uploaded material, with sources.</p>
+      </div>`;
+      return;
+    }
+    chat.innerHTML = history.map(m => m.role === 'user'
+      ? `<div class="flex justify-end"><div class="max-w-[80%] bg-primary text-on-primary rounded-2xl rounded-br-sm px-4 py-2 whitespace-pre-wrap">${esc(m.content)}</div></div>`
+      : `<div class="flex justify-start"><div class="max-w-[88%] bg-surface-container rounded-2xl rounded-bl-sm px-4 py-2 whitespace-pre-wrap">${esc(m.content) || '<span class="text-on-surface-variant">…</span>'}</div></div>`
+    ).join('');
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+  render();
+
+  async function refreshStatus() {
+    try {
+      const h = await (await fetch(API + '/health')).json();
+      const ready = h.ollama.up && h.proxy.up;
+      statusDot.className = 'h-2 w-2 rounded-full ' + (ready ? 'bg-success' : 'bg-error');
+      statusText.textContent = `${h.docs} notes · ${h.chunks} chunks · ` +
+        (h.ollama.up ? 'embeddings ✓' : 'Ollama down') + ' · ' + (h.proxy.up ? 'model ✓' : 'proxy down');
+    } catch (e) {
+      statusDot.className = 'h-2 w-2 rounded-full bg-error';
+      statusText.textContent = 'Service unreachable';
+    }
+  }
+  refreshStatus();
+
+  // ---- admin ----
+  const adminToken = document.getElementById('admin-token');
+  adminToken.value = localStorage.getItem(TOKEN_KEY) || '';
+  document.getElementById('admin-toggle').addEventListener('click', () => {
+    document.getElementById('admin').classList.toggle('hidden');
+    if (adminToken.value) loadDocs();
+  });
+  adminToken.addEventListener('change', () => localStorage.setItem(TOKEN_KEY, adminToken.value));
+
+  async function loadDocs() {
+    const list = document.getElementById('doc-list');
+    try {
+      const r = await fetch(API + '/api/docs', { headers: { 'X-Admin-Token': adminToken.value } });
+      if (!r.ok) { list.innerHTML = ''; return; }
+      const docs = await r.json();
+      list.innerHTML = docs.length ? docs.map(d => `
+        <div class="flex items-center justify-between text-sm bg-surface-container-low rounded-lg px-3 py-2">
+          <span class="truncate">${esc(d.title)} <span class="text-on-surface-variant">· ${d.chunks} chunks</span></span>
+          <button data-del="${d.id}" class="text-error hover:underline shrink-0 ml-2">Remove</button>
+        </div>`).join('') : '<p class="text-sm text-on-surface-variant">No notes uploaded yet.</p>';
+      list.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => {
+        await fetch(API + '/api/docs/' + b.dataset.del, { method: 'DELETE', headers: { 'X-Admin-Token': adminToken.value } });
+        loadDocs(); refreshStatus();
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  document.getElementById('upload').addEventListener('click', async () => {
+    const f = document.getElementById('file').files[0];
+    const msg = document.getElementById('admin-msg');
+    if (!f) { msg.textContent = 'Choose a .pdf, .txt or .md file first.'; msg.className = 'text-sm mt-2 text-error'; return; }
+    localStorage.setItem(TOKEN_KEY, adminToken.value);
+    msg.textContent = 'Indexing ' + f.name + '…'; msg.className = 'text-sm mt-2 text-on-surface-variant';
+    const fd = new FormData(); fd.append('file', f);
+    try {
+      const r = await fetch(API + '/api/ingest', { method: 'POST', headers: { 'X-Admin-Token': adminToken.value }, body: fd });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.detail || 'Upload failed');
+      msg.textContent = `Indexed ${d.title} (${d.chunks} chunks).`; msg.className = 'text-sm mt-2 text-success';
+      loadDocs(); refreshStatus();
+    } catch (e) {
+      msg.textContent = e.message; msg.className = 'text-sm mt-2 text-error';
+    }
+  });
+
+  // ---- chat ----
+  q.addEventListener('input', () => { q.style.height = 'auto'; q.style.height = Math.min(q.scrollHeight, 160) + 'px'; });
+  q.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); } });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (busy) return;
+    const text = q.value.trim();
+    if (!text) return;
+    q.value = ''; q.style.height = 'auto';
+    history.push({ role: 'user', content: text });
+    const a = { role: 'assistant', content: '' };
+    history.push(a);
+    render();
+    busy = true; sendBtn.disabled = true;
+    try {
+      const resp = await fetch(API + '/api/chat', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: text })
+      });
+      if (!resp.ok || !resp.body) {
+        const d = await resp.json().catch(() => ({}));
+        throw new Error(d.error || ('HTTP ' + resp.status));
+      }
+      const reader = resp.body.getReader(), dec = new TextDecoder();
+      let buf = '';
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        let idx;
+        while ((idx = buf.indexOf('\n')) >= 0) {
+          const line = buf.slice(0, idx).trim(); buf = buf.slice(idx + 1);
+          if (!line.startsWith('data:')) continue;
+          const p = line.slice(5).trim();
+          if (p === '[DONE]') continue;
+          try { const delta = JSON.parse(p).choices?.[0]?.delta?.content || ''; if (delta) { a.content += delta; render(); } }
+          catch (_) {}
+        }
+      }
+    } catch (err) {
+      a.content += (a.content ? '\n\n' : '') + '⚠️ ' + err.message;
+      render();
+    } finally {
+      busy = false; sendBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
