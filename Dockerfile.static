@@ -1,0 +1,15 @@
+# Build a static app image: shared assets + one app's own files in the web root.
+# Used by the portal / parent / elibrary services in docker-compose.yml.
+#
+#   docker build -f Dockerfile.static --build-arg APP=parent -t scholastica-parent .
+#
+# Copying (rather than bind-mounting) avoids Docker Desktop's "can't nest a
+# read-only file mount inside a read-only dir mount" error and produces
+# self-contained images that deploy cleanly to the school server.
+FROM nginx:alpine
+
+ARG APP
+# shared/ first (app.js, auth.js, notify.js, icon.svg), then the app's own
+# pages (index.html, sw.js, manifest.json, ...) — no filename overlaps.
+COPY shared/ /usr/share/nginx/html/
+COPY apps/${APP}/ /usr/share/nginx/html/

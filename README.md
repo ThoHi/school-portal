@@ -127,12 +127,12 @@ everyone, set `SCHOLASTICA.examUrlDefault` in `shared/app.js`.
 ## Project structure
 
 The portal is split into **three independent apps**, each served on its own port. Shared JavaScript
-and the icon live once in `shared/` and are mounted into each app's web root at runtime, so there is a
-single source of truth.
+and the icon live once in `shared/`; each app's image copies `shared/` plus that app's own files into
+the nginx web root at **build time** (`Dockerfile.static`), so there is a single source of truth.
 
 ```
 school portal/
-├── shared/                 # single source for assets mounted into every app
+├── shared/                 # single source — copied into every app image at build
 │   ├── app.js              #   program data, grading helpers, localStorage persistence
 │   ├── auth.js             #   sign-in, roles, route guard (loaded in <head> everywhere)
 │   ├── notify.js           #   local notifications + header bell
@@ -146,7 +146,8 @@ school portal/
 │   │   └── index.html · login.html · manifest.json · sw.js
 │   └── elibrary/           # standalone E-Library launcher → port 8082
 │       └── index.html · login.html · manifest.json · sw.js
-├── docker-compose.yml      # three nginx services on 8080 / 8081 / 8082
+├── Dockerfile.static       # builds a static app image (shared/ + one app) for portal/parent/elibrary
+├── docker-compose.yml      # portal 8080 · parent 8081 · elibrary 8082 · exam 8084
 └── README.md
 ```
 
@@ -157,8 +158,9 @@ has its own login session.
 ## Running locally (Docker)
 
 ```bash
-docker compose up -d      # build & start every app
-docker compose down       # stop
+docker compose up -d --build   # build & start every app
+docker compose up -d --build   # also the command to re-run after editing any file
+docker compose down            # stop
 ```
 
 Then open:
@@ -174,9 +176,9 @@ Then open:
 > `docker compose up -d portal parent elibrary` to skip it. calibre-web (for the E-Library) runs on
 > **8083** as its own container (see [E-Library](#e-library-calibre)).
 
-> Service workers need HTTP (not `file://`), which nginx provides. To preview a single static app
-> without Docker you can run `python -m http.server` inside an app folder, but the `shared/` assets
-> won't be present — Docker (or copying `shared/*` in) is the supported path.
+> Static files are **copied into the image at build time**, so re-run with `--build` after editing any
+> page or shared script. Service workers also cache aggressively — hard-reload (or bump the `CACHE`
+> version in the app's `sw.js`) if you don't see a change.
 
 ## Multi-port deployment & VS Code tunnel
 
