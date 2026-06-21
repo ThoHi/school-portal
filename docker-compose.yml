@@ -146,6 +146,31 @@ services:
     depends_on:
       - ai-proxy
 
+  # calibre-web — the actual e-book SERVER behind the E-Library launcher (8082).
+  # The launcher just links here; this is what stores the books and shows the
+  # in-browser reader, search, and logins. Books + metadata.db live in
+  # ./calibre/books (git-ignored); calibre-web's own settings in ./calibre/config.
+  #
+  # First run: open http://<host>:8083, set the database location to /books,
+  # then sign in with admin / admin123 and CHANGE THE PASSWORD immediately, and
+  # add student accounts under Admin. To let teachers add books without the
+  # Calibre desktop app, enable "Enable Uploads" under Admin → Basic Configuration.
+  #
+  #   docker compose up -d calibre-web
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    container_name: scholastica-calibre-web
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Yangon
+    volumes:
+      - ./calibre/config:/config
+      - ./calibre/books:/books
+    ports:
+      - "8083:8083"
+
   # Offline Wikipedia (Kiwix). Opt-in: only starts with `--profile wiki`, because
   # it needs ZIM files (multi-GB) downloaded into ./wikipedia/zim first. The
   # Research page probes http://<host>:8086 and falls back to online wikipedia.org.
